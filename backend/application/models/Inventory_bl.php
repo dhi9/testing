@@ -8,7 +8,7 @@ class Inventory_bl extends CI_Model {
 		// Call the CI_Model constructor
 		parent::__construct();
 		
-		$this->load->model(array('inventory_db', 'stock_movement_db', 'item_bl'));
+		$this->load->model(array('inventory_db', 'stock_movement_db', 'item_bl', 'purchase_bl'));
 	}
 	
 	public function generate_stock_setting_reference($stock_setting_id)
@@ -41,8 +41,6 @@ class Inventory_bl extends CI_Model {
 				$data['quantity'] = $quantity;
 				$this->inventory_db->insert_inventory($data);
 			}
-			
-			
 		}
 	}
 	
@@ -362,5 +360,36 @@ class Inventory_bl extends CI_Model {
 		}
 		
 		return $value_list;
+	}
+	
+	public function update_consigment_stock($data, $quantity = NULL)
+	{
+		$stock = array(
+			'customer_id' => $data['customer_id'],
+			'customer_address_id' => $data['customer_address_id'],
+			'item_code' => $data['item_code'],
+		);
+		
+		if(! empty($stock['attributes'])){
+			$stock['attributes'] = $this->purchase_bl->array_to_cb($data['attributes']);
+		}
+		
+		if($quantity != NULL){
+			$query = $this->inventory_db->get_consigment_stock_by_data($stock);
+			
+			if($query->num_rows() > 0){
+				if($data['type'] == 'add'){
+					$changed_quantity = $query->row()->quantity + $quantity;
+				}
+				else{
+					$changed_quantity = $query->row()->quantity - $quantity;
+				}
+				$this->inventory_db->update_consigment_stock_by_data($stock, $changed_quantity);
+			}
+			else{
+				$stock['quantity'] = $quantity;
+				$this->inventory_db->insert_inventory($stock);
+			}
+		}
 	}
 }

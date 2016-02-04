@@ -290,6 +290,7 @@ class Inventory_db extends CI_Model {
 			return 0;
 		}
 	}
+	
 	public function update_stock_item($data)
 	{
 		$this->db->update(
@@ -298,6 +299,7 @@ class Inventory_db extends CI_Model {
 			array('stock_opname_item_id' => $data['stock_opname_item_id'])
 		);
 	}
+	
 	public function get_stock_display()
 	{
 		/*
@@ -350,7 +352,7 @@ class Inventory_db extends CI_Model {
 					HAVING tags >= ".$data['count_tags']."	 
 				");
 	}
-
+	
 	public function get_stock_movements($site_id, $start_date, $end_date)
 	{
 		return $this->db
@@ -361,11 +363,45 @@ class Inventory_db extends CI_Model {
 			->order_by('date_created desc')
 		->get('stock_movements');
 	}
+	
 	public function is_opname_exist($opname_date, $site_id)
 	{
 		return $this->db
 			->where('opname_date', $opname_date)
 			->where('site_id', $site_id)
 			->get('stock_opname');
+	}
+	
+	public function insert_consignment_stock($data)
+	{
+		if(! empty($data['attributes'])){
+			$attributes = $data['attributes'];
+			$this->db->set('attributes', "COLUMN_CREATE($attributes)", FALSE);
+			unset($data['attributes']);
+		}
+		
+		if ( $this->db->insert('consignment_stocks', $data) )
+		{
+			return $this->db->insert_id();
+		} 
+		else
+		{
+			return 0;
+		}
+	}
+	
+	public function update_consignment_stock($data, $quantity)
+	{
+		if(! empty($data['attributes'])){
+			$attributes = $data['attributes'];
+			$this->db->set('attributes', "COLUMN_CREATE($attributes)", FALSE);
+			unset($data['attributes']);
+		}
+		
+		$this->db->update(
+			'consignment_stocks',
+			array('quantity' => $quantity),
+			$data
+		);
 	}
 }
