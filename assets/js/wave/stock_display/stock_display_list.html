@@ -1,0 +1,94 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Stock Display</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="StockDisplayListController">  
+
+	<div class="container-fluid container-fullw">
+        <div class="row">
+            <div class="form-group">
+                <label for="text" class="col-sm-1 control-label">SiteID</label>
+                <div class="col-sm-5">
+                    <select class="form-control" ng-model="search.site_id"
+                            ng-options="site.site_id as site.site_name for site in siteList"></select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="form-group">
+                <label for="text" class="col-sm-1 control-label">Tag</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" ng-model="tag_input"
+                           typeahead="tag.tag_name as tag.tag_name for tag in tagList | filter:$viewValue | limitTo:20">
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary" ng-click="addItemTag(tag_input)" ng-disabled="!isTagAvaiable()">Tambah</button>
+                </div>
+
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="form-group">
+                <label for="text" class="col-sm-1 control-label"></label>
+                <div class="col-sm-8">
+                    <span ng-repeat="tag in search.tag" class="ng-scope">
+                        <span style="margin-right: 3px;" class="ui-select-match-item btn btn-default btn-xs" type="button">
+                            <span class="close ui-select-match-close" ng-click="removeItemTag(tag)">&nbsp;x</span>
+                            <span uis-transclude-append="">
+                                <span class="ng-binding ng-scope">
+                                        {{tag.tag_name}}
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary" ng-click="applyFilter()">Apply Filter</button>
+                    <button class="btn btn-primary pull-right" ng-click="exportToCSV()">Export to CSV</button>
+                </div>
+            </div>
+        </div>
+        <br>
+
+		<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$" placeholder="Filter"/>
+		<br/>
+		<div class="table-responsive">
+			<table class="table" ng-table="stockTableParams">
+				<tr ng:repeat="stock in $data | filter: search.$">
+					<td data-title="'Site'" sortable="'site_name'">{{ stock.site_name}}</td>
+					<td data-title="'ArticleID/SKU'" sortable="'item_code'">{{ stock.item_code}}</td>
+					<td data-title="'Name'" sortable="'item_name'">{{ stock.item_name}}</td>
+					<td data-title="'Attribute'" sortable="'attribute'">{{ stock.attributes.string}}</td>
+					<td data-title="'Tag'" sortable="'tag'">{{ stock.tag}}</td>
+					<td data-title="'UOM Dasar'" sortable="'item_unit'">{{ stock.item_unit}}</td>
+					<td data-title="'Tersedia'" sortable="'quantity'">{{ stock.quantity}}</td>
+					<td data-title="'Quality'" sortable="'quality'">{{ stock.quality}}</td>
+					<td data-title="'Block'" sortable="''">{{  }}</td>
+					<td data-title="'Konsinyas'" sortable="'consignment'">{{ stock.consignment}}</td>
+					<td data-title="'Proses Pengadaan'" sortable="''">{{  }}</td>
+					<td data-title="'Sales Order'" sortable="''">{{  }}</td>
+					<td class="col-sm-1">
+                        <button class="btn btn-primary" ui-sref="app.inventory.stock_status_detail ({item_code : '{{stock.item_code}}', attributes : '{{stock.attributes.link}}', site_reference : '{{stock.site_reference}}'})">Details</button>
+                    </td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- End of Customer Row -->
+
+
+
+<!-- end: YOUR CONTENT HERE -->

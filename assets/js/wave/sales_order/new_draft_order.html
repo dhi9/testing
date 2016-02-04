@@ -1,0 +1,1159 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Buat Draft Order</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="NewDraftOrderController">  
+
+<div class="container-fluid container-fullw">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="form-group pull-right">
+				<div class="btn-group">
+					<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-model="order.order_type" ng-class="{'btn-o': order.order_type !== 'B' }"  btn-radio="'B'" ng-click="changeOrderType('cash')" >
+						<i class="ti-package"></i><br><span> Biasa</span>
+					</label>
+					<label class="btn btn-primary btn-o ng-untouched ng-valid ng-dirty" ng-model="order.order_type" ng-class="{'btn-o': order.order_type !== 'K' }"  btn-radio="'K'" ng-click="changeOrderType('konsinyasi')" >
+						<i class="ti-package"></i><br><span> Konsinyasi</span>
+					</label>
+					<label class="btn btn-primary btn-o ng-untouched ng-valid ng-dirty" ng-model="order.order_type" ng-class="{'btn-o': order.order_type !== 'sample' }"  btn-radio="'sample'"  >
+						<i class="ti-package"></i><br><span> Sample</span>
+					</label>
+					<label class="btn btn-primary btn-o ng-untouched ng-valid ng-dirty" ng-model="order.order_type" ng-class="{'btn-o': order.order_type !== 'urgent' }"  btn-radio="'urgent'" >
+						<i class="ti-package"></i><br><span> Urgent</span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="txtSearchCustomer"><h5>Cari Customer&nbsp;</h5></label>
+					<div class="input-group">
+						
+						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="customerIdToSearch" 
+							typeahead="customerLU.customer_id as customerLU.customer_name + ' - ' + customerLU.pic_name for customerLU in customerLookupList | filter:$viewValue | limitTo:20"
+							typeahead-input-formatter="formatSearchCustomerText($model)"
+							typeahead-on-select="getCustomerById()" autocomplete="off">
+
+						<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" ng-click="getCustomerById()">
+							<i class="fa fa-search"></i>
+						</button> </span>
+					</div>
+										<!--
+										<button class="btn btn-alt btn-hover btn-primary" ng-click="displayCustomerListModal()">
+												<span>Daftar Customer</span>
+										</button>
+					-->
+					<button class="btn btn-alt btn-hover btn-primary" ng-click="createNewCustomer()">
+						<i class="ti-plus"></i>
+												<span> Customer Baru</span>
+						<i class="glyph-icon icon-plus"></i>
+					</button>
+				</div>
+				
+				<div class="form-group pull-right">
+					<label for="exampleInputEmail2">PO Customer</label>
+					<input type="text" class="form-control" id="exampleInputEmail2" ng-model="order.order_details.customer_po">
+				</div>
+			</form>
+			<br/>
+		</div>
+	</div>
+  
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Detail Customer</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<form class="form-horizontal">
+							
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Nama Customer</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtCustomerName" ng-model="order.customer_details.customer_name" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+								
+								 <div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPICName" ng-model="order.customer_details.pic_name" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtAddress" ng-model="order.customer_details.address" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+								
+								 <div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPhoneNumber" ng-model="order.customer_details.phone_number" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtCity" ng-model="order.customer_details.city" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+								
+								 <div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPostcode" ng-model="order.customer_details.postcode" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+										<div class="col-sm-10">
+											<input type="email" class="form-control" id="txtEmail" ng-model="order.customer_details.customer_email" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+								
+								 <div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtFaxNumber" ng-model="order.customer_details.fax_number" ng-disabled="order.customer_input_type == 'E'">
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						</form>
+											<span ng-show="order.customer_id" class="pull-right">
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateCustomer()" >
+													<span>Ubah Detail</span>
+													<i class="glyph-icon icon-plus"></i>
+						</button>
+											</span>
+										</div>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+	
+	<div class="row">
+		
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlItems">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Detail Sales</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+					<div class="panel-body">
+						<tabset class="tabbable">
+							<tab heading="Umum">
+								<div ng-if="order.order_type == 'B'">
+								<!--@#JWBOOKMARK 1-->
+								<!--<div class="table-responsive">-->
+									<table class="table" ng-show="HLPFIELD_items_is_edit_mode">
+										<thead>
+											<tr>
+												<th class="col-md-2">ArticleID (SKU)</th>
+												<th class="col-md-1" ng-repeat="attrib in attributeActiveList">
+													{{attrib.attribute_name}}
+												</th>
+												<th class="col-md-1">Jumlah Order</th>
+												<th class="col-md-1">Unit</th>
+												<th>Nama Barang</th>
+												<th class="col-md-2">@Harga</th>
+												<th class="col-md-1">Disc %</th>
+												<th class="col-md-2">Disc (IDR)</th>
+												<th class="col-md-2">Subtotal</th>
+												<th class="col-md-2">Remark</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody ng:repeat="item in order.order_details.order_items" ng-init="$parentIndex = $index">
+											<tr>
+												<td>
+													<div class="input-group">
+														<input type="text" class="form-control" ng-model="item.item_code" ng-if="item.level !== 'N'"
+															   typeahead="itemLU.item_code as itemLU.item_code + ' - ' + itemLU.item_name for itemLU in itemLookupList | filter:$viewValue | limitTo:30"
+															   typeahead-on-select="setLookupItem(item.item_code, 'parent', $index)" >
+														<input type="text" class="form-control" ng-model="item.item_code" ng-if="item.level == 'N'">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-primary" ng-click="displayItemDetailModal($index)"><i class="fa fa-search"></i>
+															</button>
+														</span>
+													</div>
+												</td>
+												
+												<td ng-repeat="attrib in attributeActiveList"">
+													<!--<input type="text" class="form-control" placeholder="{{attrib.default_value}}" ng-model="item[attrib.attribute_name]" />-->
+												<select ng-model="item[attrib.attribute_name]" ng-options="attribute.attribute_item as attribute.attribute_item for attribute in attrib.attribute_items"></select>
+												</td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="1" /></td>
+												<td>{{ item.item_unit }}</td>
+												<td>{{ item.item_name }}</td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.cost" min="0" /></td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.disc_percent" min="0" max="100" maxlength="3" /></td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.disc_value" min="0"/></td>
+												<td>{{(item.quantity*item.cost)-(item.quantity*item.cost*item.disc_percent/100)-(item.disc_value) || 0 | number:2}}</td>
+												<td><input type="text" class="form-control" placeholder="" ng-model="item.remark" /></td>
+												<td>
+													<a ng-hide="order.order_details.order_items.length <= 1" ng-click="removeItem(item)" class="text-danger">
+														<i class="fa fa-times"></i>
+													</a>
+													<a ng-show="order.order_details.order_items.length <= 1" ng-click="">
+														<span>&nbsp;</span>
+													</a>
+												</td>
+											</tr>
+										</tbody>
+										<tr>
+											<td colspan="3" style="border-bottom: none">
+												<div ng-show="HLPFIELD_items_is_edit_mode">
+													<button class="btn btn-alt btn-hover btn-primary" ng-click="confirmItemsEdit()">
+														<span>OK</span>
+														<i class="glyph-icon icon-plus"></i>
+													</button>
+													<button class="btn btn-alt btn-hover btn-primary" ng-click="addItem()">
+														<i class="ti-plus"></i> <span> Tambah Barang</span>
+													</button>
+												</div>
+												<div ng-show="!HLPFIELD_items_is_edit_mode">
+													<button class="btn btn-alt btn-hover btn-primary" ng-click="activateItemsEditMode()" ng-disabled="isAnyInEditMode()">
+														<span>EDIT</span>
+														<i class="glyph-icon icon-plus"></i>
+													</button>
+												</div>
+											</td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Total</td>
+											<td colspan="3">{{ totalWithoutDisc() || 0 | number:2 }}</td>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Discount</td>
+											<td colspan="3">{{ totalDiscPercent() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Tambahan Discount</td>
+											<td colspan="3">{{ totalDiscValue() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">DPP</td>
+											<td colspan="3">{{ total() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">PPN</td>
+											<td colspan="3">{{ total() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Grand Total</td>
+											<td colspan="3" style="border-top: 1px #CCC solid;border-bottom:none">{{ totalGrand() || 0 | number:2 }}</td>
+										</tr>
+
+									</table>
+									
+									<!--</div>-->
+									<div class="table-responsive">
+									<table class="table" ng-show="!HLPFIELD_items_is_edit_mode">
+										<thead>
+											<tr>
+												<th>ArticleID (SKU)</th>
+												<th class="col-md-1" ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+													{{attrib.attribute_name}}
+												</th>
+												<th>Jumlah Order</th>
+												<th>Unit</th>
+												<th>Nama Barang</th>
+												<th>@Harga</th>
+												<th>Disc %</th>
+												<th>Disc (IDR)</th>
+												<th>Subtotal</th>
+												<th>Remark</th>
+											</tr>
+										</thead>
+										<tbody ng:repeat="item in order.order_details.order_items">
+											<tr>
+												<td>{{ item.item_code }}</td>
+												<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+													{{item[attrib.attribute_name]}}
+												</td>
+												<td>{{ item.quantity }}</td>
+												<td>{{ item.item_unit }}</td>
+												<td>{{ item.item_name }}</td>
+												<td>{{ item.cost }}</td>
+												<td>{{ item.disc_percent }}</td>
+												<td>{{ item.disc_value }}</td>
+												<td>{{(item.quantity*item.cost)-(item.quantity*item.cost*item.disc_percent/100)-(item.disc_value) || 0 | number:2}}</td>
+												<td>{{ item.remark }}</td>
+											</tr>
+										</tbody>
+	
+									</table>
+									</div>
+								</div>
+								
+								
+								
+								<div ng-if="order.order_type == 'K'">
+								<!--@#JWBOOKMARK 1-->
+								<!--<div class="table-responsive">-->
+									<table class="table" ng-show="HLPFIELD_items_is_edit_mode">
+										<thead>
+											<tr>
+												<th class="col-md-2">ArticleID (SKU)</th>
+												<th class="col-md-1" ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+													{{attrib.attribute_name}}
+												</th>
+												<th class="col-md-1">Jumlah Order</th>
+												<th class="col-md-1">Unit</th>
+												<th>Nama Barang</th>
+												<th class="col-md-2">@Harga</th>
+												<th class="col-md-1">Disc %</th>
+												<th class="col-md-2">Subtotal</th>
+												<th class="col-md-2">Remark</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody ng:repeat="item in order.order_details.order_items" ng-init="$parentIndex = $index">
+											<tr>
+												<td>
+													<div class="input-group">
+														<input type="text" class="form-control" ng-model="item.item_code" ng-if="item.level !== 'N'"
+															   typeahead="itemLU.item_code as itemLU.item_code + ' - ' + itemLU.item_name for itemLU in itemLookupList | filter:$viewValue | limitTo:30"
+															   typeahead-on-select="setLookupItem(item.item_code, 'parent', $index)" >
+														<input type="text" class="form-control" ng-model="item.item_code" ng-if="item.level == 'N'">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-primary" ng-click="displayItemDetailModal($index)"><i class="fa fa-search"></i>
+															</button>
+														</span>
+													</div>
+												</td>
+												
+												<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+													<input type="text" class="form-control" placeholder="{{attrib.default_value}}" ng-model="item[attrib.attribute_name]" />
+												</td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="1" /></td>
+												<td>{{ item.item_unit }}</td>
+												<td>{{ item.item_name }}</td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.cost" min="0" /></td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.disc_percent" min="0" max="100" maxlength="3" /></td>
+												<td>{{(item.quantity*item.cost)-(item.quantity*item.cost*item.disc_percent/100)-(item.disc_value) || 0 | number:2}}</td>
+												<td><input type="text" class="form-control" placeholder="" ng-model="item.remark" /></td>
+												<td>
+													<a ng-hide="order.order_details.order_items.length <= 1" ng-click="removeItem(item)" class="text-danger">
+														<i class="fa fa-times"></i>
+													</a>
+													<a ng-show="order.order_details.order_items.length <= 1" ng-click="">
+														<span>&nbsp;</span>
+													</a>
+												</td>
+											</tr>
+										</tbody>
+										<tr>
+											<td colspan="{{ 6 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Total</td>
+											<td colspan="3">{{ total() || 0 | number:2 }}</td>
+										</tr>
+
+									</table>
+									
+									<!--</div>-->
+									<div class="table-responsive">
+									<table class="table" ng-show="!HLPFIELD_items_is_edit_mode">
+										<thead>
+											<tr>
+												<th>ArticleID (SKU)</th>
+												<th class="col-md-1" ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+													{{attrib.attribute_name}}
+												</th>
+												<th>Jumlah Order</th>
+												<th>Unit</th>
+												<th>Nama Barang</th>
+												<th>@Harga</th>
+												<th>Disc %</th>
+												<th>Subtotal</th>
+												<th>Remark</th>
+											</tr>
+										</thead>
+										<tbody ng:repeat="item in order.order_details.order_items">
+											<tr>
+												<td>{{ item.item_code }}</td>
+												<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+													{{item[attrib.attribute_name]}}
+												</td>
+												<td>{{ item.quantity }}</td>
+												<td>{{ item.item_unit }}</td>
+												<td>{{ item.item_name }}</td>
+												<td>{{ item.cost }}</td>
+												<td>{{ item.disc_percent }}</td>
+												<td>{{(item.quantity*item.cost)-(item.quantity*item.cost*item.disc_percent/100) || 0 | number:2}}</td>
+												<td>{{ item.remark }}</td>
+											</tr>
+										</tbody>
+	
+									</table>
+									</div>
+																	
+									<div ng-show="HLPFIELD_items_is_edit_mode">
+										
+										<button class="btn btn-alt btn-hover btn-primary" ng-click="confirmItemsEdit()">
+											<span>OK</span>
+											<i class="glyph-icon icon-plus"></i>
+										</button>
+										
+										<button class="btn btn-alt btn-hover btn-primary" ng-click="addItem()">
+											<i class="ti-plus"></i> <span> Tambah Barang</span>
+										</button>
+										
+									</div>
+									<div ng-show="!HLPFIELD_items_is_edit_mode">
+										<button class="btn btn-alt btn-hover btn-primary" ng-click="activateItemsEditMode()" ng-disabled="isAnyInEditMode()">
+											<span>EDIT</span>
+											<i class="glyph-icon icon-plus"></i>
+										</button>
+									</div>
+								</div>
+								
+								
+								
+							</tab>
+							<tab heading="Pembayaran">
+								<div class="row">
+									<div class="col-md-8">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="Referral (optimal)" ng-model="order.referral">
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-primary"><i class="fa fa-search"></i>
+												</button>
+											</span>
+										</div>
+										<br>
+										<div class="btn-group" ng-if="order.order_type == 'K'">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'konsinyasi' }" ng-model="order.payment_type" btn-radio="'konsinyasi'"  ng-click="tabs[5].active = true">
+												<i class="ti-package"></i><br><span> KONSINYASI</span>
+											</label>
+										</div>
+										<div class="btn-group" ng-if="order.order_type == 'B'">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'cash' }" ng-model="order.payment_type" btn-radio="'cash'"  ng-click="tabs[0].active = true">
+												<i class="ti-package"></i><br><span> CASH</span>
+											</label>
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'transfer'}" ng-model="order.payment_type" btn-radio="'transfer'"  ng-click="tabs[1].active = true">
+												<i class="ti-package"></i><br><span> TRANSFER</span>
+											</label>
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'debit'}" ng-model="order.payment_type" btn-radio="'debit'"  ng-click="tabs[2].active = true">
+												<i class="ti-package"></i><br><span> DEBIT CARD</span>
+											</label>
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'credit'}" ng-model="order.payment_type" btn-radio="'credit'"  ng-click="tabs[3].active = true">
+												<i class="ti-package"></i><br><span> CREDIT CARD</span>
+											</label>
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'term'}" ng-model="order.payment_type" btn-radio="'term'"  ng-click="tabs[4].active = true">
+												<i class="ti-package"></i><br><span> TERM</span>
+											</label>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<table class="table pull-right">
+											<tr>
+												<td>
+													Total Harga
+												</td>
+												<td>
+													{{ totalWithoutDisc() || 0 | number:2 }}
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Discount
+												</td>
+												<td>
+													{{ totalDisc() || 0 | number:2 }}
+												</td>
+											</tr>
+											<tr>
+												<td>
+													DPP
+												</td>
+												<td>
+													0.00
+												</td>
+											</tr>
+											<tr>
+												<td>
+													PPN
+												</td>
+												<td>
+													0.00
+												</td>
+											</tr>
+											<tr>
+												<td style="border-top: 1px #CCC solid">
+													Grand Total
+												</td>
+												<td style="border-top: 1px #CCC solid">
+													{{ totalGrand() || 0 | number:2 }}
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<tabset class="tabbable">
+											Pembayaran {{order.payment_type}}
+											<tab ng-repeat="tab in tabs" class="hide" active="tab.active">
+												<tab-heading class="hide"></tab-heading>
+												<div ng-include src="tab.content"></div>
+											</tab>
+										</tabset>
+									</div>
+								</div>
+								
+							</tab>
+
+							<tab heading="Pengiriman">
+								<div class="radio clip-radio radio-primary radio-inline">
+									
+									<div class="col-sm-12">
+										<span>Tipe pengiriman</span> 
+										<input type="radio" id="sendiri" name="inline" ng-model="order.delivery_type" value="A" >
+										<label for="sendiri">Ambil Sendiri</label>
+										<input type="radio" id="antar" name="inline" ng-model="order.delivery_type" value="D" checked="checked">
+										<label for="antar">Diantar</label>
+									</div>
+
+								</div>
+								<br>
+								<!--@#JWBOOKMARK 2-->
+								<div ng-show="order.delivery_type == 'D'">
+									<div class="panel panel-white" id="panel1" ng:repeat="delivery in order.delivery_request_details">
+										<div class="panel-heading">
+											<h4 class="panel-title text-primary">Rencana Pengiriman {{ $index + 1}}</h4>
+											<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+										</div>
+										<div collapse="panel1" ng-init="panel1=false" class="panel-wrapper">
+											<div class="panel-body">
+												<div class="row">
+													<div class="col-md-7">
+														<form class="form-horizontal">
+															<div class="form-group">
+																<label for="txtDeliveryDate{{ $index + 1 }}" class="col-sm-3 control-label">Tanggal Pengiriman</label>
+																<div class="col-sm-9">
+																	
+																	<input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" 
+																		   ng-model="delivery.requested_delivery_date" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}"
+																		   ng-readonly="!delivery.HLPFIELD_is_edit_mode"
+																		   required />
+																	
+																</div>
+															</div>
+														</form>
+													</div>
+													<div class="col-md-5">
+														<form class="form-horizontal">
+															<div class="form-group">
+																<label for="txtDeliveryDate{{ $index + 1 }}" class="col-sm-2 control-label">Pengantar</label>
+																<div class="col-sm-10">
+																	
+																	<input type="text" ng-readonly="!delivery.HLPFIELD_is_edit_mode" ng-model="delivery.delivery_source" required/>
+																	
+																</div>
+															</div>
+															
+															<div class="form-group">
+																<label for="txtCustomerName" class="col-sm-2 control-label">Keterangan </label>
+																<div class="col-sm-10">
+																	<textarea class="form-control autosize msd-elastic: \n;" ng-model="delivery.notes"
+																			  ng-readonly="!delivery.HLPFIELD_is_edit_mode"></textarea>
+																</div>
+															</div>
+															
+														</form>
+													</div>
+												</div>
+												
+												
+												<!-- TABLE if edit mode -->
+																							<div class="table-responsive">
+												<table class="table table-bordered" ng-show="delivery.HLPFIELD_is_edit_mode">
+													<thead>
+														<tr>
+															<th>ArticleID (SKU)</th>
+															<th ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+																{{attrib.attribute_name}}
+															</th>
+															<th>Jumlah Order</th>
+															<th>Jumlah Belum Direncanakan</th>
+															<th>Jumlah Permohonan Pengiriman</th>
+															<th>Unit</th>
+															<th>Nama Barang</th>
+															<th>Remark</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng:repeat="item in delivery.requested_delivery_items">
+															<td>{{ item.item_code }}</td>
+															<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+																{{item.attributes[attrib.attribute_name]}}
+															</td>
+															<td>{{ item.main_quantity }}</td>
+															<td>{{ item.remains }}</td>
+															<td><input type="text" class="form-control" id="" placeholder="0" ng-model="item.quantity" /></td>
+															<td>{{ item.item_unit }}</td>	
+															<td>{{ item.item_name }}</td>
+															<td>{{ item.remark }}</td>
+														</tr>
+
+													</tbody>
+
+												</table>
+											</div>
+																							
+												<!-- TABLE NOT EDITABLE -->
+											<div class="table-responsive">
+												<table class="table table-bordered"  ng-show="!delivery.HLPFIELD_is_edit_mode">
+													<thead>
+														<tr>
+															<th>ArticleID (SKU)</th>
+															<th ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+																{{attrib.attribute_name}}
+															</th>
+															<th>Jumlah Order</th>
+															<th>Jumlah Belum Direncanakan</th>
+															<th>Jumlah Permohonan Pengiriman</th>
+															<th>Unit</th>
+															<th>Nama Barang</th>
+															<th>Remark</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng:repeat="item in delivery.requested_delivery_items | filter: filterNullAndZero(item)">
+															<td>{{ item.item_code }}</td>
+															<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+																{{item.attributes[attrib.attribute_name]}}
+															</td>
+															<td>{{ item.main_quantity }}</td>
+															<td>{{ item.remains }}</td>
+															<td>{{ item.quantity }}</td>
+															<td>{{ item.item_unit }}</td>
+															<td>{{ item.item_name; }}</td>
+															<td>{{ item.remark }}</td>
+														</tr>
+
+													</tbody>
+
+												</table>
+																							</div>
+																							
+												<div ng-show="delivery.HLPFIELD_is_edit_mode">
+													<button class="btn btn-alt btn-hover btn-primary" ng-click="confirmDeliveryRequest(delivery)">
+														<span>OK</span>
+														<i class="glyph-icon icon-plus"></i>
+													</button>
+													
+													<button class="btn btn-alt btn-hover btn-danger" ng-click="removeDeliveryRequest(delivery)">
+														<span>HAPUS</span>
+														<i class="glyph-icon icon-plus"></i>
+													</button>
+												</div>
+												
+												<div ng-show="!delivery.HLPFIELD_is_edit_mode">
+													<button class="btn btn-alt btn-hover btn-primary" ng-click="delivery.HLPFIELD_is_edit_mode=true" ng-disabled="isAnyInEditMode()">
+														<span>EDIT</span>
+														<i class="glyph-icon icon-plus"></i>
+													</button>
+													
+													<button class="btn btn-alt btn-hover btn-danger" ng-click="removeDeliveryRequest(delivery)" ng-disabled="isAnyInEditMode()">
+														<span>HAPUS</span>
+														<i class="glyph-icon icon-plus"></i>
+													</button>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<button class="btn btn-alt btn-hover btn-primary" ng-click="addDeliveryRequest()" ng-disabled="isAnyInEditMode()">
+										<span><i class="ti-plus"></i> Tambah Rencana Pengiriman</span>
+									</button>
+								</div>
+							</tab>
+						</tabset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+		<div class="row">
+			<div class="col-md-10">
+				<div ng-show="!is_order_saved">
+					<button class="btn btn-alt btn-hover btn-primary" ng-click="insertDraftOrder()" ladda="submitButtonLoading">
+						<span>Buat Order</span>
+						<i class="glyph-icon icon-plus"></i>
+					</button>
+					<button class="btn btn-alt btn-hover btn-primary" ng-click="saveCart()" ladda="submitButtonLoading">
+						<span>Submit Draft Order</span>
+						<i class="glyph-icon icon-plus"></i>
+					</button>
+				</div>
+			</div>
+	
+			<div class="checkbox clip-check check-primary pull-right" ng-show="hasSpecialRequestAccess">
+				<input type="checkbox" id="checkbox1" value="1" ng-model="order.order_details.special_request">
+				<label for="checkbox1">
+					Special request
+				</label>
+			</div>
+		</div>
+	<div>
+
+		<div ng-show="is_order_saved">
+			<button class="btn btn-alt btn-hover btn-primary" ng-click="clearPage()"  >
+				<span>Buat Baru</span>
+				<i class="glyph-icon icon-plus"></i>
+			</button>
+			
+			<!--
+			<button class="btn btn-alt btn-hover btn-purple" ng-click=""  ng-show="hasSpecialRequestAccess">
+				<span>Print Special Order {{ submitted_order_reference }}</span>
+				<i class="glyph-icon icon-plus"></i>
+			</button>
+			
+			<button class="btn btn-alt btn-hover btn-purple" ng-click=""  ng-hide="hasSpecialRequestAccess">
+				<span>Print Order {{ submitted_order_reference }}</span>
+				<i class="glyph-icon icon-plus"></i>
+			</button>
+			-->
+		</div>
+
+		<script type="text/ng-template" id="modal_item_detail">
+			<div class="modal-header">
+				<h3 class="modal-title">Item Detail</h3>
+			</div>
+			<div class="modal-body bg-white">
+				<div ng-show="!table_loading">
+					<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+					<div class="table-responsive">
+						<table class="table" ng-table="tableParams">
+							<tr ng:repeat="item in $data | filter: filter">
+								<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+								<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+								<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+								<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+								<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+								<td>
+									<!--<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item.item_code, item.item_name)">Pilih</button>-->
+									<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item)">Pilih</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div ng-show="table_loading">Loading...</div>
+				<!--
+				<tabset class="tabbable">
+					<tab heading="Standard">
+						<div ng-show="!table_loading">
+							<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+							<div class="table-responsive">
+								<table class="table" ng-table="tableParams">
+									<tr ng:repeat="item in $data | filter: filter">
+										<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+										<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+										<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+										<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+										<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+										<td>
+											<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item.item_code, item.item_name)">Pilih</button>
+											<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item)">Pilih</button>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div ng-show="table_loading">Loading...</div>
+					</tab>
+					<tab heading="Custom">
+						<div ng-show="customer">
+							<button class="btn btn-alt btn-hover btn-primary" ng-click="newCustomItem()"><span class="fa fa-plus"></span>Buat Baru</button><br>
+							<br>
+							<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+							<div class="table-responsive">
+								<table ng-table="tableParamsCustom" class="table">
+									<tbody ng-repeat="custom in $data">
+										<tr>
+											<td class="rowTd" data-title="'Kode Barang'" sortable="'id'">{{custom.item_code}}</td>
+											<td class="rowTd" data-title="'Nama'" sortable="'fn'">{{custom.name}}</td>
+											<td class="rowTd" data-title="'Kombinasi ItemID'" sortable="'ln'">{{custom.children.length}}</td>
+											<td class="rowTd" data-title="'UOM'" sortable="'dc'">{{custom.material_type}}</td>
+											<td class="rowTd" >
+												<div class="pull-right margin-right-10">
+													<button type=button class="btn btn-primary"
+															 ng-click="setItemCustom(custom)">Pilih</button>
+													<button type=button class="btn btn-primary btn-o"
+															 ng-click="open = false">Detail</button>
+												</div>
+											</td>
+										</tr>
+										<tr ng-show="open !== true" ng-if="custom.level==='N' || custom.level==='E'">
+											<td colspan="7" ng-include src="'assets/views/editRow.html'"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div ng-show="! customer">Pilih customer dahulu.</div>
+					</tab>
+				</tabset>
+				-->
+				<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="modal_child_item_detail">
+			<div class="modal-header">
+				<h3 class="modal-title">Item Detail</h3>
+			</div>
+			<div class="modal-body bg-white">
+			<div ng-show="!table_loading">
+				<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+				<div class="table-responsive">
+					<table class="table" ng-table="tableParams">
+						<tr ng:repeat="item in $data | filter: filter">
+							<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+							<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+							<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+							<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+							<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+							<td>
+								<button class="btn btn-alt btn-hover btn-primary" ng-click="setChildItemCode(item)">Pilih</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div ng-show="table_loading">Loading...</div>
+				<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="modal_customer_list">
+			<div class="modal-header">
+				<h3 class="modal-title">Daftar Customer</h3>
+			</div>
+			<div class="modal-body bg-white">
+				<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$"/>
+				<div class="table-responsive">
+					<table class="table" ng-table="customerListTableParams">
+						<tr ng:repeat="customer in $data | filter: search">
+							<td data-title="'Nama Customer'" sortable="'customer_name'">{{ customer.customer_name }}</td>
+							<td data-title="'Nama PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
+							<td data-title="'No Telp'" sortable="'phone_number'">{{ customer.phone_number }}</td>
+							<td data-title="'Email'" sortable="'customer_email'">{{ customer.customer_email }}</td>
+							<td>
+								<button class="btn btn-alt btn-hover btn-primary" ng-click="setCustomerIdToSearch(customer.customer_id)">Pilih</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="/cash.html">
+			<div class="row">
+				<div class="col-md-10">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Remark
+							</label>
+							<div class="col-sm-10">
+								<textarea class="col-sm-12" ng-model="order.payment_detail.remark"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-2">
+					<form role="form" class="form-horizontal">
+						<button class="btn btn-primary" type="submit">
+							Bayar
+						</button>
+						<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">
+							PAID
+						</button>
+						<br><br>
+						<button class="btn btn-primary" type="submit" ng-click="saveCart()">
+							Simpan Draft
+						</button>
+					</form>
+				</div>
+			</div>
+			
+		</script>
+
+		<script type="text/ng-template" id="/transfer.html">
+		  <div class="row">
+				<div class="col-md-10">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Bank
+							</label>
+							<div class="col-sm-10">
+							<select ng-model="order.payment_detail.bank_code" class="cs-skin-slide" ng-options="o.bank_code as +' ( '+ o.bank_code +' ) '+ o.bank_name for o in bankList"></select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Date
+							</label>
+							<div class="col-sm-10">
+								<input type="date" class="col-sm-12" ng-model="order.payment_detail.transfer_date">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Remark
+							</label>
+							<div class="col-sm-10">
+								<textarea class="col-sm-12" ng-model="order.payment_detail.remark"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-2">
+					<form role="form" class="form-horizontal">
+						<button class="btn btn-primary" type="submit">
+							Bayar
+						</button>
+						<br><br>
+						<button class="btn btn-primary" type="submit" ng-click="saveCart()">
+							Simpan Draft
+						</button>
+					</form>
+				</div>
+			</div>
+			
+		</script>
+
+		<script type="text/ng-template" id="/debit.html">
+		  <div class="row">
+				<div class="col-md-10">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Bank
+							</label>
+							<div class="col-sm-10">
+								<select ng-model="order.payment_detail.bank_code" class="cs-skin-slide" ng-options="o.bank_code as +' ( '+ o.bank_code +' ) '+ o.bank_name for o in bankList"></select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Card
+							</label>
+							<div class="col-sm-10">
+								<input type="text" class="col-sm-12" maxlength="16" ng-model="order.payment_detail.card_number" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Remark
+							</label>
+							<div class="col-sm-10">
+								<textarea class="col-sm-12" ng-model="order.payment_detail.remark"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-2">
+					<form role="form" class="form-horizontal">
+						<button class="btn btn-primary" type="submit">
+							Bayar
+						</button>
+						<br><br>
+						<button class="btn btn-primary" type="submit" ng-click="saveCart()">
+							Simpan Draft
+						</button>
+					</form>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="/credit.html">
+		  <div class="row">
+				<div class="col-md-10">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Bank
+							</label>
+							<div class="col-sm-10">
+								<select ng-model="order.payment_detail.bank_code" class="cs-skin-slide" ng-options="o.bank_code as +' ( '+ o.bank_code +' ) '+ o.bank_name for o in bankList"></select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Card
+							</label>
+							<div class="col-sm-10">
+								<input type="text" class="col-sm-12" maxlength="16" ng-model="order.payment_detail.card_number" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Remark
+							</label>
+							<div class="col-sm-10">
+								<textarea class="col-sm-12" ng-model="order.payment_detail.remark"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-2">
+					<form role="form" class="form-horizontal">
+						<button class="btn btn-primary" type="submit">
+							Bayar
+						</button>
+						<br><br>
+						<button class="btn btn-primary" type="submit" ng-click="saveCart()">
+							Simpan Draft
+						</button>
+					</form>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="/term.html">
+		  <div class="row">
+				<div class="col-md-10">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Term
+							</label>
+							<div class="col-sm-10">
+								30 days
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Remark
+							</label>
+							<div class="col-sm-10">
+								<textarea class="col-sm-12" ng-model="order.payment_detail.remark"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-2">
+					<form role="form" class="form-horizontal">
+						<button class="btn btn-primary" type="submit">
+							Bayar
+						</button>
+						<br><br>
+						<button class="btn btn-primary" type="submit" ng-click="saveCart()">
+							Simpan Draft
+						</button>
+					</form>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="/konsinyasi.html">
+			<div class="row">
+				<div class="col-md-9">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="inputEmail3">
+								Remark
+							</label>
+							<div class="col-sm-10">
+								<textarea class="col-sm-12" ng-model="order.payment_detail.remark"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-3">
+					<form role="form" class="form-horizontal">
+						<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">
+							Cetak Form Konsinyasi
+						</button>
+						<br><br>
+						<button class="btn btn-primary" type="submit" ng-click="saveCart()">
+							Simpan Draft
+						</button>
+					</form>
+				</div>
+			</div>
+			
+		</script>
+
+		
+		<script type="text/ng-template" id="modal_payment_receipt">
+			<div class="modal-header">
+				<h3 class="modal-title">Cetak Kwitansi Pembayaran</h3>
+			</div>
+			<div class="modal-body bg-white">
+				Apakah anda mau mencetak kwitansi pembayaran
+				<br>
+				<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+			</div>
+		</script>
+		
+</div><!-- End of Customer Row -->
+
+
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

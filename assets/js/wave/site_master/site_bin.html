@@ -1,0 +1,94 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Daftar Bin</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="SiteBinController">  
+
+<div class="container-fluid container-fullw bg-white">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<form class="form-horizontal">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="txtAddress" class="col-sm-2 control-label">Site ID</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="txtAddress" ng-model="site.site_reference" disabled>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="txtAddress" class="col-sm-2 control-label">Lokasi</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="txtAddress" ng-model="storage.storage_name" disabled>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="txtAddress" class="col-sm-2 control-label">Nama</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="txtAddress" ng-model="site.site_name" disabled>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="txtAddress" class="col-sm-2 control-label">Detail Lokasi</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="txtAddress" ng-model="storage.storage_details" disabled>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Bin</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table" ng-table="tableParams">
+								<tr ng:repeat="bin in $data">
+									<td data-title="'Lokasi'" sortable="'bin_name'">{{ bin.bin_name }}</td>
+									<td data-title="'Status'" sortable="'status'">{{ statusLabel(bin.status) }}</td>
+									<td class="col-sm-1">
+										<button class="btn btn-primary" ui-sref="app.master.site_bin_edit({bin_id: bin.bin_id })">
+											<span>Detail</span>
+											<i class="glyph-icon icon-close"></i>
+										</button>
+								</tr>
+							</table>
+							
+							<button class="btn btn-primary" ui-sref="app.master.site_bin_new({storage_id: storage.storage_id})">
+								<span>Buat Bin Baru</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

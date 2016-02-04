@@ -1,0 +1,67 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Sales Order Aktif</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="DeliveryActiveOrdersController">  
+
+<div class="container-fluid container-fullw">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="btn-group">
+				<button class="btn btn-primary" ng-click="tableFilter.status = ''">
+					<span>Semua</span>
+				</button>
+				<button class="btn btn-primary" ng-click="tableFilter.status = '!C'">
+					<span>Lain-lain</span>
+				</button>
+				<button class="btn btn-primary" ng-click="tableFilter.status = 'C'">
+					<span>Selesai</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<br/>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<input type="text" class="form-control" id="txtSearchTable" ng-model="tableFilter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="order in $data | filter: tableFilter">
+						<td data-title="'Status'" sortable="'status'">
+							<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span>
+						</td>
+						<td data-title="'Order Reference'" sortable="'order_reference'">{{ order.order_reference }}</td>
+						<td data-title="'Pengiriman Berikutnya'" sortable="'next_requested_delivery_date'">{{ order.next_requested_delivery_date }}</td>
+						<td data-title="'Rencana Pengiriman'" sortable="'no_of_delivery_requests'">{{ order.no_of_delivery_requests }}</td>
+						<!--<td data-title="'Jumlah Tipe Barang'">{{ order.no_of_item_types }}</td>-->
+						<td data-title="'Nama Customer'" sortable="'customer_name'">{{ order.customer_name }}</td>
+						<td data-title="'PIC'" sortable="'pic_name'">{{ order.pic_name }}</td>
+						<td data-title="'Tanggal Buat'" sortable="'date_created'">{{ order.date_created }}</td>
+						<!--<td data-title="'Tanggal Revisi'">{{ order.date_modified }}</td>-->
+						<td>
+							<button class="btn btn-primary" ui-sref="app.order.order_detail({order_id: '{{ order.order_id }}'})">
+								<span>Detail</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

@@ -1,0 +1,206 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Stock Status</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="stockStatusDetailController">  
+
+<div class="container-fluid container-fullw"> 	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Stock Status</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-4 control-label">Kode Barang (SKU)</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_code" disabled>
+										</div>
+									</div>
+								</div>
+								
+								 <div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-4 control-label">Tipe</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_type" disabled>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-4 control-label">Nama</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_name" disabled>
+										</div>
+									</div>
+								</div>
+								
+								 <div class="col-md-6">
+									<div class="form-group">
+										<label class="col-sm-4 control-label">Category</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_category" disabled>
+										</div>
+									</div>
+								</div>
+                            </div>
+							<div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">UOM</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" ng-model="item.item_unit" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6"><div class="col-sm-12"></div></div>
+							</div>
+						</form>
+						<span class="pull-right">
+							<button class="btn btn-alt btn-hover btn-primary" ui-sref="app.inventory.stock_status" >
+								<span>Kembali</span>
+								<i class="glyph-icon icon-plus"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlItems">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary"></h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+					<div class="panel-body">
+						<input class="form-control" type="text" data-ng-model="filterString"	placeholder="Filter" />
+						<br/>
+						<div class="table-responsive">
+							<tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs" expand-on="expanding_property" on-select="my_tree_handler(branch)" expand-level="2" icon-leaf= "glyphicon glyphicon-globe"></tree-grid>
+						</div>
+					</div>
+				</div>
+			</div>
+			<span class="pull-left">
+				<button class="btn btn-alt btn-hover btn-primary" ui-sref="app.inventory.stock_status" >
+					<span>Kembali</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</span> 
+		</div>
+	</div>
+	<script type="text/ng-template" id="bantuan_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Keterangan</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<div class="panel-body">
+				<header></header>                  
+				<tabset class="tabbable">
+					<tab heading="Umum">
+						<p>
+							<strong>No Dokumen</strong><br>
+							Merupakan nomor dokumen yang menjadi referensi user dalam meakukan posting.
+							<br><br>
+							<strong>Tanggal Posting</strong><br>
+							Tanggal dimana dokumen yang bersangkutan dicatat kedalam system
+							<br><br>
+							<strong>Jumlah</strong><br>
+							Jumlah yang diposting
+							<br><br>
+							<strong>UOM</strong><br>
+							Unit of Measure/ Satuan jumlah yang digunakan pada saat posting
+							<br><br>
+							<strong>UOM Dasar</strong><br>
+							Unit of Measure/ Satuan jumlah yang merupakan dasar sebagaimana ditentukan dalam material master
+							<br><br>
+							<strong>PO/SO</strong><br>
+							Purchase Order/ Sales Order yang menjadi referensi dalam posting (apabila ada)
+							<br><br>
+							<strong>User</strong><br>
+							yang melakukan posting
+							<br><br>
+							<strong>Tipe</strong><br>
+							Tipe posting yang dilakukan
+							<br><br>
+							<strong>Nilai dalam IDR</strong><br>
+							Nilai posting dalam Rupiah sebagaimana didalam material master pada saat posting terjadi
+							<br><br>
+						</p>
+					</tab>
+					<tab heading="Tipe">
+						<p>
+							<strong>Goog Receive - 10</strong><br>
+							Pemasukan stock kedalam stock, berdasarkan hasil produksi maupun pergerakan lainnya.
+							<br><br>
+							<strong>Good receive - 11</strong><br>
+							Pemasukan stock kedalam stock, berdasarkan hasil produksi maupun pergerakan lainnya (pembatalan).
+							<br><br>
+							<strong>Good Issue - 12</strong><br>
+							Pengeluaran stock kedalam stock, berdasarkan penjualan maupun pergerakan transfer internal.
+							<br><br>
+							<strong>Good Issue - 13</strong><br>
+							Pengeluaran stock kedalam stock, berdasarkan penjualan maupun pergerakan transfer internal (pembatalan).
+							<br><br>
+							<strong>Transfer tersedia ke quality - 20</strong><br>
+							Transfer stock dari status barang tersedia menjadi quality.
+							<br><br>
+							<strong>Transfer tersedia ke quality (balik) - 21</strong><br>
+							Transfer stock dari status barang tersedia menjadi quality (pengembalian).
+							<br><br>
+							<strong>Transfer tersedia ke block - 30</strong><br>
+							Transfer stock dari status barang tersedia menjadi block.
+							<br><br>
+							<strong>Transfer tersedia ke block (balik) - 31</strong><br>
+							Transfer stock dari status barang tersedia menjadi block (pengembalian).
+							<br><br>
+							<strong>Penyesuaian Stock Masuk - 40</strong><br>
+							penyesuaian stock dimana terjadi penambahan terhadap stock yang ada.
+							<br><br>
+							<strong>Penyesuaian Stock Masuk (batal) - 41</strong><br>
+							Penyesuaian stock dimana terjadi penambahan terhadap stock yang ada (pembatalan).
+							<br><br>
+							<strong>Penyesuaian Stock Keluar - 50</strong><br>
+							Penyesuaian stock dimana terjadi pengeluaran terhadap stock yang ada.
+							<br><br>
+							<strong>Penyesuaian Stock Keluar (batal) - 51</strong><br>
+							penyesuaian stock dimana terjadi pengeluaran terhadap stock yang ada (pembatalan).
+							<br><br>
+							<strong>Penghapusan Stock - 60</strong><br>
+							Penghapusan stock dari fisik dan pembukuan.
+							<br><br>
+							<strong>Penghapusan stock (batal) - 61</strong><br>
+							Penghapusan stock dari fisik dan pembukuan (pembatalan).
+							<br><br>
+						</p>
+					</tab>
+				</tabset>
+			</div>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+<!-- End of Customer Row -->
+</div>
+<!-- end: YOUR CONTENT HERE -->

@@ -1,0 +1,175 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Stock Status</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="StockStatusController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<form class="form-horizontal" ng-submit="submitSearch()">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Kode Barang (SKU)<span class="symbol required"></span></label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<!--<input type="text" class="form-control" ng-model="search.searchItem" typeahead="itemLU.item_code as itemLU.item_code + ' - ' + itemLU.item_name for itemLU in itemList | filter:$viewValue | limitTo:30">-->
+							<input type="text" class="form-control" ng-model="search.searchItem" typeahead="itemLU.item_code as itemLU.item_code + ' - ' + itemLU.item_name for itemLU in itemList | filter:$viewValue | limitTo:30"/>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-primary" ng-click="itemListModal()"><i class="fa fa-search"></i></button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Site ID</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<!--<input type="text" class="form-control" id="txtSearchCustomer" ng-model="search.searchSite" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" />-->
+							<input type="text" class="form-control" ng-model="search.searchSite"/>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-primary" ng-click="siteListModal()">
+									<i class="fa fa-search"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Lokasi</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<!--<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" />-->
+							<input type="text" class="form-control" ng-model="search.searchStorage" ng-disabled="! search.searchSite"/>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-primary" ng-click="storageListModal(search.searchSite)" ng-disabled="! search.searchSite">
+									<i class="fa fa-search"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+					<label class="col-sm-2 control-label">{{attrib.attribute_name}}</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<!--<input type="text" class="form-control" id="txtSearchCustomer" ng-model="search.searchSite" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" />-->
+							<input type="text" class="form-control" ng-model="search[attrib.attribute_name]"/>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-primary" ng-click="attributeModal(attrib.attribute_name)">
+									<i class="fa fa-search"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				
+				<button type="submit" class="btn btn-primary">Cari</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/ng-template" id="modal_item_list">
+	<div class="modal-header">
+		<h3 class="modal-title">Item Detail</h3>
+	</div>
+	<div class="modal-body bg-white">
+		<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+		<div class="table-responsive">
+			<table class="table" ng-table="tableParams">
+				<tr ng:repeat="item in $data | filter: filter" ng-class="{ 'info': item.selected }">
+					<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+					<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+					<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+					<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+					<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+					<td>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item.item_code)">Pilih</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<button class="btn btn-primary" ng-click="closeModal()">Tutup</button
+	</div>
+</script>
+
+<script type="text/ng-template" id="modal_site_list">
+	<div class="modal-header">
+		<h3 class="modal-title">Site Detail</h3>
+	</div>
+	<div class="modal-body bg-white">
+		<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+		<div class="table-responsive">
+			<table class="table" ng-table="tableParams">
+				<tr ng:repeat="site in $data | filter: filter" ng-class="{ 'info': site.selected }">
+					<td data-title="'Kode Barang'" sortable="'site_reference'">{{ site.site_reference }}</td>
+					<td data-title="'Nama Barang'" sortable="'site_name'">{{ site.site_name }}</td>
+					<td class="col-md-2">
+						<button class="btn btn-alt btn-hover btn-primary" ng-if="!site.selected" ng-click="site.selected=true">Pilih</button>
+						<button class="btn btn-alt btn-hover btn-danger" ng-if="site.selected" ng-click="site.selected=false">Batal</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+		<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+	</div>
+</script>
+
+    <script type="text/ng-template" id="modal_storage_list">
+        <div class="modal-header">
+            <h3 class="modal-title">Storage Detail</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+            <div class="table-responsive">
+                <table class="table" ng-table="tableParams">
+                    <tr ng:repeat="location in $data | filter: filter" ng-class="{ 'info': location.selected }">
+                        <td data-title="'Nama Lokasi'" sortable="'location'">{{ location.storage_name }}</td>
+                        <td class="col-md-2">
+                            <button class="btn btn-alt btn-hover btn-primary" ng-if="!location.selected" ng-click="location.selected=true">Pilih</button>
+                            <button class="btn btn-alt btn-hover btn-danger" ng-if="location.selected" ng-click="location.selected=false">Batal</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+            <button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+        </div>
+    </script>
+		
+<script type="text/ng-template" id="modal_attribute_value_list">
+	<div class="modal-header">
+		<h3 class="modal-title">Daftar {{attributeName}}</h3>
+	</div>
+	<div class="modal-body bg-white">
+		<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+		<div class="table-responsive">
+			<table class="table" ng-table="tableParams">
+				<tr ng:repeat="attributeValue in $data | filter: filter" ng-class="{ 'info': attributeValue.selected }">
+					<td data-title="'Nama'" sortable="'attribute_value'">{{ attributeValue.attribute_value }}</td>
+					<td class="col-md-1">
+						<button class="btn btn-alt btn-hover btn-primary" ng-if="!attributeValue.selected" ng-click="attributeValue.selected=true">Pilih</button>
+						<button class="btn btn-alt btn-hover btn-danger" ng-if="attributeValue.selected" ng-click="attributeValue.selected=false">Batal</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+		<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+	</div>
+</script>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

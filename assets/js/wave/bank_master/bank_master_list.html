@@ -1,0 +1,52 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Bank Master</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="BankMasterListController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="bank in $data">
+						<td data-title="'Nama'" sortable="'account_name'">{{ bank.account_name }}</td>
+						<td data-title="'Nama Bank'" sortable="'bank_name'">{{ bank.bank_name }}</td>
+						<td data-title="'Nomor Rekening'" sortable="'account_number'">{{ bank.account_number }}</td>
+						<td data-title="'TT'" sortable="'tt'">{{ bank.tt }}</td>
+						<td data-title="'KK'" sortable="'kk'">{{ bank.kk }}</td>
+						<td data-title="'KD'" sortable="'kd'">{{ bank.kd }}</td>
+						<td>
+							<button class="btn btn-primary" ui-sref="app.master.bank_edit({bank_id: '{{ bank.bank_id }}'})">
+								<span>Detail</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+				
+				<button class="btn btn-primary" ui-sref="app.master.bank_new">
+					<span>Buat Bank Baru</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

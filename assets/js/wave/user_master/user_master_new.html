@@ -1,0 +1,60 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Create New User</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="UserMasterNewController">  
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<form role="form" class="form-horizontal" ng-submit="insertUser()">
+					<div class="form-group" ng-class="{'has-error': !usernameAvailable}">
+						<label class="col-sm-2 control-label" for="inputEmail3">Username</label>
+						<div class="col-sm-8">
+							<input type="text" placeholder="Username" id="inputEmail3" class="form-control" ng-model="user.username" ng-blur="isUsernameAvailable()">
+							<span class="error text-small block" ng-show="!usernameAvailable">Username not available</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="inputEmail3">Full Name</label>
+						<div class="col-sm-8">
+							<input type="text" placeholder="Full Name" id="inputEmail3" class="form-control" ng-model="user.full_name">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="inputEmail3">Email</label>
+						<div class="col-sm-8">
+							<input type="text" placeholder="Enter a Valid Email" id="inputEmail3" class="form-control ng-dirty ng-invalid ng-valid-email ng-invalid-required ng-touched" ng-model="user.email">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="inputEmail3">Password</label>
+						<div class="col-sm-8">
+							<input type="password" placeholder="Password" id="inputEmail3" class="form-control" ng-model="user.password">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="inputEmail3">Repeat Password</label>
+						<div class="col-sm-8">
+							<input type="password" placeholder="Ulangi Password" id="inputEmail3" class="form-control" ng-model="user.repeatedPassword">
+						</div>
+					</div>
+					
+					<button type="submit" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-danger" ui-sref="app.master.user">Cancel</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

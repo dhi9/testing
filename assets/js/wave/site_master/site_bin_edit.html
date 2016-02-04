@@ -1,0 +1,92 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="SiteBinEditController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Ubah Bin</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-primary pull-right" ng-click="historyModal()">
+					<span>History</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-1 control-label">Bin</label>
+						<div class="col-sm-11">
+							<input type="text" class="form-control" id="txtAddress" ng-model="bin.bin_name" disabled/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-1 control-label">Status</label>
+						<div class="col-sm-2">
+							<select class="form-control" ng-model="bin.status">
+								<option value="A">Aktif</option>
+								<option value="N">Non Aktif</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="updateBin()">
+					<span>Simpan</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.site_bin({ storage_id: bin.storage_id })">
+					<span>Batal</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="history_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">History Bin</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Tanggal</th>
+						<th>Waktu</th>
+						<th>User</th>
+						<th>Bagian</th>
+						<th>Field</th>
+						<th>Data Lama</th>
+						<th>Data Baru</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="history in historyList">
+						<td>{{ history.datetime | date:'dd/MM/yy'}}</td>
+						<td>{{ history.datetime | date:'H:mm'}}</td>
+						<td>{{ history.username }}</td>
+						<td>{{ history.section }}</td>
+						<td>{{ history.field }}</td>
+						<td>{{ history.old_data }}</td>
+						<td>{{ history.new_data }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

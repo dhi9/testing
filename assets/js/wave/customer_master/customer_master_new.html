@@ -1,0 +1,150 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="CustomerMasterNewController">
+
+    <section id="page-title" class="padding-top-15 padding-bottom-15" >
+        <div class="row">
+            <div class="col-sm-7">
+                <h1 class="mainTitle">Customer Baru</h1>
+            </div>
+            <div ncy-breadcrumb></div>
+        </div>
+    </section>
+    <!-- end: PAGE TITLE -->
+
+    <!-- start: YOUR CONTENT HERE -->
+
+    <div class="container-fluid container-fullw">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white" id="pnlCustomerDetail">
+                    <div class="panel-heading border-light">
+                        <h4 class="panel-title text-primary">Detail Customer</h4>
+                        <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                    </div>
+                    <div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="txtCustomerName" class="col-sm-2 control-label">Nama Customer</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="txtCustomerName" ng-model="customer.customer_name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="txtPICName" ng-model="customer.pic_name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="txtAddress" ng-model="customer.address">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="txtPhoneNumber" ng-model="customer.phone_number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="txtCity" ng-model="customer.city">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="txtPostcode" ng-model="customer.postcode">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="txtEmail" ng-model="customer.customer_email">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="txtFaxNumber" ng-model="customer.fax_number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white" id="pnlCustomerDescription">
+                    <div class="panel-heading border-light">
+                        <h4 class="panel-title text-primary">Alamat Pengiriman</h4>
+                        <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                    </div>
+                    <div collapse="pnlCustomerDescription" ng-init="pnlCustomerDescription=false" class="panel-wrapper">
+                        <div class="panel-body">
+                            <div class="table-responsive" ng-show="customerDeliveryAddressList.length > 0">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Deskripsi</th>
+                                            <th>Alamat</th>
+                                            <th>PIC Pengiriman</th>
+                                            <th class="col-md-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in customerDeliveryAddressList">
+                                            <td>{{ item.description }}</td>
+                                            <td>{{ item.delivery_address }}</td>
+                                            <td>{{ item.pic_name }}</td>
+                                            <td>
+                                                <button class="btn btn-alt btn-hover btn-primary" ng-click="displayEditCustomerModal(item)">Detail</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-alt btn-hover btn-primary pull-left" ng-click="displayNewCustomerModal()"><i class="ti-plus"></i>&nbsp;Tambah Alamat</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" ng-click="insertCustomer()">Simpan</button>
+        <button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.customer_list">Batal</button>
+    </div>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

@@ -1,0 +1,66 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Laporan On Time Delivery</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="OnTimeDeliveryReportController">  
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-md-12">
+			<form role="form" class="form-inline">
+				<div class="form-group">
+					<label>Dari Tanggal</label>
+					<input type="date" placeholder="Tanggal Awal" class="form-control" ng-model="search.start_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+				</div>
+				<div class="form-group">
+					<label>Sampai Tanggal</label>
+					<input type="date" placeholder="Tanggal Akhir" class="form-control" ng-model="search.end_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+				</div>
+				<button class="btn btn-primary" ng-click="applySearch()">Cari</button>
+				<button class="btn btn-primary pull-right" ng-click="exportToCSV()">Export to CSV</button>
+			</form>
+			<br/>
+			<div ng-show="table_loading">Loading...</div>
+			<div ng-show="!table_loading">
+				<input type="text" class="form-control" placeholder="Filter" id="txtSearchTable" ng-model="tableFilter.$"/>
+				<br/>
+				<div class="table-responsive">
+					<table ng-table="tableParams" class="table table-bordered" export-csv='csv'>
+						<tr ng:repeat="report in $data | filter: tableFilter">
+							<td data-title="'No Surat Jalan' "sortable="'delivery_reference'">{{ report.delivery_reference }}</td>
+							<td data-title="'No Order'" sortable="'order_reference'">{{ report.order_reference }}</td>
+							<td data-title="'Status'" sortable="'status'">{{ UTILgetStatusLabel(report.delivery_status, 'DELIVERY'); }}</td>
+							<td data-title="'Nama Customer'" sortable="'customer_name'">{{ report.customer_name }}</td>
+							<td data-title="'Alamat Pengiriman'" sortable="'requested_delivery_address'">{{ report.requested_delivery_address }}</td>
+							<td data-title="'Asal Pengiriman'" sortable="'delivery_source'">{{ report.delivery_source }}</td>
+							<td data-title="'Pengangkut'" sortable="'delivery_provider'">{{ report.delivery_provider }}</td>
+							<td data-title="'Supir'" sortable="'driver_name'">{{ report.driver_name }}</td>
+							<td data-title="'No Truk'" sortable="'truck_code'">{{ report.truck_code }}</td>
+							<td data-title="'Rencana Pemuatan'" sortable="'loading_date_ORDERBY'">{{ report.loading_date }}</td>
+							<td data-title="'Pemuatan Ke Truk'" sortable="'actual_loading_date_ORDERBY'">{{ report.actual_loading_date }}</td>
+							<td data-title="'Pengiriman Tiba'" sortable="'arrival_date_ORDERBY'">{{ report.arrival_date }}</td>
+							<td data-title="'Pengiriman Selesai'" sortable="'confirmation_date_ORDERBY'">{{ report.confirmation_date }}</td>
+							<td data-title="'OTD OT/LT'" sortable="'otd'">
+								<span ng-show="{{ report.confirmation_date }}">{{ report.otd }}</span></td>
+							<td data-title="'OTD Durasi'" sortable="'otd_duration'">{{ report.otd_duration }}</td>
+							<td data-title="'OTD(%)'" sortable="'otd_percent'">{{ report.otd_percent }}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

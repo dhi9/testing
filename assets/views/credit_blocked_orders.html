@@ -1,0 +1,46 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Order Dengan Credit Block</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="CreditBlockListByOrderController">  
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<div ng-show="table_loading">Loading...</div>
+				<div ng-show="!table_loading">
+					<input type="text" class="form-control" id="txtSearchTable" ng-model="tableFilter.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="tableParams">
+							<tr ng-repeat="order in $data | filter: tableFilter">
+								<td data-title="'Order Reference'" sortable="'order_reference'">{{ order.order_reference }}</td>
+								<td data-title="'Customer Name'" sortable="'customer_name'">{{ order.customer_name }}</td>
+								<td data-title="'PIC Name'" sortable="'pic_name'">{{ order.pic_name }}</td>
+								<td data-title="'Requested Delivery Date'" sortable="'requested_delivery_date_ORDERBY'">{{ order.requested_delivery_date }}</td>
+								<td>
+									<button class="btn btn-primary" ui-sref="app.creditblock.edit_credit_block({customer_id: '{{ order.customer_id }}'})">
+										<span>Atur</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

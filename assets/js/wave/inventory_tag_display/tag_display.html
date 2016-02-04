@@ -1,0 +1,95 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Tag Display</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="TagDisplayController">
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<div ng-show="table_loading">Loading...</div>
+				<div ng-show="!table_loading">
+					<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="tableParams">
+							<tr ng:repeat="tag in $data | filter: search">
+								<td class="col-md-6" data-title="'Nama tag'" sortable="'tag_name'">{{ tag.tag_name }}</td>
+								<td class="col-md-2" data-title="'Stock'" sortable="'stock'">{{ tag.stock }}</td>
+								<td class="col-md-4">
+                                    <button class="btn btn-primary" ui-sref="app.inventory.stock_display({tag_id: '{{ tag.tag_id }}'})">
+                                        <span>Lihat Produk</span>
+                                        <i class="glyph-icon icon-close"></i>
+                                    </button>
+									<button class="btn btn-primary" ng-click="displayEditTagModal(tag)">
+										<span>Edit</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+									<button class="btn btn-danger" ng-click="removeTag(tag)">
+										<span>Hapus</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary" ng-click="displayNewTagModal()">
+                    <span>Buat Tag Baru</span>
+                </button>
+            </div>
+        </div>
+	</div>
+	<script type="text/ng-template" id="edit_tag_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Edit Tag</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<form role="form" class="form-horizontal" ng-submit="updateTag(tag)">
+				<div class="form-group">
+					<div class="col-sm-12">
+						<label class="col-sm-2 label-control" id="edit">Nama Tag</label>
+						<input type="text" class="col-sm-9" id="edit" ng-model="tag.tag_name">
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+	
+	
+	<script type="text/ng-template" id="new_tag_modal">
+        <div class="modal-header">
+            <h3 class="modal-title">New Tag</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal" ng-submit="insertTag(tag)">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-2 label-control" id="new">Nama Tag</label>
+                        <input type="text" class="col-sm-9" id="new" ng-model="tag.tag_name">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+            </form>
+        </div>
+	</script>
+	
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

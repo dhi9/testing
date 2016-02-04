@@ -1,0 +1,50 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Pengiriman Baru / Order Untuk Dikirim</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="NewDeliveryListController">  
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-md-12">
+			<div ng-show="table_loading">Loading...</div>
+			<div ng-show="!table_loading">
+				<input type="text" class="form-control" id="txtSearchTable" ng-model="tableFilter.$" placeholder="Filter"/>
+				<br/>
+				<div class="table-responsive">
+					<table class="table" ng-table="tableParams">
+						<tr ng:repeat="deliveryRequest in $data | filter: tableFilter">
+							<td data-title="'Status'" sortable="'status'">
+								<span class="label {{ UTILgetStatusClass(deliveryRequest.status, 'DELIVERYREQUEST'); }}">{{ UTILgetStatusLabel(deliveryRequest.status, 'DELIVERYREQUEST'); }}</span>
+							</td>
+							<td data-title="'Order Reference'" sortable="'deliveryRequest_reference'">{{ deliveryRequest.order_reference }}</td>
+							<td data-title="'Pengiriman Berikutnya'" sortable="'requested_delivery_date_ORDERBY'">{{ deliveryRequest.requested_delivery_date }}</td>
+							<td data-title="'Rencana Pengiriman'" sortable="''">{{deliveryRequest.sequence}}({{ deliveryRequest.delivery_request_total }})</td>
+							<td data-title="'Nama Customer'" sortable="'customer_name'">{{ deliveryRequest.customer_name }}</td>
+							<td data-title="'Tanggal Order'" sortable="'date_created_order_ORDERBY'">{{ deliveryRequest.date_created_order }}</td>
+							<td>
+								<button data-title="'Pengiriman'" class="btn btn-primary" ui-sref="app.delivery.new_delivery({delivery_request_id: deliveryRequest.delivery_request_id })">
+									<span>Detail</span>
+									<i class="glyph-icon icon-close"></i>
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

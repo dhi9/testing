@@ -1,0 +1,54 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Site Master</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="SiteMasterController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="site in $data">
+						<td data-title="'Site ID'" sortable="'site_reference'">{{ site.site_reference }}</td>
+						<td data-title="'Nama'" sortable="'site_name'">{{ site.site_name }}</td>
+						<!--<td data-title="'Tipe'" sortable="'type'">{{ site.type }}</td>-->
+						<td class="col-sm-2" data-title="'Status'" sortable="'statusLabel'">{{ site.statusLabel }}</td>
+						<td class="col-sm-3">
+							<button class="btn btn-primary" ui-sref="app.master.site_edit({reference: '{{ site.site_reference }}'})">
+								<span>Detail</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+							<button class="btn btn-primary" ui-sref="app.master.site_locations({reference: '{{ site.site_reference }}'})">
+								<span>Daftar Lokasi</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+				
+				<button class="btn btn-primary" ui-sref="app.master.site_new">
+					<span>Buat Site Baru</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

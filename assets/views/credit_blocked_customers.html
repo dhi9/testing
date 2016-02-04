@@ -1,0 +1,43 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Customer Dengan Credit Block</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="CreditBlockListByCustomerController">  
+
+	<div class="container-fluid container-fullw bg-white">
+		<div ng-show="table_loading">Loading...</div>
+		<div ng-show="!table_loading">
+			<input type="text" class="form-control" id="txtSearchTable" ng-model="tableFilter.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng-repeat="customer in $data | filter: tableFilter">
+						<td data-title="'Customer ID'" sortable="'customer_id'">{{ customer.customer_id }}</td>
+						<td data-title="'Nama Customer'" sortable="'customer_name'">{{ customer.customer_name }}</td>
+						<td data-title="'Nama PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
+						<td data-title="'No Telp'" sortable="'phone_number'">{{ customer.phone_number }}</td>
+						<td data-title="'Email'" sortable="'customer_email'">{{ customer.customer_email }}</td>
+						<td>
+							<button class="btn btn-primary" ui-sref="app.creditblock.edit_credit_block({customer_id: '{{ customer.customer_id }}'})">
+								<span>Atur</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

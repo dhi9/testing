@@ -1,0 +1,89 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Test</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="qrCodeGeneratorController">  
+
+<div class="container-fluid container-fullw">
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="panel panel-white" id="pnlCustomerDetail">
+						<div class="panel-heading border-light">
+							<h4 class="panel-title text-primary">QR Code</h4>
+							<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+						</div>
+						<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+							<div class="panel-body">
+								<form class="form-horizontal">
+	
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="data" class="col-sm-2 control-label">Data</label>
+												<div class="col-sm-10">													
+													<textarea class="form-control underline autosize area-animated msd-elastic: \n; ng-valid ng-dirty ng-valid-parse ng-touched" id="data" ng-model="qrCode.qrvalue" maxlength="2953"
+															style="overflow: hidden; word-wrap: break-word; resize: horizontal;"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="size" class="col-sm-2 control-label">Size</label>
+												<div class="col-sm-10">													
+													<input type="number" class="form-control underline" id="size" ng-model="qrCode.size">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="version" class="col-sm-2 control-label">Version</label>
+												<div class="col-sm-10">												
+													<input type="number" class="form-control underline" id="version" ng-model="qrCode.version" min="1" max="40">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="level" class="col-sm-2 control-label">Level</label>
+												<div class="col-sm-10">
+													<select class="form-control underline" id="level" ng-model="qrCode.level"
+															ng-options="option.version as option.name for option in [{name:'Low', version:'L'},{name:'Medium', version:'M'},{name:'Quartile', version:'Q'},{name:'High', version:'H'}]"
+															></select>
+												</div>
+											</div>
+										</div>
+									</div>
+	
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					
+					<qrcode version="{{qrCode.version}}" error-correction-level="{{qrCode.level}}" size="{{qrCode.size}}" data="{{qrCode.qrvalue}}" download></qrcode>
+				</div>
+			</div>
+
+	                         
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

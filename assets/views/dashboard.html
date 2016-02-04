@@ -1,0 +1,236 @@
+<!-- start: DASHBOARD TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle" translate="dashboard.WELCOME" translate-values="{ appName: app.name }">{{ mainTitle }}</h1>
+			<span class="mainDescription">overview &amp; stats </span>
+		</div>
+		<div class="col-sm-5">
+			<!-- start: MINI STATS WITH SPARKLINE -->
+			<ul class="mini-stats pull-right" ng-controller="SparklineCtrl">
+				<li>
+					<div class="sparkline">
+						<span jq-sparkline ng-model="totalMonthlyOrder" type="bar" height="20px" bar-color="#D43F3A"></span>
+					</div>
+					<div class="values">
+						<strong class="text-dark">{{ totalOrder }}</strong>
+						<p class="text-small no-margin">
+							Sales Order
+						</p>
+					</div>
+				</li>
+				<li>
+					<div class="sparkline">
+						<span jq-sparkline ng-model="totalMonthlyDelivery" type="bar" height="20px" bar-color="#5CB85C"></span>
+					</div>
+					<div class="values">
+						<strong class="text-dark">{{ totalDelivery }}</strong>
+						<p class="text-small no-margin">
+							Pengiriman
+						</p>
+					</div>
+				</li>
+				<li>
+					<div class="sparkline">
+						<span jq-sparkline ng-model="deliveryRequestsAccuracy" type="bar" height="20px" bar-color="#46B8DA"></span>
+					</div>
+					<div class="values">
+						<strong class="text-dark">{{ totalDeliveryRequest | number:0 }}&#37;</strong>
+						<p class="text-small no-margin">
+							On Time Delivery
+						</p>
+					</div>
+				</li>
+			</ul>
+			<!-- end: MINI STATS WITH SPARKLINE -->
+		</div>
+	</div>
+</section>
+<!-- end: DASHBOARD TITLE -->
+<!-- start: FEATURED BOX LINKS -->
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="panel panel-white no-radius text-center">
+				<div class="panel-body">
+					<span class="fa-stack fa-2x"><a ui-sref="app.order.new_draft_order"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-money fa-stack-1x fa-inverse"></i> </a></span>
+					<h2 class="StepTitle"><a ui-sref="app.order.new_draft_order">Buat Draft Order</a></h2>
+					<p class="text-small">
+						Untuk membuat Draft Order baru.
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="panel panel-white no-radius text-center">
+				<div class="panel-body">
+					<span class="fa-stack fa-2x"><a ui-sref="app.delivery.order_to_deliver"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-truck fa-stack-1x fa-inverse"></i> </a></span>
+					<h2 class="StepTitle"><a ui-sref="app.delivery.order_to_deliver">Atur Pengiriman</a></h2>
+					<p class="text-small">
+						Untuk membuat Surat Jalan dan mengatur pengiriman.
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="panel panel-white no-radius text-center">
+				<div class="panel-body">
+					<span class="fa-stack fa-2x"><a ui-sref="app.delivery.active_delivery"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-road fa-stack-1x fa-inverse"></i> </a></span>
+					<h2 class="StepTitle"><a ui-sref="app.delivery.active_delivery">Update Status</a></h2>
+					<p class="text-small">
+						Untuk menambahkan perkembangan dari pengiriman.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end: FEATURED BOX LINKS -->
+<!-- start: FIRST SECTION -->
+<div class="container-fluid container-fullw padding-bottom-10">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-md-7 col-lg-8">
+					<div class="panel panel-white no-radius" id="visits">
+						<div class="panel-heading border-light">
+							<h4 class="panel-title"> Statistik </h4>
+							<ul class="panel-heading-tabs border-light">
+								<li class="panel-tools">
+									<ct-paneltool tool-refresh="load1"></ct-paneltool>
+								</li>
+							</ul>
+						</div>
+						<div collapse="visits" ng-init="visits=false" class="panel-wrapper">
+							<div class="panel-body">
+								<div ng-controller="VisitsCtrl" class="height-200">
+									<canvas class="tc-chart" tc-chartjs-line chart-options="options" chart-data="data" chart-legend="chart1" width="100%"></canvas>
+									<div class="margin-top-20">
+										<div tc-chartjs-legend chart-legend="chart1" class="inline pull-left"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-5 col-lg-4">
+					<div class="panel panel-white no-radius">
+						<div class="panel-heading border-light">
+							<h4 class="panel-title"> Status Pengiriman Hari Ini </h4>
+						</div>
+						<div class="panel-body" ng-controller="DeliveryStatusCtrl">
+							<div>
+								<h3 class="inline-block no-margin">{{ total.a || 0 }}</h3>
+								Dibuat
+								<progressbar value="total.a || 0" class="progress-xs no-radius" type="default"></progressbar>
+							</div>
+							<br/>
+							<div>
+								<h3 class="inline-block no-margin">{{ total.l || 0 }}</h3>
+								Pemuatan
+								<progressbar value="total.l || 0" class="progress-xs no-radius" type="warning"></progressbar>
+							</div>
+							<br/>
+							<div>
+								<h3 class="inline-block no-margin">{{ total.s || 0 }}</h3>
+								Tiba
+								<progressbar value="total.s || 0" class="progress-xs no-radius" type="info"></progressbar>
+							</div>
+							<br/>
+							<div>
+								<h3 class="inline-block no-margin">{{ total.c || 0 }}</h3>
+								Selesai
+								<progressbar value="total.c || 0" class="progress-xs no-radius" type="success"></progressbar>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end: FIRST SECTION -->
+<!-- start: THIRD SECTION -->
+<div class="container-fluid container-fullw padding-bottom-10">
+	<div class="row" >
+		<div class="col-sm-12">
+			<div class="panel panel-white no-radius">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title">Pengiriman</h4>
+				</div>
+				<div class="panel-body no-padding" ng-controller="DisplayDeliveryCtrl">
+					<tabset class="tabbable no-padding no-margin">
+						<tab heading="Pengiriman Hari Ini" class="padding-top-5 padding-left-5">
+							<div class="panel-scroll height-200" perfect-scrollbar wheel-propagation="false" suppress-scroll-x="true">
+								<table class="table no-margin">
+									<thead>
+										<th>Order Reference</th>
+										<th>Delivery Reference</th>
+										<th>Customer Name</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="delivery in todayDeliveries">
+											<td>{{ delivery.order_reference }}</td>
+											<td>{{ delivery.delivery_reference }}</td>
+											<td>{{ delivery.customer_name }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</tab>
+						<tab heading="Jadwal Pengiriman" class="padding-top-5">
+							<div class="panel-scroll height-200" perfect-scrollbar wheel-propagation="false" suppress-scroll-x="true">
+								<table class="table no-margin">
+									<thead>
+										<th>Tanggal Pemuatan</th>
+										<th>Order Reference</th>
+										<th>Delivery Reference</th>
+										<th>Customer Name</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="delivery in activeDeliveries">
+											<td>{{ delivery.loading_date }}</td>
+											<td>{{ delivery.order_reference }}</td>
+											<td>{{ delivery.delivery_reference }}</td>
+											<td>{{ delivery.customer_name }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</tab>
+					</tabset>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end: THIRD SECTION -->
+<!-- start: SECOND SECTION -->
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="panel panel-white no-radius">
+				<div class="panel-body" ng-controller="NotReturnedDeliveriesCtrl">
+					<div class="partition-light-grey padding-15 text-center margin-bottom-20">
+						<h4 class="no-margin">Surat Jalan Belum Kembali</h4>
+					</div>
+					<table class="table no-margin">
+						<thead>
+							<th>Delivery Reference</th>
+							<th>No.Truk</th>
+							<th>Supir</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="delivery in deliveries">
+								<td>{{ delivery.delivery_reference }}</td>
+								<td>{{ delivery.truck_code }}</td>
+								<td>{{ delivery.driver_name }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end: SECOND SECTION -->

@@ -1,0 +1,7 @@
+============
+VONTIS 1.5
+10/26/2015
+============
+New Features
+------------
+Add Combined Item Module.

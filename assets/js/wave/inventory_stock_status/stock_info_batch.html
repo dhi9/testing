@@ -1,0 +1,144 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Info Batch</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="stockInfoBatchController">  
+
+<div class="container-fluid container-fullw"> 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Info Batch</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail"  class="panel-wrapper">
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-4 control-label">Kode Barang (SKU)</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_code" disabled>
+										</div>
+									</div>
+								</div>
+								 <div class="col-md-6">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Tipe</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_type" disabled>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-4 control-label">Nama</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_name" disabled>
+										</div>
+									</div>
+								</div>
+								 <div class="col-md-6">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Category</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_category" disabled>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-4 control-label">UOM Dasar</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_unit"  disabled>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<hr>
+				<div class="panel-body">
+					<form class="form-horizontal">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="txtCustomerName" class="col-sm-4 control-label">Batch</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-model="batchs.batch_reference"  disabled>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="txtCustomerName" class="col-sm-4 control-label">Tanggal produksi</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-model="batchs.production_date"  disabled>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="txtCustomerName" class="col-sm-4 control-label">Tanggal kadaluarsa</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-model="batchs.expired_date" disabled>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="txtCustomerName" class="col-sm-4 control-label">Good Receive tanggal</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-model="batchs.good_receive_date"  disabled>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label for="txtCustomerName" class="col-sm-2 control-label">Keterangan saat Good Receive</label>
+									<div class="col-sm-10">
+										<textarea class="form-control autosize msd-elastic: \n;" ng-model="batchs.remark"  ng-readonly="true" disabled></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<span class="pull-left">
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="back()">
+					<span>Kembali</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</span> 
+		</div>
+	</div>              
+</div>
+<!-- End of Customer Row -->
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

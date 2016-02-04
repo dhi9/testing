@@ -1,0 +1,133 @@
+<div ng-controller="DocumentFlowController">  
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Alur Dokumen</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+
+
+<div class="container-fluid container-fullw">
+  
+	<div class="row">
+		<div class="col-lg-12">
+			<form class="form-inline">
+				<div class="form-group">
+					<label for="txtSearchCustomer"><h5>Cari Order Reference</h5></label>
+					<div class="input-group">
+						<input type="text" class="form-control" id="txtSearchOrder" ng-model="search_object_reference"/>
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-primary" ng-click="go()">
+									<i class="fa fa-search"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<div class="row" ng-show="isNotExist">
+		<div class="col-md-12">
+			<p>Order {{ orderReference }} tidak terdaftar.</p>
+		</div>
+	</div>
+	
+	<div class="row" ng-show="isDataRetrieved">
+		<div class="col-md-12">
+			<strong>ORDER {{ order.order_reference }} [ID: {{ order.order_id }}]</strong>
+			<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span>
+			<button class="btn btn-o btn-light-azure" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button>
+			<ul>
+				<li>Dibuat Tanggal: {{ order.date_created }}</li>
+				<li ng-show="order.production_start_date" >Mulai Produksi Tanggal: {{ order.production_start_date }}</li>
+				<li ng-show="order.production_completed_date">Barang Tersedia Tanggal: {{ order.production_completed_date }}</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row" ng-show="isDataRetrieved">
+		<div class="col-md-12">
+			<strong>Pengiriman</strong>
+			
+			<ul ng-repeat="deliveryRequest in order.delivery_requests | filter: { 'status': '!X'}">
+				<li>
+					<span>Rencana Pengiriman {{ $index+1 }} [Direncanakan tanggal: {{ deliveryRequest.requested_delivery_date }}]</span>
+					<span class="label {{ UTILgetStatusClass(deliveryRequest.status, 'DELIVERYREQUEST'); }}">{{ UTILgetStatusLabel(deliveryRequest.status, 'DELIVERYREQUEST'); }}</span>
+					<ul ng-repeat="delivery in deliveryRequest.deliveries | filter: { 'status': '!X'}"  style="margin-bottom:10px ">
+						<li>
+							<span>Pengiriman {{ delivery.delivery_reference }}</span>
+							<span class="label {{ UTILgetStatusClass(delivery.status, 'DELIVERY'); }}">{{ UTILgetStatusLabel(delivery.status, 'DELIVERY'); }}</span>
+							<button class="btn btn-o btn-light-azure" ui-sref="app.delivery.confirm_delivery({delivery_id: '{{ delivery.delivery_id }}'})">Detail</button>
+							<ul>
+								<li>Dibuat tanggal: {{ delivery.date_created }}</li>
+								<li ng-show="delivery.loading_date">Rencana untuk dimuat tanggal: {{ delivery.loading_date }}</li>
+								<li ng-show="delivery.actual_loading_date">Actual pemuatan: {{ delivery.actual_loading_date }}</li>
+                                <li ng-show="delivery.arrival_date">Diterima customer tanggal: {{ delivery.arrival_date }}</li>
+                                <li>Pengiriman mulai/ GI tanggal: {{ delivery.arrival_date }}</li>
+                                <li> Pembatalan GI tanggal: {{ delivery.arrival_date }}
+                                    <button class="btn btn-o btn-light-azure" ng-click="displayCancelModal()">Detail</button>
+                                </li>
+                                <li> Auto Retur dari Pengiriman tanggal: {{ delivery.arrival_date }}
+                                    <button class="btn btn-o btn-light-azure" ng-click="displayAutoReturModal()">Detail</button>
+                                </li>
+								<li ng-show="delivery.confirmation_date">Surat jalan kembali tanggal: {{ delivery.confirmation_date }}</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+    <script type="text/ng-template" id="modal_cancel">
+        <div class="modal-header">
+            <h3 class="modal-title">Pembatalan Good Issue</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal" ng-submit="saveRemark(remark)">
+                <p>Alasan Pembatalan</p>
+                <textarea class="form-control" ng-model="remark.remark"></textarea>
+                <br/>
+                <button type="submit" class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+                <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+            </form>
+        </div>
+    </script>
+    <script type="text/ng-template" id="modal_retur">
+        <div class="modal-header">
+            <h3 class="modal-title">Auto Retur dari Pengiriman</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Alasan Retur</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" ng-model="remark.remark"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Tanggal</label>
+                    <div class="col-sm-10">
+                        <input type="text">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">User</label>
+                    <div class="col-sm-10">
+                        <input type="text">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+            </form>
+        </div>
+    </script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

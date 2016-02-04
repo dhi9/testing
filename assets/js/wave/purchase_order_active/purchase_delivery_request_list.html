@@ -1,0 +1,51 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Good Receive</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="PurchaseDeliveryRequestListController">  
+
+<div class="container-fluid container-fullw bg-white">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<p>Mohon dipilih permintaan pengiriman yang akan diproses:</p>
+			<div class="table-responsive">
+				<table class="table">
+					<tr>
+						<th>Nama</th>
+						<th>Permintaan Tanggal Kirim</th>
+						<th>Tujuan</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+					<tr ng-repeat="deliveryRequest in ActiveDeliveryRequestList">
+						<td>Permintaan Pengiriman {{ $index+1 }}</td>
+						<td>{{ deliveryRequest.requested_date | date:'dd-MM-yyyy'}}</td>
+						<td>{{ searchWarehouseById(deliveryRequest.warehouse_id).city}}</td>
+						<td>{{ statusLabel(deliveryRequest.status)}}</td>
+						<td>
+							<button class="btn btn-primary" ui-sref="app.purchase.purchase_delivery_request_detail({requests_delivery_requests_id :'{{ deliveryRequest.requests_delivery_request_id }}'})">
+								<span>Pilih</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

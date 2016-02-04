@@ -1,0 +1,82 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Stock Master</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="StockMasterListController">
+
+<div class="container-fluid container-fullw">
+
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="item in $data">
+						<td data-title="'Item ID/SKU'" sortable="'item_code'">{{ item.item_code }}</td>
+						<td data-title="'Nama'" sortable="'item_name'">{{ item.item_name }}</td>
+						<td data-title="'Kategori'" sortable="'item_type'">{{ lookupCategoryName(item.category_id) }}</td>
+						<td data-title="'UOM Dasar'" sortable="'item_unit'">{{ item.item_unit }}</td>
+						<td data-title="'Tanggal Dibuat'" sortable="'date_created'">{{ item.date_created }}</td>
+						<td data-title="'Terakhir Update'" sortable="'date_updated'">{{ item.date_updated }}</td>
+						<td>
+							<button class="btn btn-primary" ui-sref="app.master.stock_edit({item_code: '{{ item.item_code }}'})">
+								<span>Ubah</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+
+				<button class="btn btn-primary" ui-sref="app.master.stock_new">
+					<span>Tambah Barang</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+				<div class="btn-group dropup" dropdown >
+					<button type="button" class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+						Import / Export <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li>
+							<a ng-click="downloadTemplate()">Download Template</a>
+						</li>
+						<li>
+							<a ui-sref="app.master.stock_import">Import Data</a>
+						</li>
+						<li>
+							<a ng-click="saveExpenses()">Export Data</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->
+
+<!-- JSZip -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+
+<!-- Wijmo -->
+<script src="vendor/wijmo/scripts/vendor/wijmo.min.js" type="text/javascript"></script>
+<script src="vendor/wijmo/scripts/vendor/wijmo.xlsx.min.js" type="text/javascript"></script>
+<link href="vendor/wijmo/styles/vendor/wijmo.min.css" rel="stylesheet" />
+
+<script src="vendor/wijmo/scripts/vendor/wijmo.angular.min.js" type="text/javascript"></script>
+
+<script src="vendor/wijmo/scripts/xlsxExport/expenseReportExport.js" type="text/javascript"></script>
+
+<!-- <script src="vendor/wijmo/scripts/xlsxImport/drawWorkbook.js"></script> -->

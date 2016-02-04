@@ -1,0 +1,149 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Daftar Barang</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="ItemMasterListController">  
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<div ng-show="table_loading">Loading...</div>
+				<div ng-show="!table_loading">
+					<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="tableParams">
+							<tr ng:repeat="item in $data">
+								<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+								<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+								<td data-title="'Unit'" sortable="'item_unit'">{{ item.item_unit }}</td>
+								<td data-title="'Divisi'" sortable="'division'">{{ item.division }}</td>
+								<td data-title="'Panjang'" sortable="'length'">{{ item.length }}</td>
+								<td data-title="'Lebar'" sortable="'width'">{{ item.width }}</td>
+								<td data-title="'Tinggi'" sortable="'height'">{{ item.height }}</td>
+								<td>
+									<button class="btn btn-primary" ui-sref="app.master.item_edit({item_code: '{{ item.item_code }}'})">
+										<span>Ubah</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-primary" ng-show="!createItemPanel" ng-click="createItemPanel = true">
+					<span>Buat Barang Baru</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+				
+				<div class="panel panel-white" id="pnlItemDetail" ng-show="createItemPanel">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Buat Barang Baru</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlItemDetail" ng-init="pnlItemDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal" ng-submit="insertItem(item)">   
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtItemName" class="col-sm-2 control-label">Kode Barang</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtItemName" ng-model="item.item_code">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Panjang</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPICName" ng-model="item.length">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtItemName" class="col-sm-2 control-label">Nama Barang</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtItemName" ng-model="item.item_name">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Lebar</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPICName" ng-model="item.width">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-2 control-label">Unit</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtAddress" ng-model="item.item_unit">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPhoneNumber" class="col-sm-4 control-label">Tinggi</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPhoneNumber" ng-model="item.height">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtItemName" class="col-sm-2 control-label">Divisi</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtCity" ng-model="item.division">
+											</div>
+										</div>
+									</div>
+									
+									<!--<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPostcode" ng-model="item.postcode">
+											</div>
+										</div>
+									</div>-->
+								</div>
+																
+								<button type="submit" class="btn btn-primary" ladda="loading">Simpan</button>
+								<button type="button" class="btn btn-danger" ng-click="createItemPanel = false">Batal</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

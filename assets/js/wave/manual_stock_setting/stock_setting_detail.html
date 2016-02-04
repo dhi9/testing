@@ -1,0 +1,172 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="StockSettingDetailController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Detail Pengaturan Manual</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Tanggal Posting</label>
+						<div class="col-sm-2">
+							<input type="date" class="form-control" id="txtAddress" ng-model="stockSetting.posting_date" disabled />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Judul Pengaturan Stock</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="stockSetting.posting_name" disabled />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Tipe</label>
+						<div class="col-sm-10">
+							<div class="clip-radio radio-primary">
+								<input type="radio" id="female" name="gender" value="VPS1" ng-model="stockSetting.type" disabled />
+								<label for="female">
+									VPS1 - Penambahan dari Pengaturan Stock Manual
+								</label>
+								<input type="radio" id="male" name="gender" value="VPS2" ng-model="stockSetting.type" disabled />
+								<label for="male">
+									VPS2 - Pengurangan dari Pengaturan Stock Manual
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Site</label>
+						<div class="col-sm-10">
+							<select ng-model="stockSetting.site_id" ng-options="site.site_id as site.site_name for site in siteList" ng-change="setStorage()" disabled></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Lokasi</label>
+						<div class="col-sm-10">
+							<select ng-model="stockSetting.storage_id" ng-options="storage.storage_id as storage.storage_name for storage in storageList" disabled></select>
+						</div>
+					</div>
+				</form>
+				
+				<tabset class="tabbable">
+					<tab heading="Detail">
+						<table class="table">
+							<tr>
+								<th class="col-md-2">Item ID/SKU</th>
+								<th ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">{{attrib.attribute_name}}</th>
+								<th class="col-md-2">Nama</th>
+								<th class="col-md-1">QTY</th>
+								<th class="col-md-1">UOM</th>
+								<th class="col-md-2">BIN</th>
+								<th class="col-md-2">Batch</th>
+								<th class="col-md-2">Remark</th>
+							</tr>
+							<tr ng-repeat="itemSetting in itemSettingList">
+								<td>{{ itemSetting.item_code }}</td>
+								<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+									{{itemSetting.attributes[attrib.attribute_name]}}
+								</td>
+								<td>{{ itemSetting.item_name }}</td>
+								<td>{{ itemSetting.quantity }}</td>
+								<td>{{ itemSetting.item_uom }}</td>
+								<td>{{ itemSetting.bin_name }}</td>
+								<td><input type="text" class="form-control" ng-model="itemSetting.batch_name" disabled/></td>
+								<td>{{ itemSetting.remark }}</td>
+							</tr>
+						</table>		
+					</tab>
+					<tab heading="Approval">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Pemberi Persetujuan</label>
+								<div class="col-sm-10">
+									<p class="form-control-static">Elice Hioe</p>
+								</div>
+							</div>
+							<button class="btn btn-primary">Approve</button>
+							<button class="btn btn-danger" ng-click="reject()">Tolak/Hapus</button>
+						</form>
+					</tab>
+				</tabset>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="item_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Item Detail</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="item in $data | filter: filter">
+						<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+						<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+						<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+						<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+						<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+						<td>
+							<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item.item_code)">Pilih</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="bin_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">BIN</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<!--<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="item in $data | filter: filter">
+						<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+						<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+						<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+						<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+						<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+						<td>
+							<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item.item_code, item.item_name)">Pilih</button>
+						</td>
+					</tr>
+				</table>
+			</div>-->
+			
+			<table class="table">
+				<tr>
+					<th>BIN</th>
+					<th>QTY</th>
+					<th>UOM</th>
+					<th class="col-md-1"></th>
+				</tr>
+				<tr ng-repeat="bin in binList">
+					<td>{{ bin.bin_name }}</td>
+					<td>{{ bin.quantity }}</td>
+					<td>{{ bin.uom }}</td>
+					<td>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="setBin(bin)">Pilih</button>
+					</td>
+				</tr>
+			</table>
+			
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

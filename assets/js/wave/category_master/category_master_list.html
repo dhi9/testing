@@ -1,0 +1,48 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Category Master</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="CategoryMasterListController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="category in $data">
+						<td data-title="'Category Name'" sortable="'category_name'">{{ category.category_name }}</td>
+						<td data-title="'Status'" sortable="'status'">{{ statusLabel(category.status) }}</td>
+						<td class="col-md-1">
+							<button class="btn btn-primary" ui-sref="app.master.category_edit({category_id: '{{ category.category_id }}'})">
+								<span>Ubah</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+				
+				<button class="btn btn-primary" ui-sref="app.master.category_new">
+					<span>Buat Category Baru</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

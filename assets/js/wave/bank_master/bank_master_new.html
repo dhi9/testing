@@ -1,0 +1,83 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="BankMasterNewController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Bank Baru</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal" ng-submit="insertBank()">
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Nama</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="bank.account_name" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Nama Bank</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="bank.bank_name" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Nomor Rekening</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="bank.account_number" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12">
+							<div class="checkbox clip-check check-primary">
+								<input type="checkbox" id="checkbox101" ng-model="bank.telex_transfer" ng-true-value="'1'" ng-false-value="'0'"/>
+								<label for="checkbox101">
+									Telex Transfer
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12">
+							<div class="checkbox clip-check check-primary">
+								<input type="checkbox" id="checkbox102" ng-model="bank.credit_card" ng-true-value="'1'" ng-false-value="'0'"/>
+								<label for="checkbox102">
+									Kartu Kredit
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12">
+							<div class="checkbox clip-check check-primary">
+								<input type="checkbox" id="checkbox103" ng-model="bank.debit_card" ng-true-value="'1'" ng-false-value="'0'"/>
+								<label for="checkbox103">
+									Kartu Debit
+								</label>
+							</div>
+						</div>
+					</div>
+					
+					<button class="btn btn-alt btn-hover btn-primary" type="submit">
+						<span>Simpan</span>
+						<i class="glyph-icon icon-plus"></i>
+					</button>
+					<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.bank">
+						<span>Batal</span>
+						<i class="glyph-icon icon-plus"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

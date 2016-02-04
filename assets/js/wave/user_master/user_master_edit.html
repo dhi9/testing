@@ -1,0 +1,234 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="UserMasterEditController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Modify User</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<tabset class="tabbable">
+					<tab heading="User Detail" active="tab[0]">	
+						<!-- CONTENT -->
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal">
+									<div class="row">
+										<div class="col-md-7">
+											<div class="form-group">
+												<label class="col-sm-2 control-label" for="inputEmail3">Username</label>
+												<div class="col-sm-10">
+													<input type="text" placeholder="Username" id="inputEmail3" class="form-control" ng-model="user.username" disabled>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-5">
+											<div class="form-group">
+												<label class="col-sm-2 control-label" for="inputEmail3">Status</label>
+												<div class="col-sm-10">
+													<select class="form-control" ng-model="user.status">
+														<option value="A">Aktif</option>
+														<option value="S">Tunda</option>
+														<option value="X">Non Aktif</option>
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-7">
+											<div class="form-group">
+												<label class="col-sm-2 control-label" for="inputEmail3">Full Name</label>
+												<div class="col-sm-10">
+													<input type="text" placeholder="Full Name" id="inputEmail3" class="form-control" ng-model="user.full_name">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-7">
+											<div class="form-group">
+												<label class="col-sm-2 control-label" for="inputEmail3">Email</label>
+												<div class="col-sm-10">
+													<input type="text" placeholder="Email" id="inputEmail3" class="form-control" ng-model="user.email">
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</tab>
+					
+					<tab heading="Access Level" active="tab[1]">
+						<form role="form" class="form-horizontal" >
+							<!--<div ng-repeat="acl in accessList">
+								<div class="checkbox clip-check check-primary col-md-auto" ng-if="acl.code != ''">
+									<input type="checkbox" id="checkbox{{$index}}" ng-model="user.access[acl.code]">
+									<label for="checkbox{{$index}}">{{ acl.label + acl.code }}</label>
+								</div>
+								<div class=" clip-check" ng-if="acl.code === ''">
+									<!--<input type="checkbox" id="checkbox{{$index}}" ng-model="user.access[acl.code]">
+									<label for="checkbox{{$index}}">{{ acl.label + acl.code }}</label>
+								</div>
+							</div>-->
+							<ul class="list-unstyled">
+								<li ng-repeat="acl in accessList">
+									<div ng-if="acl.code == '' ">
+										<br>
+										<label for="checkbox{{$index}}">{{ acl.label }}</label>
+									</div>
+									<div ng-if="acl.code !== '' ">
+										<div class="checkbox clip-check check-primary col-md-auto">
+											<input type="checkbox" id="checkbox{{$index}}" ng-model="user.access[acl.code]">
+											<label for="checkbox{{$index}}">{{ acl.label }}</label>
+										</div>
+									</div>
+									<!--<div class="checkbox clip-check check-primary col-md-auto" ng-if="acl.code === ''">
+										<input type="checkbox" id="checkbox{{$index}}" ng-model="user.access[acl.code]">
+										<label for="checkbox{{$index}}">{{ acl.label }}</label>
+									</div>-->
+								</li>
+							</ul>
+						</form>
+					</tab>
+					
+					<tab heading="Approval"  active="tab[2]">	
+						<!-- CONTENT -->
+						<!--<form role="form" class="form-horizontal" ng-submit="setApprove()">-->
+						<form role="form" class="form-horizontal">
+							<!--<div class="checkbox clip-check check-primary col-md-auto" ng-repeat="apl in approvalList">
+								<input type="checkbox" id="checkbox{{$index + 20}}" ng-model="user.approval[apl.code]" >
+								<label for="checkbox{{$index + 20}}">{{ apl.label }}</label>
+							</div>-->
+							
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox301" ng-model="user.approval.po_approval">
+								<label for="checkbox301">
+									Approval untuk PO
+									<ul class="list-inline">
+										<li>Max USD: <input type="number" ng-model="user.approval.po_max_usd" /></li>
+										<li>Max IDR: <input type="number" ng-model="user.approval.po_max_idr" /></li>
+										<li>Max EUR: <input type="number" ng-model="user.approval.po_max_eur" /></li>
+									</ul>
+								</label>
+							</div>
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox302" ng-model="user.approval.so_approval">
+								<label for="checkbox302">
+									Approval untuk SO
+									<ul class="list-inline">
+										<li>Max USD: <input type="number" ng-model="user.approval.so_max_usd" /></li>
+										<li>Max IDR: <input type="number" ng-model="user.approval.so_max_idr" /></li>
+										<li>Max EUR: <input type="number" ng-model="user.approval.so_max_eur" /></li>
+									</ul>
+								</label>
+							</div>
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox303" ng-model="user.approval.inventory_adjustment">
+								<label for="checkbox303">Approval untuk Inventory Adjustment</label>
+							</div>
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox304" ng-model="user.approval.so_max_discount_approval">
+								<label for="checkbox304">
+									Max Discount untuk Sales Order
+									<input type="number" ng-model="user.approval.so_max_discount" />
+								</label>
+							</div>
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox305" ng-model="user.approval.payment">
+								<label for="checkbox305">Approval untuk set termin pembayaran</label>
+							</div>
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox306" ng-model="user.approval.consignment">
+								<label for="checkbox306">Approval untuk set konsinyasi</label>
+							</div>
+						</form>
+					</tab>
+					
+					<tab heading="Password Reset"  active="tab[3]">	
+						<!-- CONTENT -->
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal">
+									<div class="row">
+										<div class="col-md-11">
+											<div class="form-group">
+												<label class="col-sm-12 control-label" for="inputEmail3">User may also select the option "Forgot Password" to have VONTIS send email for password reset. Use this function for alternative only</label>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-7">
+											<div class="form-group">
+												<label class="col-sm-3 control-label" for="inputEmail3">Password</label>
+												<div class="col-sm-9">
+													<input type="password" class="form-control" ng-model="user.password">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-7">
+											<div class="form-group">
+												<label class="col-sm-3 control-label" for="inputEmail3">Ulangi Password</label>
+												<div class="col-sm-9">
+													<input type="password" class="form-control" ng-model="user.repeatPassword">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-7">
+											<div class="form-group">
+												<div class="col-md-3">
+													&nbsp;
+												</div>
+												<div class="col-md-9">
+													<input type="checkbox" id="checkbox1" ng-model="newUser.remember" class="ng-pristine ng-untouched ng-valid">
+													<label for="checkbox1">Ask to change on next time login</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</tab>
+					
+					<tab heading="Email" active="tab[4]">
+						<form role="form" class="form-horizontal" >
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox4011" ng-model="user.accept_po_cc">
+								<label for="checkbox4011">Terima cc untuk Purchase Order</label>
+							</div>
+							<div class="checkbox clip-check check-primary col-md-auto">
+								<input type="checkbox" id="checkbox4022" ng-model="user.accept_so_cc">
+								<label for="checkbox4022">Terima cc untuk Sales Order</label>
+							</div>
+						</form>
+					</tab>
+				</tabset>
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="updateUser()">
+					<span>Save</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.user">
+					<span>Cancel</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

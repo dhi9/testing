@@ -1,0 +1,75 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Daftar Draft Order</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="DraftOrderListController">  
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-md-12">
+			<tabset class="tabbable" type="pills">
+				<tab heading="Sendiri">
+					<input type="text" class="form-control" id="txtSearchTable" ng-model="ownDraftFilter.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="ownDraftTableParams">
+							<tr ng:repeat="draft in $data | filter: ownDraftFilter">
+								<td data-title="'Status'" sortable="'status'">
+									<!--<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ draft.status }}</span>-->
+									{{ UTILgetStatusDraftLabel(draft.status) }}
+								</td>
+								<td data-title="'Draft Reference'" sortable="'draft_reference'">{{ draft.draft_reference }}</td>
+								<td data-title="'Tanggal Dibuat'" sortable="'date_created'">{{ draft.date_created }}</td>
+								<td data-title="'Pembuat Draft'" sortable="'draft_creator'">{{ draft.user_creator }}</td>
+								<td data-title="'Penilai Draft'" sortable="'draft_approver'">{{ draft.user_approver }}</td>
+								<td data-title="'Divisi'" sortable="'product_type'">{{ UTILgetDepartmentDraftLabel(draft.product_type) }}</td>
+								<td>
+									<button class="btn btn-primary" ui-sref="app.order.own_draft_order_detail({draft_id: '{{ draft.draft_id }}'})">
+										Detail
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</tab>
+				<tab heading="Divisi">
+					<input type="text" class="form-control" id="txtSearchTable" ng-model="departmentDraftFilter.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="departmentDraftTableParams">
+							<tr ng:repeat="draft in $data | filter: departmentDraftFilter">
+								<td data-title="'Status'" sortable="'status'">
+									<!--<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ draft.status }}</span>-->
+									{{ UTILgetStatusDraftLabel(draft.status) }}
+								</td>
+								<td data-title="'Draft Reference'" sortable="'draft_reference'">{{ draft.draft_reference }}</td>
+								<td data-title="'Tanggal Dibuat'" sortable="'date_created'">{{ draft.date_created }}</td>
+								<td data-title="'Pembuat Draft'" sortable="'draft_creator'">{{ draft.user_creator }}</td>
+								<td data-title="'Penilai Draft'" sortable="'draft_approver'">{{ draft.user_approver }}</td>
+								<td data-title="'Divisi'" sortable="'product_type'">{{ UTILgetDepartmentDraftLabel(draft.product_type) }}</td>
+								<td>
+									<button class="btn btn-primary" ui-sref="app.order.department_draft_order_detail({draft_id: '{{ draft.draft_id }}'})">
+										Detail
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

@@ -1,0 +1,561 @@
+<div ng-controller="DeliveryConfirmationDetailController">  
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Surat Jalan {{ delivery.delivery_detail.delivery_reference }} ({{ delivery.delivery_detail.status }})</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+
+
+	<div class="container-fluid container-fullw no-print">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Customer</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal">
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtCustomerName" class="col-sm-2 control-label">Nama Customer</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control underline" id="txtCustomerName" ng-model="delivery.customer_detail.customer_name" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtPICName" ng-model="delivery.customer_detail.pic_name" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control underline" id="txtAddress" ng-model="delivery.customer_detail.address" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtPhoneNumber" ng-model="delivery.customer_detail.phone_number" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control underline" id="txtCity" ng-model="delivery.customer_detail.city" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtPostcode" ng-model="delivery.customer_detail.postcode" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+											<div class="col-sm-10">
+												<input type="email" class="form-control underline" id="txtEmail" ng-model="delivery.customer_detail.customer_email" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtFaxNumber" ng-model="delivery.customer_detail.fax_number" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 2 BEGIN -->
+		<div class="row">
+
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlItems">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Surat Jalan</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+						<div class="panel-body">
+							<!-- 2.1 BEGIN -->
+
+							<h4>Detail</h4>
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="txtLoadingDate{{ $index + 1 }}" 
+										class="col-sm-2 control-label">Rencana kirim</label>
+									<div class="col-sm-10">
+										<input type="date" id="txtLoadingDate{{ $index + 1 }}" name="input" 
+											   ng-model="delivery.delivery_detail.loading_date" placeholder="yyyy-MM-dd" 
+											   ng-readonly="true"
+											   required />
+
+									</div>
+								</div>
+                                <div class="form-group">
+                                    <label for="txtReciever" class="col-sm-2 control-label">Penerima</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="txtReciever{{ $index + 1 }}"
+                                               ng-model="delivery.delivery_detail.reciever"
+                                               required />
+                                    </div>
+                                </div>
+								<div class="form-group">
+									<label for="txtCustomerName" class="col-sm-2 control-label">Alamat</label>
+									<div class="col-sm-10">
+										<textarea class="form-control autosize msd-elastic: \n;" 
+												  ng-model="delivery.delivery_detail.delivery_address"></textarea>
+									</div>
+								</div>
+
+							</form>
+
+							<h4>Barang</h4>
+							<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Kode Barang (SKU)</th>
+                                        <th>Jumlah Pengiriman</th>
+										<th>Unit</th>
+										<th>Nama Barang</th>
+										<th>Remark</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng:repeat="item in delivery.delivery_detail.delivery_items">
+										<td>{{ item.item_code }}</td>
+										<td>{{ item.quantity_sent }}</td>
+										<td>{{ lookupItemUnit(item.item_code); }}</td>
+										<td>{{ lookupItemName(item.item_code); }}</td>
+										<td>{{ item.remark }}</td>
+									</tr>
+
+								</tbody>
+
+							</table>
+													</div>
+
+							<h4>Transportasi</h4>
+							<form class="form-horizontal">
+
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="txt" class="col-sm-3 control-label">Pengantar</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txt" ng-model="delivery.delivery_detail.delivery_source"/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtVendor" class="col-sm-3 control-label">Keterangan</label>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control" ng-model="delivery.delivery_detail.notes"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+							</form>
+
+							<!-- 2.1 END -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 2 END -->
+
+		<!-- 3 BEGIN -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlItems">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Tindakan/Status</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+						<div class="panel-body">
+
+							<tabset class="tabbable">
+                                <tab heading="Detail">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label for="txtCity" class="col-sm-3 control-label">Barang Siap</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="date" class="form-control" id="txtOrderCreatedDate" name="input"
+                                                               ng-model="delivery.order_detail.actual_loading_date" placeholder="yyyy-MM-dd" />
+                                                    </div>
+                                                    <button class="btn btn-o btn-light-azure" ng-click="delivery.order_detail.actual_loading_date=setToCurrentDate();">Hari Ini</button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="txtCity" class="col-sm-3 control-label">Barang Terkirim</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="date" class="form-control" id="txtOrderCreatedDate" name="input"
+                                                               ng-model="goodIssue.good_issue_date" placeholder="yyyy-MM-dd" />
+                                                    </div>
+                                                    <button class="btn btn-o btn-light-azure" ng-click="goodIssue.good_issue_date=setToCurrentDate();">Hari Ini</button>
+                                                    <div class="col-sm-3 checkbox clip-check check-primary pull-right">
+                                                        <input type="checkbox" id="checkbox1" value="1" ng-model="goodIssue.confirmGoodIssue">
+                                                        <label for="checkbox1">
+                                                            Konfirmasi Goods Issue
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th class="col-md-2">ArticleID (SKU)</th>
+                                                    <!--
+                                                    <th class="col-md-1" ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+                                                        {{attrib.attribute_name}}
+                                                    </th>
+                                                    -->
+                                                    <th class="col-md-1">Jumlah Order</th>
+                                                    <th class="col-md-1">Unit</th>
+                                                    <th>Nama Barang</th>
+                                                    <th class="col-md-2">Actual</th>
+                                                    <th class="col-md-1">Unit</th>
+                                                    <th class="col-md-2">PieceID/SiteID/StorageID/Bin</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody ng:repeat="item in goodIssue.items" ng-if="item.status == 'A'" >
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-control" ng-model="item.item_code" ng-options="item.item_code as item.item_code for item in delivery.order_detail.order_items" ng-disabled="goodIssue.good_issue"></select>
+                                                    </td>
+                                                    <!--
+                                                    <td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
+                                                        {{ lookupAttibute(item.item_code, attrib.attribute_name)}}
+                                                    </td>
+                                                    -->
+                                                    <td>
+                                                        {{ lookupQuantity(item.item_code)}}
+                                                    </td>
+                                                    <td>{{ lookupItemUnit(item.item_code) }}</td>
+                                                    <td>{{ lookupItemName(item.item_code) }}</td>
+                                                    <td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="0"  ng-disabled="goodIssue.good_issue"/></td>
+                                                    <td><input type="text" class="form-control" placeholder="" ng-model="item.item_unit" ng-disabled="goodIssue.good_issue"/></td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" ng-model="item.location" ng-click="displayLocationModal(item)" ng-disabled="goodIssue.good_issue">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-primary" ng-click="displayLocationModal(item)" ng-disabled="goodIssue.good_issue"><i class="fa fa-search"></i>
+                                                        </button>
+													</span>
+                                                        </div>
+                                                    </td>
+                                                    <td ng-if="!goodIssue.good_issue">
+                                                        <a ng-hide="goodIssue.items.length <= 1" ng-click="removeGoodIssueItem(item)" class="text-danger">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
+                                                        <a ng-show="goodIssue.items.length <= 1" ng-click="">
+                                                            <span>&nbsp;</span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                <tr>
+                                                    <td colspan="3" style="border-bottom: none">
+                                                        <div>
+                                                            <button class="btn btn-alt btn-hover btn-primary"ng-click="addGoodIssueItem()" ng-if="!goodIssue.good_issue">
+                                                                <i class="ti-plus"></i> <span> Tambah</span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label for="txtCity" class="col-sm-3 control-label">Remarks</label>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <textarea class="col-sm-12" rows="5" ng-model="goodIssue.good_issue_remark" ng-disabled="goodIssue.good_issue"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <br>
+                                                    <button class="btn btn-alt btn-hover btn-primary" ng-click="updateGoodIssue()" ladda="updateButtonLoading" ng-if="!goodIssue.good_issue">
+                                                        <span>Simpan</span>
+                                                        <i class="glyph-icon icon-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tab>
+								<tab heading="Progress" class="hide">
+
+									<form class="form-horizontal">
+										<div class="form-group">
+											<label for="txtCity" class="col-sm-2 control-label">Pemuatan ke Truk</label>
+											<div class="col-sm-3">
+												<input type="date" class="form-control" id="txtOrderCreatedDate" name="input" 
+													 ng-model="delivery.delivery_detail.actual_loading_date" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" />
+
+											</div>
+											<button class="btn btn-o btn-light-azure" ng-click="delivery.delivery_detail.actual_loading_date=setToCurrentDate();">Hari Ini</button>
+										</div>
+                                        <div class="form-group">
+                                            <label for="txtDeliveryStart" class="col-sm-2 control-label">Pengiriman Mulai</label>
+                                            <div class="col-sm-3">
+                                                <input class="form-control" type="date" id="txtDeliveryStart" name="input"
+                                                       ng-model="delivery.delivery_detail.start_date" placeholder="yyyy-MM-dd" max="{{ getCurrentDateString(); }}" />
+                                            </div>
+                                            <button class="btn btn-o btn-light-azure" ng-click="delivery.delivery_detail.start_date=setToCurrentDate();">Hari Ini</button>
+                                            <div class="col-md-3 pull-right" ng-show="delivery.delivery_detail.start_date !== undefined && delivery.delivery_detail.start_date !== '' && delivery.delivery_detail.start_date !== null">
+                                                <button class="btn btn-o btn-light-azure col-sm-6" ng-click="displayCancelModal()">Batalkan</button>
+                                                <label for="txtDeliveryStart" class="col-sm-6 control-label">Good Issue</label>
+                                            </div>
+                                        </div>
+										<div class="form-group">
+											<label for="txtPostcode" class="col-sm-2 control-label">Pengiriman Tiba</label>
+											<div class="col-sm-3">
+												<input class="form-control" type="date" id="txtProductionStartDate" name="input" 
+													 ng-model="delivery.delivery_detail.arrival_date" placeholder="yyyy-MM-dd" max="{{ getCurrentDateString(); }}" />
+											</div>
+											<button class="btn btn-o btn-light-azure" ng-click="delivery.delivery_detail.arrival_date=setToCurrentDate();">Hari Ini</button>
+										</div>
+										<div class="form-group">
+											<label for="txtFaxNumber" class="col-sm-2 control-label">Pengiriman Selesai</label>
+											<div class="col-sm-3">
+												<input type="date" class="form-control" id="txtProductionComletedDate" name="input" 
+													 ng-model="delivery.delivery_detail.confirmation_date" placeholder="yyyy-MM-dd" max="{{ getCurrentDateString(); }}" />
+											</div>
+											<button class="btn btn-o btn-light-azure" ng-click="delivery.delivery_detail.confirmation_date=setToCurrentDate();">Hari Ini</button>
+										</div>
+									</form>	
+
+								</tab>
+
+								<tab heading="Barang" disabled="disableTabBarang" class="hide">>
+								  <div class="table-responsive">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Kode Barang (SKU)</th>
+                                                <th>P x L x T</th>
+                                                <th>Nama Barang</th>
+												<th>Untuk Dikirim</th>
+												<th>Unit</th>
+												<th>Aktual Jumlah Pengiriman</th>
+												<th>Diterima Customer</th>
+												<th>Alasan</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng:repeat="item in delivery.delivery_detail.delivery_items">
+                                                <td>{{ item.item_code }}</td>
+                                                <td>200 x 80 x 33</td>
+												<td>{{ lookupItemName(item.item_code); }}</td>
+												<td>{{ item.quantity_sent }}</td>
+												<td>{{ lookupItemUnit(item.item_code); }}</td>
+												<td><input type="text" class="form-control" placeholder="0" ng-model="item.quantity_sent_actual" /></td>
+												<td><input type="text" class="form-control" placeholder="0" ng-model="item.quantity_received" /></td>
+												<td width="200px">
+													<select ng-model="item.explaination_type" class="cs-skin-slide" ng-options="o.value as o.label for o in OPTIONS_explaination_types">
+
+												</td>
+											</tr>
+
+										</tbody>
+
+									</table>
+																</div>
+
+								</tab>
+							</tabset>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 3 END -->
+
+		<button class="btn btn-alt btn-hover btn-primary" ng-click="updateDelivery()" ladda="updateButtonLoading">
+			<span>Update</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>
+
+		<button class="btn btn-alt btn-hover btn-dark-beige" ng-click="displayOrderHistory()">
+			<span>Delivery History</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>
+		
+		<button class="btn btn-alt btn-hover btn-purple" ng-click="printDeliveryNotes(delivery)"  ng-show="delivery.delivery_detail.special_request != 1">
+			<span>Print Delivery {{ delivery.delivery_detail.delivery_reference }}</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>
+		
+		<button class="btn btn-alt btn-hover btn-purple" ng-click="printSpecialOrdeeliveryNotes(delivery)"  ng-show="delivery.delivery_detail.special_request == 1">
+			<span>Print Special Delivery {{ delivery.delivery_detail.delivery_reference }}</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>
+		
+    <script type="text/ng-template" id="modal_content_order_history.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Delivery update history</h3>
+        </div>
+        <div class="modal-body">
+					<div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+												<th>Username</th>
+                        <th>Waktu Update</th>
+                        <th>Deskripsi</th>
+                        <th>Data Lama</th>
+                        <th>Data Baru</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng:repeat="update_history in delivery_update_history">
+											<td>{{ update_history.username }}</td>
+											<td>{{ update_history.update_timestamp }}</td>
+											<td>{{ update_history.update_description }}</td>
+											<td>{{ update_history.old_value }}</td>
+											<td>{{ update_history.new_value }}</td>
+										</tr>
+
+                </tbody>
+                
+            </table>
+					</div>
+            
+            <button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+        </div>
+    </script>
+		
+		<script type="text/ng-template" id="modal_content_print_special_delivery">
+    </script>
+
+    <script type="text/ng-template" id="modal_cancel">
+        <div class="modal-header">
+            <h3 class="modal-title">Pembatalan Good Issue</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal" ng-submit="saveRemark(remark)">
+                <p>Alasan Pembatalan</p>
+                <textarea class="form-control" ng-model="remark.remark"></textarea>
+                <br/>
+                <button type="submit" class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+                <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+            </form>
+        </div>
+    </script>
+
+        <script type="text/ng-template" id="modal_location">
+            <div class="modal-header">
+                <h3 class="modal-title">Lokasi</h3>
+            </div>
+            <div class="modal-body bg-white">
+                <p>Lakukan proses pengambilan barang dari lokasi yang telah ditentukan dibawah untuk proses Good Issue (GI)</p>
+
+                <form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Site</label>
+                        <div class="col-sm-11">
+                            <select class="form-control" ng-model="locations.site_id" ng-options="code.site_id as code.site_reference for code in siteList" ng-change="locations.bin_id = locations.site_id ? '': locations.bin_id"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Lokasi</label>
+                        <div class="col-sm-11">
+                            <select class="form-control" ng-model="locations.storage_id" ng-disabled="!locations.site_id || deliveryRequests.status == 'C'" ng-options="code.storage_id as code.storage_name for code in storageList | filter:{ site_id : locations.site_id }" ></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">BIN</label>
+                        <div class="col-sm-11">
+                            <select class="form-control"  ng-model="locations.bin_id" ng-disabled="!locations.site_id || !locations.storage_id || deliveryRequests.status == 'C'" ng-options="code.bin_id as code.bin_name for code in binList | filter:{ storage_id : locations.storage_id }" ></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">PieceID</label>
+                        <div class="col-sm-11">
+                            <select class="form-control" ng-model="locations.piece_id" ng-options="code.batch_id as code.batch_reference for code in batchList | filter:{ item_code : locations.item_code }"></select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+                </form>
+            </div>
+        </script>
+    </div>
+	
+
+
+
+</div>
+
+
+<!-- end: YOUR CONTENT HERE -->

@@ -1,0 +1,48 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Attribute Master</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="AttributeMasterListController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="attribute in $data">
+						<td data-title="'Attribute Name'" sortable="'attribute_name'">{{ attribute.attribute_name }}</td>
+						<td data-title="'Status'" sortable="'restatus'">{{ attribute.restatus }}</td>
+						<td class="col-md-1">
+							<button class="btn btn-primary" ui-sref="app.master.attribute_edit({attribute_id: '{{ attribute.attribute_id }}'})">
+								<span>Ubah</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+				
+				<button class="btn btn-primary" ui-sref="app.master.attribute_new">
+					<span>Buat Attribute Baru</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

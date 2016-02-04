@@ -1,0 +1,137 @@
+	<!-- start: PAGE TITLE -->
+<div ng-controller="SiteMasterNewController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Site Baru</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-1 control-label">Site ID</label>
+						<div class="col-sm-11">
+							<input type="text" class="form-control" id="txtAddress" ng-model="site.site_reference" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-1 control-label">Nama</label>
+						<div class="col-sm-11">
+							<input type="text" class="form-control" id="txtAddress" ng-model="site.site_name" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-1 control-label">Alamat</label>
+						<div class="col-sm-11">
+							<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="site.address"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Kota</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="site.city">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Kode Pos</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="site.postcode">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">No. Telp</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="site.phone_number">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Fax</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="site.fax_number">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label"></label>
+								<div class="col-sm-10">
+									<div class="checkbox clip-check check-primary checkbox-inline">
+										<input type="checkbox" id="consignment" ng-model="site.consignment">
+										<label for="consignment">
+											Lokasi di Customer (Konsinyasi)
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<br>
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="insertSite()">
+					<span>Simpan</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.site">
+					<span>Batal</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="history_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">History UOM</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Tanggal</th>
+						<th>Waktu</th>
+						<th>User</th>
+						<th>Bagian</th>
+						<th>Field</th>
+						<th>Data Lama</th>
+						<th>Data Baru</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="history in historyList">
+						<td>{{ history.datetime | date:'dd/MM/yy'}}</td>
+						<td>{{ history.datetime | date:'H:mm'}}</td>
+						<td>{{ history.username }}</td>
+						<td>{{ history.section }}</td>
+						<td>{{ history.field }}</td>
+						<td>{{ history.old_data }}</td>
+						<td>{{ history.new_data }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

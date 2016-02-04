@@ -1,0 +1,575 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="OwnActiveDraftOrderDetailController">
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">{{ draft.draft_reference }}</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div class="container-fluid container-fullw">
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="txtSearchCustomer"><h5>Cari Customer&nbsp;</h5></label>
+                    <div class="input-group">
+                        
+                        <input type="text" class="form-control" id="txtSearchCustomer" ng-model="customerIdToSearch" 
+                            typeahead="customerLU.customer_id as customerLU.customer_name + ' - ' + customerLU.pic_name for customerLU in customerLookupList | filter:$viewValue | limitTo:20"
+                            typeahead-input-formatter="formatSearchCustomerText($model)"
+							typeahead-on-select="getCustomerById()" >
+
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary" ng-click="getCustomerById()">
+                            <i class="fa fa-search"></i>
+                        </button> </span>
+                    </div>
+                    					<!--
+										<button class="btn btn-alt btn-hover btn-primary" ng-click="displayCustomerListModal()">
+												<span>Daftar Customer</span>
+										</button>
+                    -->
+                    <button class="btn btn-alt btn-hover btn-primary" ng-click="createNewCustomer()">
+                        <i class="ti-plus"></i>
+												<span> Customer Baru</span>
+                        <i class="glyph-icon icon-plus"></i>
+                    </button>
+                </div>
+                
+                <div class="form-group pull-right">
+                    <label for="exampleInputEmail2">PO Customer</label>
+                    <input type="text" class="form-control" id="exampleInputEmail2" ng-model="order.order_details.customer_po">
+								</div>
+            </form>
+            <br/>
+        </div>
+    </div>
+  
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white" id="pnlCustomerDetail">
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title text-primary">Detail Customer</h4>
+                    <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                </div>
+                <div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-2 control-label">Nama Customer</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtCustomerName" ng-model="order.customer_details.customer_name" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtPICName" ng-model="order.customer_details.pic_name" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtAddress" ng-model="order.customer_details.address" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtPhoneNumber" ng-model="order.customer_details.phone_number" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtCity" ng-model="order.customer_details.city" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtPostcode" ng-model="order.customer_details.postcode" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+                                        <div class="col-sm-10">
+                                            <input type="email" class="form-control" id="txtEmail" ng-model="order.customer_details.customer_email" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtFaxNumber" ng-model="order.customer_details.fax_number" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+										</div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    
+    <div class="row">
+        
+        <div class="col-md-12">
+            <div class="panel panel-white" id="pnlItems">
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title text-primary">Detail Sales</h4>
+                    <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                </div>
+                <div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+                    <div class="panel-body">
+                        
+                        <tabset class="tabbable">
+                            <tab heading="Umum">
+                                
+                                <!--@#JWBOOKMARK 1-->
+								<!--<div class="table-responsive">-->
+                                <table class="table" ng-show="HLPFIELD_items_is_edit_mode">
+                                    <thead>
+                                    <tr>
+                                        <th class="col-md-3">Kode Barang (SKU)</th>
+                                        <th class="col-md-2">P x L x T (cm)</th>
+                                        <th class="col-md-1">Jumlah Order</th>
+                                        <th class="col-md-1">Unit</th>
+                                        <th class="col-md-2">Nama Barang</th>
+                                        <th class="col-md-1">Tipe Kain</th>
+                                        <th class="col-md-2">Remark</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody ng:repeat="item in order.order_details.order_items" ng-init="$parentIndex = $index">
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" ng-model="item.item_code" ng-if="item.level !== 'N'"
+                                                       typeahead="itemLU.item_code as itemLU.item_code + ' - ' + itemLU.item_name for itemLU in itemLookupList | filter:$viewValue | limitTo:30">
+                                                <input type="text" class="form-control" ng-model="item.item_code" ng-if="item.level == 'N'">
+														<span class="input-group-btn">
+															<button ng-show="item.level !== 'N' || item.level !== 'E'" type="button" class="btn btn-primary" ng-click="displayItemDetailModal($index)"><i class="fa fa-search"></i>
+                                                            </button>
+                                                            <button ng-show="item.level == 'N' && open == false  || item.level == 'E' && open == false" type="button" class="btn btn-primary ng-hide ng-scope" ng-click="open = true"><i class="fa fa-plus"></i>
+                                                            </button>
+                                                            <button ng-show="item.level == 'N' && open == true  || item.level == 'E' && open == true" type="button" class="btn btn-primary ng-hide ng-scope" ng-click="open = false"><i class="fa fa-minus"></i>
+                                                            </button>
+														</span>
+                                            </div>
+                                        </td>
+                                        <td><input type="text" class="form-control" placeholder="0x0x0" ng-model="item.length_width_height" /></td>
+                                        <td><input type="text" class="form-control" placeholder="0" ng-model="item.quantity" /></td>
+                                        <td>{{ lookupItemUnit(item.item_code); }}</td>
+                                        <td ng-if="item.level !== 'N' || item.level == 'E'">{{ lookupItemName(item.item_code) || item.item_name }}</td>
+                                        <td ng-if="item.level == 'N'"><input type="text" class="form-control" placeholder="" ng-model="item.item_name" /></td>
+                                        <td><input type="text" class="form-control" placeholder="" ng-model="item.material_type" /></td>
+                                        <td><input type="text" class="form-control" placeholder="" ng-model="item.remark" /></td>
+                                        <td>
+                                            <a ng-hide="order.order_details.order_items.length <= 1" ng-click="removeItem(item)" class="text-danger">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                            <a ng-show="order.order_details.order_items.length <= 1" ng-click="">
+                                                <span>&nbsp;</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr ng:repeat="itemChild in item.children" style="border-bottom: none;" ng-show="open == true"  ng-if="item.level==='N' || item.level==='E'">
+                                        <td class="col-md-3" style="border-bottom: none;">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" ng-model="itemChild.item_code"
+                                                       typeahead="itemLU.item_code as itemLU.item_code + ' - ' + itemLU.item_name for itemLU in itemLookupList | filter:$viewValue | limitTo:30">
+                                                                    <span class="input-group-btn">
+                                                                        <button type="button" class="btn btn-primary" ng-click="displayChildItemDetailModal($index, item)"><i class="fa fa-search"></i>
+                                                                        </button>
+                                                                    </span>
+                                            </div>
+                                        </td>
+                                        <td class="col-md-2" style="border-bottom: none;">{{ itemChild.length_width_height }}</td>
+                                        <td class="col-md-1" style="border-bottom: none;"></td>
+                                        <td class="col-md-1" style="border-bottom: none;">{{ lookupItemUnit(itemChild.item_code); }}</td>
+                                        <td class="col-md-2" style="border-bottom: none;">{{ lookupItemName(itemChild.item_code); }}</td>
+                                        <td class="col-md-1" style="border-bottom: none;"><input type="text" class="form-control" placeholder="" ng-model="itemChild.material_type" /></td>
+                                        <td class="col-md-2" style="border-bottom: none;"><input type="text" class="form-control" placeholder="" ng-model="itemChild.remark" /></td>
+                                        <td style="border-bottom: none;">
+                                            <a ng-hide="item.children.length <= 1" ng-click="removeChild(item, itemChild)" class="text-danger">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                            <a ng-show="item.children.length <= 1" ng-click="">
+                                                <span>&nbsp;</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr ng-show="open == true"  ng-if="item.level==='N' || item.level==='E'">
+                                        <td colspan="9">
+                                            <input type="button" class="btn btn-primary btn-sm pull-right" value=" Tambah Komponen " ng-click="addItemChild($index)">
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+									
+								<!--</div>-->
+                                <div class="table-responsive">
+                                <table class="table" ng-show="!HLPFIELD_items_is_edit_mode">
+                                    <thead>
+                                        <tr>
+                                            <th>Kode Barang (SKU)</th>
+                                            <th>P x L x T</th>
+                                            <th>Jumlah Order</th>
+                                            <th>Unit</th>
+                                            <th>Nama Barang</th>
+																						<th>Tipe Kain</th>
+                                            <th>Remark</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody ng:repeat="item in order.order_details.order_items">
+                                    <tr>
+                                        <td>{{ item.item_code }}</td>
+                                        <td>{{ item.length_width_height }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ lookupItemUnit(item.item_code); }}</td>
+                                        <td>{{ lookupItemName(item.item_code) || item.item_name }}</td>
+                                        <td>{{ item.material_type }}</td>
+                                        <td>{{ item.remark }}</td>
+                                    </tr>
+                                    <tr ng-if="item.level == 'N' || item.level == 'E'" ng:repeat="itemChild in item.children" >
+                                        <td style="line-height: 10px">&nbsp;&nbsp;&nbsp;{{ itemChild.item_code }}</td>
+                                        <td style="line-height: 10px">{{ itemChild.length_width_height }}</td>
+                                        <td style="line-height: 10px">{{ itemChild.quantity }}</td>
+                                        <td style="line-height: 10px">{{ lookupItemUnit(itemChild.item_code); }}</td>
+                                        <td style="line-height: 10px">{{ lookupItemName(itemChild.item_code); }}</td>
+                                        <td style="line-height: 10px">{{ itemChild.material_type }}</td>
+                                        <td style="line-height: 10px">{{ itemChild.remark }}</td>
+                                    </tr>
+                                    </tbody>
+
+                                    <!--
+                                    <tbody>
+                                        <tr ng:repeat="item in order.order_details.order_items">
+                                            <td>{{ item.item_code }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td>{{ lookupItemUnit(item.item_code); }}</td>
+                                            <td>{{ lookupItemName(item.item_code); }}</td>
+                                            <td>{{ item.material_type }}</td>
+																						<td>{{ item.remark }}</td>
+                                        </tr>
+                                    </tbody>
+                                    -->
+                                </table>
+																</div>
+																
+                                <div ng-show="HLPFIELD_items_is_edit_mode">
+                                    
+                                    <button class="btn btn-alt btn-hover btn-primary" ng-click="confirmItemsEdit()">
+                                        <span>OK</span>
+                                        <i class="glyph-icon icon-plus"></i>
+                                    </button>
+                                    
+                                    <button class="btn btn-alt btn-hover btn-primary" ng-click="addItem()">
+                                        <i class="ti-plus"></i> <span> Tambah Barang</span>
+                                    </button>
+                                    
+                                </div>
+                                
+                                <div ng-show="HLPFIELD_items_is_edit_mode">
+                                    <button class="btn btn-alt btn-hover btn-primary" ng-click="activateItemsEditMode()" ng-disabled="isAnyInEditMode()">
+                                        <span>EDIT</span>
+                                        <i class="glyph-icon icon-plus"></i>
+                                    </button>
+                                </div>
+                            
+                                
+                                
+                            </tab>
+                            <tab heading="Pengiriman">
+                                
+                                <!--@#JWBOOKMARK 2-->
+                                <div class="panel panel-white" id="panel1" ng:repeat="delivery in order.delivery_request_details">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title text-primary">Rencana Pengiriman {{ $index + 1}}</h4>
+                                        <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                                    </div>
+                                    <div collapse="panel1" ng-init="panel1=false" class="panel-wrapper">
+                                        <div class="panel-body">
+                                            
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label for="txtDeliveryDate{{ $index + 1 }}" class="col-sm-2 control-label">Tanggal Pengiriman</label>
+                                                    <div class="col-sm-10">
+                                                        
+                                                        <input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" 
+                                                               ng-model="delivery.requested_delivery_date" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}"
+                                                               ng-readonly="!delivery.HLPFIELD_is_edit_mode"
+                                                               required />
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="txtCustomerName" class="col-sm-2 control-label">Alamat</label>
+                                                    <div class="col-sm-10">
+                                                        <textarea class="form-control autosize msd-elastic: \n;" ng-model="delivery.requested_delivery_address" 
+                                                                  ng-readonly="!delivery.HLPFIELD_is_edit_mode"></textarea>
+                                                        
+                                                        
+                                                        <!-- List of Addresses - BEGIN -->
+                                                        
+                                                        <!--
+                                                        <div class="dropdown" dropdown on-toggle="toggled(open)">
+                                                            
+                                                            <a href class="dropdown-toggle" dropdown-toggle>
+                                                                <span class="dot-badge partition-red"></span> <i class="ti-comment"></i> <span>TEST</span>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large">
+                                                                <li>
+                                                                    <span class="dropdown-header" translate="topbar.messages.HEADER">Alamat</span>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="drop-down-wrapper ps-container">
+                                                                        <ul>
+                                                                            <li class="unread">
+                                                                                <a href="javascript:;" class="unread">
+                                                                                    <div class="clearfix">
+                                                                                        <div class="thread-content">
+                                                                                            Contoh Alamat 1
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                            <li class="unread">
+                                                                                <a href="javascript:;" class="unread">
+                                                                                    <div class="clearfix">
+                                                                                        <div class="thread-content">
+                                                                                            Contoh Alamat 1
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                            <li class="unread">
+                                                                                <a href="javascript:;" class="unread">
+                                                                                    <div class="clearfix">
+                                                                                        <div class="thread-content">
+                                                                                            Contoh Alamat 1
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </li>
+                                                                
+                                                            </ul>
+                                                            
+                                                        </div>
+                                                        
+                                                        -->
+                                                        
+                                                        
+                                                        
+                                                        <!-- List of Addresses - END -->
+                                                        
+                                                        
+                                                        
+                                                        
+                                                        
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                            </form>
+                                            
+                                            <!-- TABLE if edit mode -->
+																						<div class="table-responsive">
+                                            <table class="table table-bordered" ng-show="HLPFIELD_is_edit_mode">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Kode Barang (SKU)</th>
+                                                        <th>P x L x T</th>
+                                                        <th>Jumlah Order</th>
+                                                        <th>Jumlah Belum Direncanakan</th>
+                                                        <th>Jumlah Permohonan Pengiriman</th>
+                                                        <th>Unit</th>
+                                                        <th>Nama Barang</th>
+																												<th>Tipe Kain</th>
+                                                        <th>Remark</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng:repeat="item in delivery.requested_delivery_items">
+                                                        <td>{{ item.length_width_height }}</td>
+                                                        <td>{{ item.item_code }}</td>
+                                                        <td>{{ item.main_quantity }}</td>
+                                                        <td>{{ item.remains }}</td>
+                                                        <td><input type="text" class="form-control" id="" placeholder="0" ng-model="item.quantity" /></td>
+                                                        <td>{{ lookupItemUnit(item.item_code) }}</td>
+                                                        <td>{{ lookupItemName(item.item_code) || item.item_name }}</td>
+                                                        <td>{{ item.material_type }}</td>
+																												<td>{{ item.remark }}</td>
+                                                    </tr>
+
+                                                </tbody>
+
+                                            </table>
+																						</div>
+																						
+                                            <!-- TABLE NOT EDITABLE -->
+																						<div class="table-responsive">
+                                            <table class="table table-bordered"  ng-show="!HLPFIELD_is_edit_mode">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Kode Barang (SKU)</th>
+                                                        <th>P x L x T</th>
+                                                        <th>Jumlah Permohonan Pengiriman</th>
+                                                        <th>Jumlah Order</th>
+                                                        <th>Unit</th>
+                                                        <th>Nama Barang</th>
+																												<th>Tipe Kain</th>
+                                                        <th>Remark</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng:repeat="item in delivery.requested_delivery_items | filter: filterNullAndZero(item)">
+                                                        <td>{{ item.item_code }}</td>
+                                                        <td>{{ item.length_width_height }}</td>
+                                                        <td>{{ item.quantity }}</td>
+                                                        <td>{{ item.main_quantity }}</td>
+                                                        <td>{{ lookupItemUnit(item.item_code) }}</td>
+                                                        <td>{{ lookupItemName(item.item_code) || item.item_name }}</td>
+                                                        <td>{{ item.material_type }}</td>
+																												<td>{{ item.remark }}</td>
+                                                    </tr>
+
+                                                </tbody>
+
+                                            </table>
+																						</div>
+																						
+                                        </div>
+                                    </div>
+																</div>
+                                
+                            </tab>
+                            
+                        </tabset>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+		<div class="row">
+			<div class="col-md-2">
+				<select ng-model="draft.product_type" class="cs-skin-slide" ng-options="o.value as o.label for o in OPTIONS_department_types" disabled></select>
+			</div>
+	
+			<div class="checkbox clip-check check-primary pull-right" ng-show="hasSpecialRequestAccess">
+				<input type="checkbox" id="checkbox1" value="1" ng-model="order.order_details.special_request" disabled />
+				<label for="checkbox1">
+					Special request
+				</label>
+			</div>
+		</div>
+		
+		<!--<button class="btn btn-alt btn-hover btn-purple" ng-click="printDraftOrderNotes(draft)">
+			<span>Print Draft Order</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>-->
+    
+		<script type="text/ng-template" id="modal_item_detail">
+			<div class="modal-header">
+				<h3 class="modal-title">Item Detail</h3>
+			</div>
+			<div class="modal-body bg-white">
+				<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+				<div class="table-responsive">
+					<table class="table" ng-table="tableParams">
+						<tr ng:repeat="item in $data | filter: filter">
+							<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+							<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+							<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+							<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+							<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+							<td>
+								<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item.item_code)">Pilih</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+			</div>
+		</script>
+		
+		<script type="text/ng-template" id="modal_customer_list">
+			<div class="modal-header">
+				<h3 class="modal-title">Daftar Customer</h3>
+			</div>
+			<div class="modal-body bg-white">
+				<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$"/>
+				<div class="table-responsive">
+					<table class="table" ng-table="customerListTableParams">
+						<tr ng:repeat="customer in $data | filter: search">
+							<td data-title="'Nama Customer'" sortable="'customer_name'">{{ customer.customer_name }}</td>
+							<td data-title="'Nama PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
+							<td data-title="'No Telp'" sortable="'phone_number'">{{ customer.phone_number }}</td>
+							<td data-title="'Email'" sortable="'customer_email'">{{ customer.customer_email }}</td>
+							
+							<td>
+								<button class="btn btn-alt btn-hover btn-primary" ng-click="setCustomerIdToSearch(customer.customer_id)">Pilih</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+			</div>
+		</script>
+                                
+</div><!-- End of Customer Row -->
+
+
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

@@ -1,0 +1,305 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Approve Purchase Request</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="PurchaseRequestApprovedDetailController">  
+
+<div class="container-fluid container-fullw">
+  <div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Approval</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-3">
+										Pemberi persetujuan
+									</div>
+									<div class="col-md-9">
+										: {{ draft.approved.approver }}
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-md-3">
+										Disetujui
+									</div>
+									<div class="col-md-9">
+										: {{ draft.approved.date_created }}
+									</div>
+								</div>
+							</div>
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Detail Supplier</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Nama Supplier</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtCustomerName" ng-model="supplier.vendor_name" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPICName" ng-model="supplier.sales_pic" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtAddress" ng-model="supplier.address" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPhoneNumber" ng-model="supplier.phone_number" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtCity" ng-model="supplier.city" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPostcode" ng-model="supplier.postcode" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+										<div class="col-sm-10">
+											<input type="email" class="form-control" id="txtEmail" ng-model="supplier.sales_email" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtFaxNumber" ng-model="supplier.fax_number" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlItems">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Detail Purchase Request</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+					<div class="panel-body">
+						<div>
+							<label for="currency">Mata Uang</label> <b>{{ currency | uppercase }}</b>
+							<!--<input type="text" class="form-control" ng-model="currency" disabled/>-->
+						</div>
+						<br/>
+						<tabset class="tabbable">
+							<tab heading="Umum">	
+								<table class="table">
+									<thead>
+										<tr>
+											<th class="col-md-3">Kode Barang (SKU)</span></th>
+											<th class="col-md-3">Nama Barang</th>
+											<th class="col-md-1">Jumlah</span></th>
+											<th class="col-md-1">Unit</span></th>
+											<th>Catatan</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="itemRequest in itemRequestList">
+											<td>{{ itemRequest.item_code }}</td>
+											<td>{{ itemRequest.item_name }}</td>
+											<td>{{ itemRequest.quantity | number }}</td>
+											<td>{{ itemRequest.item_unit }}</td>
+											<td>{{ itemRequest.remark }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</tab>
+							
+							<tab heading="Harga">	
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Nama Barang</th>
+											<th class="col-md-1">Jumlah</th>
+											<th class="col-md-1">Unit</th>
+											<th class="col-md-2">Mata Uang</th>
+											<th class="col-md-2">Cost/Unit</span></th>
+											<th class="col-md-1">Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="itemRequest in itemRequestList">
+											<td>{{ itemRequest.item_name }}</td>
+											<td>{{ itemRequest.quantity | number }}</td>
+											<td>{{ itemRequest.item_unit }}</td>
+											<td>{{ currency | uppercase}}</td>
+											<td>{{ itemRequest.cost | number:2 }}</td>
+											<td>{{ itemRequest.quantity*itemRequest.cost || 0 | number:2}}</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="4"></td>
+											<th>Total</th>
+											<td>{{ sumTotal() || 0 | number:2 }}</td>
+										</tr>
+									</tfoot>
+								</table>
+							</tab>
+							<tab heading="Pengiriman">	
+								<div class="panel panel-white" id="panel1" ng-repeat="deliveryRequest in deliveryRequestList">
+									<div class="panel-heading">
+										<h4 class="panel-title text-primary">
+												Permintaan Pengiriman {{ $index+1 }}
+										</h4>
+										<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+									</div>
+									<div collapse="panel1" ng-init="panel1=(delivery.status=='X')" class="panel-wrapper">
+										<div class="panel-body">
+											<form class="form-horizontal">
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="txtDeliveryDate{{ $index + 1 }}" class="col-sm-4 control-label">Tanggal Pengiriman</label>
+															<div class="col-sm-8">
+																<input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" ng-model="deliveryRequest.date" ng-disabled="!deliveryRequest.editMode" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" required/>
+															</div>
+														</div>
+															
+														<div class="form-group">
+															<label for="txtCustomerName" class="col-sm-4 control-label">Alamat</label>
+															<div class="col-sm-8">
+																<select class="cs-skin-slide" ng-model="deliveryRequest.warehouse_id" ng-options="a.warehouse_id as a.city for a in warehouse.addresses" ng-disabled="!deliveryRequest.editMode"></select>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="txtCustomerName" class="col-sm-2 control-label">Catatan Pengiriman</label>
+															<div class="col-sm-10">
+																<textarea class="form-control autosize msd-elastic: \n;" ng-model="deliveryRequest.remark" ng-disabled="!deliveryRequest.editMode"></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-10 col-md-offset-2">
+													<textarea class="form-control autosize msd-elastic: \n;" ng-model="deliveryRequest.warehouse_address" disabled ></textarea>
+													</div>
+												</div>
+											</form>
+											<br/><br/>
+											<!-- TABLE if edit mode -->
+											<div class="table-responsive">
+												<table class="table table-bordered">
+													<thead>
+														<tr>
+															<th>Nama Barang</th>
+															<th>Jumlah Order</th>
+															<th>Jumlah Belum Direncanakan</th>
+															<th>Jumlah Permohonan Pengiriman</th>
+															<th class="col-md-1">Unit</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="itemDeliveryRequest in deliveryRequest.item_delivery_request_list">
+															<td>{{ itemDeliveryRequest.item_name }}</td>
+															<td>{{ itemDeliveryRequest.requested_quantity | number }}</td>
+															<td>{{ itemDeliveryRequest.remaining | number }}</td>
+															<td>{{ itemDeliveryRequest.quantity | number }}</td>
+															<td>{{ itemDeliveryRequest.item_unit }}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</tab>
+							<tab heading="Lainnya">	
+								<p>PR ini akan membutuhkan persetujuan dari: <input type="text" class="form-control" ng-model="purchase.approver_name" disabled/></p>
+								<div class="checkbox clip-check check-primary">
+									<input type="checkbox" id="checkbox1" ng-model="edit.sendEmail">
+									<label for="checkbox1">
+										Email PO ke supplier
+									</label>
+								</div>
+								<input type="text" class="form-control" ng-model="supplier.sales_email"/>
+							</tab>
+						</tabset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

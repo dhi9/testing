@@ -1,0 +1,308 @@
+<!-- start: MAIN NAVIGATION MENU -->
+<div class="navbar-title">
+	<span>Main Menu</span>
+</div>
+
+<ul class="main-navigation-menu">
+	<li ui-sref-active="active">
+		<a ui-sref="app.dashboard">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-home"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title"> Dashboard </span>
+				</div>
+			</div>
+		</a>
+	</li>
+	
+	<li ng-class="{'active open':$state.includes('app.order')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-money"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Sales Order</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.order.new_draft_order">
+					<span class="title">Buat Draft Order</span>
+				</a>
+			</li>
+			<!--<li ui-sref-active="active">
+				<a ui-sref="app.order.draft_order_list">
+					<span class="title">Daftar Draft Order</span>
+				</a>
+			</li>-->
+			<li ui-sref-active="active">
+				<a ui-sref="app.order.draft_order_cart_list">
+					<span class="title">Sales Order Troli</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.order.active_order">
+					<span class="title">Sales Order Aktif</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	
+	<li ng-class="{'active open':$state.includes('app.purchase')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-money"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Purchase Order</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.purchase.new_purchase_request">
+					<span class="title">Buat Purchase Request</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.service.new_service_request">
+					<span class="title">Buat Service Request</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.purchase.approve_purchase_request">
+					<span class="title">Approve Request</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.purchase.purchase_order_active">
+					<span class="title">Order Aktif</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	
+	<li ng-class="{'active open':$state.includes('app.inventory')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-money"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Inventory</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+            <li ui-sref-active="active">
+                <a ui-sref="app.inventory.tag_display">
+                    <span class="title">Tag Display</span>
+                </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="app.inventory.stock_status">
+                    <span class="title">Stock Status</span>
+                </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="app.inventory.stock_opname">
+                    <span class="title">Stock Opname</span>
+                </a>
+            </li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.inventory.manual_stock_setting">
+					<span class="title">Pengaturan Stock Manual</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.inventory.stock_display">
+					<span class="title">Stock Display</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	
+	<li ng-class="{'active open':$state.includes('app.delivery')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-truck"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Pengiriman</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<!--<li ui-sref-active="active">
+				<a ui-sref="app.delivery.active_orders">
+					<span class="title">Sales Order Aktif</span>
+				</a>
+			</li>-->
+			<li ui-sref-active="active">
+				<a ui-sref="app.delivery.document_flow({order_reference: 'cari'})">
+					<span class="title">Alur Dokumen</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.delivery.order_to_deliver">
+					<span class="title">Pengiriman Baru</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.delivery.active_delivery">
+					<span class="title">Pengiriman Aktif</span>
+				</a>
+			</li>
+		</ul>	
+	</li>
+	
+	<li ng-class="{'active open':$state.includes('app.creditblock')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-lock"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Credit Block</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.creditblock.customer_list_new_credit_block">
+					<span class="title">Buat Credit Block</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.creditblock.customers_with_credit_block">
+					<span class="title">Customer Credit Block</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.creditblock.orders_with_credit_block">
+					<span class="title">Order Credit BLock</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	
+	<li ng-class="{'active open':$state.includes('app.master')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-server"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Master Database</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.category">
+					<span class="title">Category Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.customer_list">
+					<span class="title">Customer Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.user">
+					<span class="title">User Master</span>
+				</a>
+			</li>
+			<!--<li ui-sref-active="active">
+				<a ui-sref="app.master.item_list">
+					<span class="title">Item Master</span>
+				</a>
+			</li>-->
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.stock">
+					<span class="title">Stock Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.vendor">
+					<span class="title">Vendor Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.site">
+					<span class="title">Site Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.attribute">
+					<span class="title">Attribute Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.vehicle">
+					<span class="title">Vehicle Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.company">
+					<span class="title">Company Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.bank">
+					<span class="title">Bank Master</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+</ul>
+<!-- end: MAIN NAVIGATION MENU -->
+<!-- start: CORE FEATURES -->
+<div class="navbar-title">
+	<span>Reports</span>
+</div>
+<ul class="folders">
+	<li>
+		<a ui-sref="app.report.delivery">
+			<div class="item-content">
+				<div class="item-media">
+					<span class="fa-stack"> <i class="fa fa-square fa-stack-2x"></i> <i class="fa fa-truck fa-stack-1x fa-inverse"></i> </span>
+				</div>
+				<div class="item-inner">
+					<span class="title"> Pengiriman </span>
+				</div>
+			</div>
+		</a>
+	</li>
+	<li>
+		<a ui-sref="app.report.travel_letter">
+			<div class="item-content">
+				<div class="item-media">
+					<span class="fa-stack"> <i class="fa fa-square fa-stack-2x"></i> <i class="fa fa-folder fa-stack-1x fa-inverse"></i> </span>
+				</div>
+				<div class="item-inner">
+					<span class="title"> Surat Jalan </span>
+				</div>
+			</div>
+		</a>
+	</li>
+	<li>
+		<a ui-sref="app.report.on_time_delivery">
+			<div class="item-content">
+				<div class="item-media">
+					<span class="fa-stack"> <i class="fa fa-square fa-stack-2x"></i> <i class="fa fa-clock-o fa-stack-1x fa-inverse"></i> </span>
+				</div>
+				<div class="item-inner">
+					<span class="title"> On Time Delivery </span>
+				</div>
+			</div>
+		</a>
+	</li>
+</ul>
+<!-- end: CORE FEATURES -->

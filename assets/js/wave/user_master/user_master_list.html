@@ -1,0 +1,60 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">User Master</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="UserMasterListController">  
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<div ng-show="table_loading">Loading...</div>
+				<div ng-show="!table_loading">
+					<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="tableParams">
+							<tr ng:repeat="user in $data | filter: search">
+								<td data-title="'Username'" sortable="'username'">{{ user.username }}</td>
+								<td data-title="'Full Name'" sortable="'full_name'">{{ user.full_name }}</td>
+								<td class="col-sm-2" data-title="'Status'" sortable="'statusLabel'">{{ user.statusLabel }}</td>
+								<td class="col-sm-2">
+									<div class="btn-group" dropdown >
+										<button type="button" class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+											Option <span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu" role="menu">
+											<li>
+												<a ui-sref="app.master.user_edit({user: '{{ user.username }}', tab:0 })">Modify User
+											</li>
+											<li>
+												<a ui-sref="app.master.user_edit({user: '{{ user.username }}', tab:1})">Access Level
+											</li>
+											<li>
+												<a ui-sref="app.master.user_edit({user: '{{ user.username }}', tab:2})">Approval
+											</li>
+											<li>
+												<a ui-sref="app.master.user_edit({user: '{{ user.username }}', tab:3})">Password Reset
+											</li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<button class="btn btn-primary" ui-sref="app.master.user_new">Create New user</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

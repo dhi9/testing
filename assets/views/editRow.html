@@ -1,0 +1,27 @@
+<table class="table no-bg">
+    <thead>
+        <tr>
+            <th>Kode Barang</th>
+            <th>P x L x T</th>
+            <th>Tipe Kain</th>
+            <th>Remark</th>
+        </tr>
+    </thead>
+	<tbody>
+        <tr ng-repeat="item in custom.children">
+            <td>
+                <input class="form-control" type="text" name="fn" class="w100" ng-model="item.item_code">
+            </td>
+            <td>
+                <input class="form-control" type="text" name="dc" class="w180" ng-model="item.length_width_height">
+            </td>
+            <td>
+                <input class="form-control" type="text" name="em" class="w180" ng-model="item.material_type">
+            </td>
+            <td>
+                <input class="form-control" type="text" name="em" class="w180" ng-model="item.remark">
+            </td>
+        </tr>
+    </tbody>
+</table>
+<!--  class="editRowTd" -->

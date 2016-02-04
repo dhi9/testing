@@ -1,0 +1,126 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Pengiriman Aktif</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="ActiveDeliveryController">  
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-md-12">
+			<tabset class="tabbable" type="pills">
+				<tab heading="Aktif" ng-click="notCompletedDeliveriesList()">
+					<div ng-show="table_loading">Loading...</div>
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" id="txtSearchTable" ng-model="notCompletedDeliveriesFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table ng-table="notCompletedDeliveriesTableParams" class="table">
+								<tr ng:repeat="delivery in $data | filter: notCompletedDeliveriesFilter">
+									<td data-title="'Status' "sortable="'status'"><span class="label {{ UTILgetStatusClass(delivery.status, 'DELIVERY'); }}">{{ UTILgetStatusLabel(delivery.status, 'DELIVERY'); }}</span></td>
+									<td data-title="'No Surat Jalan'" sortable="'delivery_reference'">{{ delivery.delivery_reference }}</td>
+									<td data-title="'Order'" sortable="'order_reference'">{{ delivery.order_reference }}</td>
+									<td data-title="'Tanggal Pemuatan'" sortable="'order_loading_date'">{{ delivery.loading_date }}</td>
+									<td data-title="'Nama Customer'">{{ delivery.customer_name }}</td>
+									<td data-title="'Nama PIC'">{{ delivery.pic_name }}</td>
+									<td>
+										<button class="btn btn-primary" ui-sref="app.delivery.confirm_delivery({delivery_id: '{{ delivery.delivery_id }}'})">
+											<span>Detail</span>
+											<i class="glyph-icon icon-close"></i>
+										</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</tab>
+				<tab heading="Selesai">
+					<form role="form" class="form-inline">
+						<div class="form-group">
+							<label>Dari Tanggal</label>
+							<input type="date" class="form-control" ng-model="completedDeliveriesSearch.start_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<div class="form-group">
+							<label>Sampai Tanggal</label>
+							<input type="date" class="form-control" ng-model="completedDeliveriesSearch.end_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<button class="btn btn-primary" ng-click="applyCompletedDeliveriesSearch()">Cari</button>
+					</form>
+					<br/>
+					<div ng-show="table_loading">Loading...</div>
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" id="txtSearchTable" ng-model="completedDeliveriesFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table ng-table="completedDeliveriesTableParams" class="table">
+								<tr ng:repeat="delivery in $data | filter: completedDeliveriesFilter">
+									<td data-title="'Status' "sortable="'status'"><span class="label {{ UTILgetStatusClass(delivery.status, 'DELIVERY'); }}">{{ UTILgetStatusLabel(delivery.status, 'DELIVERY'); }}</span></td>
+									<td data-title="'No Surat Jalan'" sortable="'delivery_reference'">{{ delivery.delivery_reference }}</td>
+									<td data-title="'Order'" sortable="'order_reference'">{{ delivery.order_reference }}</td>
+									<td data-title="'Tanggal Pemuatan'" sortable="'order_loading_date'">{{ delivery.loading_date }}</td>
+									<td data-title="'Nama Customer'">{{ delivery.customer_name }}</td>
+									<td data-title="'Nama PIC'">{{ delivery.pic_name }}</td>
+									<td>
+										<button class="btn btn-primary" ui-sref="app.delivery.confirm_delivery({delivery_id: '{{ delivery.delivery_id }}'})">
+											<span>Detail</span>
+											<i class="glyph-icon icon-close"></i>
+										</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</tab>
+				<tab heading="Semua">
+					<form role="form" class="form-inline">
+						<div class="form-group">
+							<label>Dari Tanggal</label>
+							<input type="date" class="form-control" ng-model="search.start_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<div class="form-group">
+							<label>Sampai Tanggal</label>
+							<input type="date" class="form-control" ng-model="search.end_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<button class="btn btn-primary" ng-click="applySearch()">Cari</button>
+					</form>
+					<br/>
+					<div ng-show="table_loading">Loading...</div>
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" id="txtSearchTable" ng-model="tableFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table ng-table="tableParams" class="table">
+								<tr ng:repeat="delivery in $data | filter: tableFilter">
+									<td data-title="'Status' "sortable="'status'"><span class="label {{ UTILgetStatusClass(delivery.status, 'DELIVERY'); }}">{{ UTILgetStatusLabel(delivery.status, 'DELIVERY'); }}</span></td>
+									<td data-title="'No Surat Jalan'" sortable="'delivery_reference'">{{ delivery.delivery_reference }}</td>
+									<td data-title="'Order'" sortable="'order_reference'">{{ delivery.order_reference }}</td>
+									<td data-title="'Tanggal Pemuatan'" sortable="'order_loading_date'">{{ delivery.loading_date }}</td>
+									<td data-title="'Nama Customer'">{{ delivery.customer_name }}</td>
+									<td data-title="'Nama PIC'">{{ delivery.pic_name }}</td>
+									<td>
+										<button class="btn btn-primary" ui-sref="app.delivery.confirm_delivery({delivery_id: '{{ delivery.delivery_id }}'})">
+											<span>Detail</span>
+											<i class="glyph-icon icon-close"></i>
+										</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

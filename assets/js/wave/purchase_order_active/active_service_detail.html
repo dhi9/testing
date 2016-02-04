@@ -1,0 +1,279 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Service Detail</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="ActiveServiceDetailController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Approval</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<p>
+							Pemberi Persetujuan: {{ ActiveRequestDetail.approver }}<br/>
+							Disetujui: {{ ActiveRequestDetail.approver }} ({{ ActiveRequestDetail.date_created }})
+						</p>
+						<button class="btn btn-primary" ng-click="createPDF()">Buat PDF</button>
+						<button class="btn btn-primary" ui-sref="app.purchase.service_execution_detail({requests_reference: ActiveRequestDetail.requests_reference })">Service Complete</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+	<br/>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Detail Vendor</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Nama Supplier</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtCustomerName" ng-model="ActiveRequestVendorDetail.vendor_name" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPICName" ng-model="ActiveRequestVendorDetail.sales_pic" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtAddress" ng-model="ActiveRequestVendorDetail.address" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPhoneNumber" ng-model="ActiveRequestVendorDetail.phone_number" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtCity" ng-model="ActiveRequestVendorDetail.city" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtPostcode" ng-model="ActiveRequestVendorDetail.postcode" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+								
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+										<div class="col-sm-10">
+											<input type="email" class="form-control" id="txtEmail" ng-model="ActiveRequestVendorDetail.sales_email" disabled/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtFaxNumber" ng-model="ActiveRequestVendorDetail.fax_number" disabled/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlItems">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Detail Service Request</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+					<div class="panel-body">
+						<div>
+							<label for="currency">Mata Uang</label>
+							<b>{{ActiveRequestDetail.currency | uppercase}}</b>
+						</div>
+						<br/>
+						<tabset class="tabbable">
+							<tab heading="Umum">	
+								<table class="table">
+									<thead>
+										<tr>
+											<th class="col-md-3">Nama Jasa</th>
+											<th class="col-md-1">Jumlah</th>
+											<th class="col-md-1">Mata Uang</th>
+											<th>Cost/Unit</th>
+											<th>Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="itemRequest in ActiveItemRequestList">
+											<td>{{ itemRequest.service_name }}</td>
+											<td>{{ itemRequest.quantity | currency:'':0  }}</td>
+											<td>{{ActiveRequestDetail.currency | uppercase}}</td>
+											<td>{{ itemRequest.cost | number:2  }}</td>
+											<td>{{itemRequest.quantity * itemRequest.cost | currency:'':2 }}</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td>Total</td>
+											<td>{{ sumTotal() | number:2  }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</tab>
+							
+							<tab heading="Harga">	
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Nama Jasa</th>
+											<th class="col-md-1">Jumlah</th>
+											<th class="col-md-1">Unit</th>
+											<th class="col-md-2">Mata Uang</th>
+											<th class="col-md-2">Cost/Unit <span class="symbol required"></span></th>
+											<th class="col-md-1">Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="itemRequest in ActiveItemRequestList">
+											<td>{{ itemRequest.service_name}}</td>
+											<td>{{ itemRequest.quantity | currency:'':0 }}</td>
+											<td>kg</td>
+											<td>{{ActiveRequestDetail.currency | uppercase}}</td>
+											<td>{{ itemRequest.cost | number:2 }}</td>
+											<td>{{ sumTotal() | number:2  }}</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="4">{{ Approver(sumTotal()) | number:2 }}</td>
+											<td>Total</td>
+											<td>{{ sumTotal() | number:2  }}</td>
+										</tr>
+									</tfoot>
+								</table>
+							</tab>
+							<tab heading="Pengerjaan">	
+								<div class="panel panel-white" id="panel1">
+									<div class="panel-heading">
+										<h4 class="panel-title text-primary">
+												Permintaan Pengerjaan
+										</h4>
+										<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+									</div>
+									<div collapse="panel1" ng-init="panel1=(delivery.status=='X')" class="panel-wrapper">
+										<div class="panel-body">
+											<form class="form-horizontal">
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="txtDeliveryDate{{ $index + 1 }}" class="col-sm-4 control-label">Tanggal Pengiriman <span class="symbol required"></label>
+															<div class="col-sm-8">
+																<input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" ng-model="ActiveDeliveryRequestList[0].requested_date" ng-disabled="!deliveryRequest.editMode" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" required/>
+															</div>
+														</div>
+															
+														<div class="form-group">
+															<label for="txtCustomerName" class="col-sm-4 control-label">Alamat <span class="symbol required"></label>
+															<div class="col-sm-8">
+																<select class="cs-skin-slide" ng-model="ActiveDeliveryRequestList[0].site_id" ng-options="a.site_id as a.site_reference for a in siteList" ng-disabled="!deliveryRequest.editMode"></select>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="txtCustomerName" class="col-sm-2 control-label">Catatan Pengiriman</label>
+															<div class="col-sm-10">
+																<textarea class="form-control autosize msd-elastic: \n;" ng-model="ActiveDeliveryRequestList[0].remark" disabled></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+                                                <!--
+												<div class="row">
+													<div class="col-md-10 col-md-offset-2">
+													<textarea class="form-control autosize msd-elastic: \n;" disabled>{{ searchWarehouseById(ActiveDeliveryRequestList[0].warehouse_id).address }}</textarea>
+													</div>
+												</div>
+												-->
+											</form>
+											<br/><br/>
+										</div>
+									</div>
+								</div>
+							</tab>
+							<tab heading="Lainnya">	
+								<p>PR ini akan membutuhkan persetujuan dari: <input type="text" class="form-control" ng-model="approve.name" disabled /></p>
+								<div class="checkbox clip-check check-primary">
+									<input type="checkbox" id="checkbox1" ng-model="edit.sendEmail" disabled>
+									<label for="checkbox1">
+										Email PO ke supplier
+									</label>
+								</div>
+								<input type="text" class="form-control" ng-model="ActiveRequestDetail.supplier_email" disabled/>
+							</tab>
+						</tabset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

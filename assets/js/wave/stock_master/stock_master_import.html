@@ -1,0 +1,119 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="StockMasterImportController">
+
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Import Data</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<!--
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="importFile" class="col-sm-2 control-label">File untuk diupload</label>
+						<div class="col-sm-6">
+							<input type="file" class="form-control" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+
+						</div>
+						<div class="checkbox col-sm-4">
+							<label>
+								<input type="checkbox" ng-model="ctx.includeColumnHeader"> Include Column Header
+							</label>
+						</div>
+					</div>
+				</form>
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="importExcel()">
+					<span>Lanjut</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.stock">
+					<span>Kembali</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				-->
+			</div>
+		</div>
+
+		<input type="file" class="form-control" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			   style="width:300px" />
+		<br />
+		<div class="row" ng-if="progress">
+			<div class="col-md-12">
+				<b>Ringkasan</b>
+				<br>
+				Pembuatan Data baru : {{validInsertData.length}}
+				<br>
+				Update Data : {{validUpdateData.length}}
+				<br>
+				<span ng-if="invalidData.length > 0">Error : {{invalidData.length}} </span>
+				<br>
+				<p ng-if="invalidData.length > 0">Error ditemukan pada baris-baris berikut, mohon periksa kembali data</p>
+				<p ng-if="invalidData.length == 0">Mohon konfirmasi untuk upload data. Perubahan yang dilakukan terhadap data tidak  akan dapat dikembalikan lagi.</p>
+
+				<table class="table table-condensed table-responsive" ng-if="invalidData.length > 0">
+					<thead>
+						<tr>
+							<th>{{columnList.no}}</th>
+							<th>{{columnList.item_code}}</th>
+							<th>Error Messages</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="dataError in invalidData track by $index"">
+							<td>{{dataError.no}}</td>
+							<td>{{dataError.item_code}}</td>
+							<td>{{dataError.error_messages}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<br>
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="checkWorkbook()" ladda="loadingImportStock">
+					<span>Lanjut</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="startImportStock()" ng-if="progress && invalidData.length == 0" >
+					<span>Konfirmasi Import Data</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</div>
+		</div>
+
+		<!-- Sheet tabs
+		<ul class="nav nav-tabs" style="margin-top:40px">
+			<li role="presentation" ng-class="{ active: $index == sheetIndex }" ng-repeat="sheet in workbook.sheets">
+				<a href="#" ng-click="drawSheet($index)">{{sheet.name}}</a>
+			</li>
+		</ul>
+		-->
+		<div id="tableHost" class="hide"></div>
+
+	</div>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->
+<!-- JSZip -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+
+<!-- Wijmo -->
+<script src="vendor/wijmo/scripts/vendor/wijmo.min.js" type="text/javascript"></script>
+<script src="vendor/wijmo/scripts/vendor/wijmo.xlsx.min.js" type="text/javascript"></script>
+<link href="vendor/wijmo/styles/vendor/wijmo.min.css" rel="stylesheet" />
+
+<script src="vendor/wijmo/scripts/vendor/wijmo.angular.min.js" type="text/javascript"></script>
+
+<!--<script src="vendor/wijmo/scripts/vendor/expenseReportExport.js"></script>-->
+
+<script src="vendor/wijmo/scripts/xlsxImport/drawWorkbook.js"></script>

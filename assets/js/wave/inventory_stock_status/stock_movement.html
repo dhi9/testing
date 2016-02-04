@@ -1,0 +1,206 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Pergerakan Stock</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="stockMovementController">
+
+<div class="container-fluid container-fullw">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Pergerakan Stock</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-4 control-label">Kode Barang (SKU)</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_code"  disabled>
+										</div>
+									</div>
+								</div>
+								 <div class="col-md-6">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Tipe</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_type" disabled>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-4 control-label">Nama</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_name" disabled>
+										</div>
+									</div>
+								</div>
+								 <div class="col-md-6">
+									<div class="form-group">
+										<label for="txtPICName" class="col-sm-4 control-label">Category</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_category" disabled>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-4 control-label">UOM Dasar</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" ng-model="item.item_unit"  disabled>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+						<span class="pull-right">
+							<button class="btn btn-alt btn-hover btn-primary" ng-click="helperModal(movementCodeList)" >
+								<span>Bantuan</span>
+								<i class="glyph-icon icon-plus"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlItems">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Pergerakan Stock</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>No Dokumen</th>
+										<th>Tanggal Posting</th>
+										<th>Jumlah</th>
+										<th>UOM</th>
+										<th>UOM Dasar</th>
+										<th>PO/SO</th>
+										<th>User</th>
+										<th>Tipe</th>
+										<th>Nilai Dalam IDR</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>12312</td>
+										<td>01/01/2001</td>
+										<td>100</td>
+										<td>KG</td>
+										<td>10000</td>
+										<td>asdasd</td>
+										<td>user</td>
+										<td>tipe</td>
+										<td>10000000</td>
+									</tr>
+									<tr>
+										<td colspan="4" align="right"><strong>Balance</strong></td>
+										<td>10000</td>
+										<td colspan="4" align="right"><strong>10,000,000.-</strong></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<span class="pull-left">
+				<button class="btn btn-alt btn-hover btn-primary" ui-sref="app.inventory.stock_status_detail" >
+					<span>Kembali</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</span>
+		</div>
+		</div>
+	</div>
+
+	<script type="text/ng-template" id="helper_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Keterangan</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<div class="panel-body">
+				  <header></header>
+				<tabset class="tabbable">
+					<tab heading="Umum">
+						<p>
+							<strong>No Dokumen</strong><br>
+							Merupakan nomor dokumen yang menjadi referensi user dalam meakukan posting.
+							<br><br>
+							<strong>Tanggal Posting</strong><br>
+							Tanggal dimana dokumen yang bersangkutan dicatat kedalam system
+							<br><br>
+							<strong>Jumlah</strong><br>
+							Jumlah yang diposting
+							<br><br>
+							<strong>UOM</strong><br>
+							Unit of Measure/ Satuan jumlah yang digunakan pada saat posting
+							<br><br>
+							<strong>UOM Dasar</strong><br>
+							Unit of Measure/ Satuan jumlah yang merupakan dasar sebagaimana ditentukan dalam material master
+							<br><br>
+							<strong>PO/SO</strong><br>
+							Purchase Order/ Sales Order yang menjadi referensi dalam posting (apabila ada)
+							<br><br>
+							<strong>User</strong><br>
+							yang melakukan posting
+							<br><br>
+							<strong>Tipe</strong><br>
+							Tipe posting yang dilakukan
+							<br><br>
+							<strong>Nilai dalam IDR</strong><br>
+							Nilai posting dalam Rupiah sebagaimana didalam material master pada saat posting terjadi
+							<br><br>
+						</p>
+					</tab>
+                    <tab heading="Tipe">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Movement Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in movementCodeList">
+                                    <td>{{ item.code_reference }}</td>
+                                    <td>{{ item.description }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </tab>
+				</tabset>
+			</div>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+<!-- End of Customer Row -->
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

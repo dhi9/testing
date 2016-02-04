@@ -1,0 +1,75 @@
+<div class="modal-header">
+		<h3 class="modal-title">Alamat Pengiriman</h3>
+</div>
+<div class="modal-body bg-white">
+		<form role="form" class="form-horizontal">
+				<div class="form-group">
+						<label class="col-sm-2 control-label">Deskripsi</label>
+						<div class="col-sm-10">
+								<input type="text" class="form-control" ng-model="item.description"/>
+						</div>
+				</div>
+				<div class="form-group">
+						<label class="col-sm-2 control-label">Alamat</label>
+						<div class="col-sm-10">
+								<textarea class="form-control" ng-model="item.delivery_address" ></textarea>
+						</div>
+				</div>
+				<div class="form-group">
+						<label class="col-sm-2 control-label">Area</label>
+						<div class="col-sm-4">
+								<input type="text" class="form-control" ng-model="item.area"/>
+						</div>
+						<label class="col-sm-2 control-label">City</label>
+						<div class="col-sm-4">
+								<input type="text" class="form-control" ng-model="item.city"/>
+						</div>
+				</div>
+				<div class="form-group">
+						<label class="col-sm-2 control-label">Postal Code</label>
+						<div class="col-sm-10">
+								<input class="form-control" ng-model="item.post_code">
+						</div>
+				</div>
+				<div class="form-group">
+						<label class="col-sm-2 control-label">PIC Pengiriman</label>
+						<div class="col-sm-10">
+								<input class="form-control" ng-model="item.pic_name">
+						</div>
+				</div>
+				<div class="form-group">
+						<label class="col-sm-2 control-label">Telp</label>
+						<div class="col-sm-10">
+								<input class="form-control" ng-model="item.phone_number">
+						</div>
+				</div>
+				<!-- EDIT CUSTOMER EDIT DELIVERY ADDRESSES -->
+				<div class="form-group" ng-if="modal_type === 'detailCustomerEdit'">
+						<label class="col-sm-2 control-label">Status</label>
+						<div class="col-sm-10">
+								<select class="form-control" ng-model="item.status">
+										<option value="A">Aktif</option>
+										<option value="X">Non Aktif</option>
+								</select>
+						</div>
+				</div>
+				<!-- -->
+				<!-- NEW CUSTOMER ADD DELIVERY ADDRESSES  -->
+				<button type="submit" class="btn btn-primary" ng-if="modal_type === 'newCustomerAdd'"  ng-click="addDeliveryAddress(item)">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-if="modal_type === 'newCustomerAdd'" ng-click="closeModal()">Batal</button>
+				<!-- -->
+				<!-- NEW CUSTOMER EDIT DELIVERY ADDRESSES -->
+				<button type="submit" class="btn btn-primary" ng-if="modal_type === 'newCustomerEdit'" ng-click="changeDeliveryAddress(item)">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-if="modal_type === 'newCustomerEdit'" ng-click="closeModal()">Batal</button>
+				<button type="button" class="btn btn-danger pull-right" ng-if="modal_type == 'newCustomerEdit'" ng-click="removeDeliveryAddress(item)">Hapus</button>
+				<!-- -->
+				<!-- EDIT CUSTOMER ADD DELIVERY ADDRESSES  -->
+				<button type="submit" class="btn btn-primary" ng-if="modal_type === 'detailCustomerAdd'" ng-click="addDeliveryAddress(item)">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-if="modal_type === 'detailCustomerAdd'" ng-click="closeModal()">Batal</button>
+				<!-- -->
+				<!-- EDIT CUSTOMER EDIT DELIVERY ADDRESSES -->
+				<button type="submit" class="btn btn-primary" ng-if="modal_type === 'detailCustomerEdit'" ng-click="changeDeliveryAddress(item)">Ubah</button>
+				<button type="button" class="btn btn-danger" ng-if="modal_type === 'detailCustomerEdit'" ng-click="closeModal()">Batal</button>
+				<!-- -->
+		</form>
+</div>

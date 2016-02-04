@@ -1,0 +1,210 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Sales Order Aktif</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="ActiveOrderController">  
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-md-12">
+			<tabset class="tabbable" type="pills">
+				<tab heading="Aktif">
+					<div ng-show="table_loading">Loading...</div>
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" id="txtSearchTable" ng-model="activeOrdersFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table class="table" ng-table="activeOrdersTableParams">
+								<tr ng:repeat="order in $data | filter: activeOrdersFilter">
+									<td data-title="'Status'" sortable="'status'">
+										<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span>
+									</td>
+									<td data-title="'Order Reference'" sortable="'order_reference'">{{ order.order_reference }}</td>
+									<td data-title="'Pengiriman Berikutnya'" sortable="'next_requested_delivery_date_ORDERBY'">{{ order.next_requested_delivery_date }}</td>
+									<td data-title="'Rencana Pengiriman'" sortable="'no_of_delivery_requests'">{{ order.no_of_delivery_requests }}</td>
+									<td data-title="'Nama Customer'" sortable="'customer_name'">{{ order.customer_name }}</td>
+									<td data-title="'Tanggal Buat'" sortable="'date_created_ORDERBY'">{{ order.date_created }}</td>
+									<td class="col-sm-2">
+										<div class="btn-group" dropdown >
+											<button type="button" class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+												Lanjut <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li>
+													<a ui-sref="app.order.order_detail({order_id: '{{ order.order_id }}'})">Detail</a>
+												</li>
+												<li>
+													<a ui-sref="app.delivery.document_flow({order_reference: '{{ order.order_reference }}'})">Alur Dokumen</a>
+												</li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</tab>
+				<tab heading="Selesai">
+					<form role="form" class="form-inline">
+						<div class="form-group">
+							<label>Dari Tanggal</label>
+							<input type="date" placeholder="Tanggal Awal" class="form-control" ng-model="searchCompletedOrders.start_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<div class="form-group">
+							<label>Sampai Tanggal</label>
+							<input type="date" placeholder="Tanggal Akhir" class="form-control" ng-model="searchCompletedOrders.end_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<button class="btn btn-primary" ng-click="applyCompletedOrdersFilter()">Cari</button>
+					</form>
+					<br/>
+					<div ng-show="table_loading">Loading...</div>
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" id="txtSearchTable" ng-model="completedOrdersFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table class="table" ng-table="completedOrdersTableParams">
+								<tr ng:repeat="order in $data | filter: completedOrdersFilter">
+									<td data-title="'Status'" sortable="'status'">
+										<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span>
+									</td>
+									<td data-title="'Order Reference'" sortable="'order_reference'">{{ order.order_reference }}</td>
+									<td data-title="'Pengiriman Berikutnya'" sortable="'next_requested_delivery_date_ORDERBY'">{{ order.next_requested_delivery_date }}</td>
+									<td data-title="'Rencana Pengiriman'" sortable="'no_of_delivery_requests'">{{ order.no_of_delivery_requests }}</td>
+									<td data-title="'Nama Customer'" sortable="'customer_name'">{{ order.customer_name }}</td>
+									<td data-title="'PIC'" sortable="'pic_name'">{{ order.pic_name }}</td>
+									<td data-title="'Tanggal Buat'" sortable="'date_created_ORDERBY'">{{ order.date_created | date:'dd-MM-yyyy'}}</td>
+									<td class="col-sm-2">
+										<div class="btn-group" dropdown >
+											<button type="button" class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+												Lanjut <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li>
+													<a ui-sref="app.order.order_detail({order_id: '{{ order.order_id }}'})">Detail</a>
+												</li>
+												<li>
+													<a ui-sref="app.delivery.document_flow({order_reference: '{{ order.order_reference }}'})">Alur Dokumen</a>
+												</li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</tab>
+				<tab heading="Semua">
+					<form role="form" class="form-inline">
+						<div class="form-group">
+							<label>Dari Tanggal</label>
+							<input type="date" placeholder="Tanggal Awal" class="form-control" ng-model="searchAllOrders.start_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<div class="form-group">
+							<label>Sampai Tanggal</label>
+							<input type="date" placeholder="Tanggal Akhir" class="form-control" ng-model="searchAllOrders.end_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<button class="btn btn-primary" ng-click="applyAllOrdersFilter()">Cari</button>
+					</form>
+					<br/>
+					<div ng-show="table_loading">Loading...</div>
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" id="txtSearchTable" ng-model="allOrdersFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table class="table" ng-table="allOrdersTableParams">
+								<tr ng:repeat="order in $data | filter: allOrdersFilter">
+									<td data-title="'Status'" sortable="'status'">
+										<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span>
+									</td>
+									<td data-title="'Order Reference'" sortable="'order_reference'">{{ order.order_reference }}</td>
+									<td data-title="'Pengiriman Berikutnya'" sortable="'next_requested_delivery_date_ORDERBY'">{{ order.next_requested_delivery_date }}</td>
+									<td data-title="'Rencana Pengiriman'" sortable="'no_of_delivery_requests'">{{ order.no_of_delivery_requests }}</td>
+									<td data-title="'Nama Customer'" sortable="'customer_name'">{{ order.customer_name }}</td>
+									<td data-title="'PIC'" sortable="'pic_name'">{{ order.pic_name }}</td>
+									<td data-title="'Tanggal Buat'" sortable="'date_created_ORDERBY'">{{ order.date_created }}</td>
+									<td class="col-sm-2">
+										<div class="btn-group" dropdown >
+											<button type="button" class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+												Lanjut <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li>
+													<a ui-sref="app.order.order_detail({order_id: '{{ order.order_id }}'})">Detail</a>
+												</li>
+												<li>
+													<a ui-sref="app.delivery.document_flow({order_reference: '{{ order.order_reference }}'})">Alur Dokumen</a>
+												</li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</tab>
+				<tab heading="Tutup Paksa">
+					<form role="form" class="form-inline">
+						<div class="form-group">
+							<label>Dari Tanggal</label>
+							<input type="date" placeholder="Tanggal Awal" class="form-control" ng-model="searchRejectedOrders.start_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<div class="form-group">
+							<label>Sampai Tanggal</label>
+							<input type="date" placeholder="Tanggal Akhir" class="form-control" ng-model="searchRejectedOrders.end_date" min="2000-01-01" max="{{ getCurrentDateString() }}" />
+						</div>
+						<button class="btn btn-primary" ng-click="applyRejectedOrdersFilter()">Cari</button>
+					</form>
+					<br/>
+					<div ng-show="table_loading">Loading...</div>
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" id="txtSearchTable" ng-model="rejectedOrdersFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table class="table" ng-table="rejectedOrdersTableParams">
+								<tr ng:repeat="order in $data | filter: rejectedOrdersFilter">
+									<td data-title="'Status'" sortable="'status'">
+										<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span>
+									</td>
+									<td data-title="'Order Reference'" sortable="'order_reference'">{{ order.order_reference }}</td>
+									<td data-title="'Pengiriman Berikutnya'" sortable="'next_requested_delivery_date_ORDERBY'">{{ order.next_requested_delivery_date }}</td>
+									<td data-title="'Rencana Pengiriman'" sortable="'no_of_delivery_requests'">{{ order.no_of_delivery_requests }}</td>
+									<td data-title="'Nama Customer'" sortable="'customer_name'">{{ order.customer_name }}</td>
+									<td data-title="'PIC'" sortable="'pic_name'">{{ order.pic_name }}</td>
+									<td data-title="'Tanggal Buat'" sortable="'date_created_ORDERBY'">{{ order.date_created | date:'dd-MM-yyyy'}}</td>
+									<td class="col-sm-2">
+										<div class="btn-group" dropdown >
+											<button type="button" class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+												Lanjut <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li>
+													<a ui-sref="app.order.order_detail({order_id: '{{ order.order_id }}'})">Detail</a>
+												</li>
+												<li>
+													<a ui-sref="app.delivery.document_flow({order_reference: '{{ order.order_reference }}'})">Alur Dokumen</a>
+												</li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+</div>
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

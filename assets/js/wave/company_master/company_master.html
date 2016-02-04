@@ -1,0 +1,416 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="CompanyMasterController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Company Master</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<tabset class="tabbable">
+					<tab heading="General">
+						<div class="row">
+							<div class="col-md-6">
+								Alamat Perusahaan
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Nama Perusahaan</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_name">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Alamat</label>
+										<div class="col-sm-8">
+											<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="company.company_address"></textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Kota</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_city">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Kode Pos</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_postcode">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Telp</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_phone_number">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Fax</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_fax_number">
+										</div>
+									</div>
+								</form>
+							</div>
+
+							<div style="height:73%;width:1px;background-color:#CCC;display:block;position:absolute;left:50%">&nbsp;</div>
+
+							<div class="col-md-6">
+								Alamat Pos/Dokumen<span class="pull-right"><a href="#" ng-click="copyCompanyAddress()">Sama dengan alamat perusahaan</a></span>
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Nama Perusahaan</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_pos_name">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Alamat</label>
+										<div class="col-sm-8">
+											<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="company.company_pos_address"></textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Kota</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_pos_city">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Kode Pos</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_pos_postcode">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Telp</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_pos_phone_number">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-4 control-label">Fax</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_pos_fax_number">
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="txtAddress" class="col-sm-2 control-label">No NPWP</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.company_number_npwp">
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					<tab heading="Pengiriman">
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-md-2 control-label">Nama Surat Jalan</label>
+										<div class="col-md-10">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.delivery_name">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Prefix Surat Jalan</label>
+										<div class="col-md-10">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.delivery_prefix">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Banner Gambar</label>
+										<div ng-class="{'col-md-10':!company.delivery_image,'col-md-7':company.delivery_image}">
+											<input type="file" class="form-control" id="txtAddress" ng-model="company.delivery_image" accept="image/*" multiple app-filereader>
+											<span>dimensi tidak lebih dari 200x50px (.jpg, .gif atau .png)</span>
+										</div>
+										<div ng-class="{'hide':!company.delivery_image,'col-md-3':company.delivery_image }">
+											<img ng-if="company.delivery_image" ng-repeat="image in company.delivery_image" ng-src="{{image}}" width="200" height="50" />
+											<a ng-click="company.delivery_image = null" class="text-danger">
+												<i class="fa fa-times"></i>
+											</a>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Header Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.delivery_header" ready="onReady()"></div>
+											Batasi paling banyak 15 baris
+										</div>
+									</div><div class="form-group">
+										<label class="col-md-2 control-label">Footer Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.delivery_footer" ready="onReady()"></div>
+											Batasi paling banyak 15 baris
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br/>
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					<tab heading="Invoice/Receipt">
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-md-2 control-label">Nama Kwitansi</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.ir_receipt_name">
+										</div>
+										<label class="col-md-2 control-label">Nama Invoice</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.ir_invoice_name">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Invoice/Receipt No Prefix</label>
+										<div class="col-md-10">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.ir_prefix">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Banner Gambar</label>
+										<div ng-class="{'col-md-10':!company.ir_image,'col-md-7':company.ir_image}">
+											<input type="file" class="form-control" id="txtAddress" ng-model="company.ir_image" accept="image/*" multiple app-filereader>
+											<span>dimensi tidak lebih dari 200x50px (.jpg, .gif atau .png)</span>
+										</div>
+										<div ng-class="{'hide':!company.ir_image,'col-md-3':company.ir_image }">
+											<img ng-if="company.ir_image" ng-repeat="image in company.ir_image" ng-src="{{image}}" width="200" height="50" />
+											<a ng-click="company.ir_image = null" class="text-danger">
+												<i class="fa fa-times"></i>
+											</a>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Header Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.ir_header" ready="onReady()"></div>
+											Batasi paling banyak 15 baris
+										</div>
+									</div><div class="form-group">
+										<label class="col-md-2 control-label">Footer Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.ir_footer" ready="onReady()"></div>
+											Batasi paling banyak 15 baris
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br/>
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					<tab heading="PO/SO">
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-md-2 control-label">Nama PO</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.order_po_name">
+										</div>
+										<label class="col-md-2 control-label">Nama SO</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.order_so_name">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">PO Prefix</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.order_po_prefix">
+										</div>
+										<label class="col-md-2 control-label">SO Prefix</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.order_so_prefix">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Banner Gambar</label>
+										<div class="col-md-4">
+											<input type="file" class="form-control" id="txtAddress" ng-model="company.order_image" accept="image/*" multiple app-filereader>
+											dimensi tidak lebih dari 200x50px (.jpg, .gif atau .png)
+										</div>
+										<label class="col-md-2 control-label">PIC</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.order_pic">
+										</div>
+									</div>
+									<div class="form-group" ng-if="company.order_image">
+										<label class="col-md-2 control-label"></label>
+										<div class="col-md-4">
+											<img ng-if="company.order_image" ng-repeat="image in company.order_image" ng-src="{{image}}" width="200" height="50" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Term Pembayaran Standard</label>
+										<div class="col-md-10">
+											<div class="col-sm-5 radio clip-radio radio-primary radio-inline">
+												<input type="radio" id="percent" ng-model="company.order_term_payment" value="G" >
+												<label for="percent">Setelah Barang Diterima</label>
+											</div>
+											<div class="col-sm-5 radio clip-radio radio-primary radio-inline">
+												<input type="radio" id="static" ng-model="company.order_term_payment" value="I">
+												<label for="static">Setelah Invoice Diterima</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Header Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.order_header" ready="onReady()"></div>
+											Batasi paling banyak 15 baris
+										</div>
+										{{customer.order_header}}
+									</div><div class="form-group">
+										<label class="col-md-2 control-label">Footer Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.order_footer" ready="onReady()"></div>
+											Batasi paling banyak 15 
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br/>
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					
+					<tab heading="Consignment">
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-md-2 control-label">Nama form Serah Terima</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.consignment_name">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Order Prefix</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.consignment_order_prefix">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Banner Gambar</label>
+										<div class="col-md-4">
+											<input type="file" class="form-control" id="txtAddress" ng-model="company.consignment_image" accept="image/*" multiple app-filereader>
+											
+											dimensi tidak lebih dari 200x50px (.jpg, .gif atau .png)
+										</div>
+										<label class="col-md-2 control-label">PIC</label>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.consignment_pic">
+										</div>
+									</div>
+									<div class="form-group" ng-if="company.consignment_image">
+										<label class="col-md-2 control-label"></label>
+										<div class="col-md-4">
+											<img ng-if="company.consignment_image" ng-repeat="image in company.consignment_image" ng-src="{{image}}" width="200" height="50" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Header Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.consignment_header" ready="onReady()"></div>
+											Batasi paling banyak 15 baris
+										</div>
+									</div><div class="form-group">
+										<label class="col-md-2 control-label">Footer Text</label>
+										<div class="col-md-10">
+											<div ckeditor="options" ng-model="company.consignment_footer" ready="onReady()"></div>
+											Batasi paling banyak 15 baris
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br/>
+						
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					
+					<tab heading="PKP">
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<div class="col-md-1"></div>
+										<div class="col-md-4">
+											<div class="checkbox clip-check check-primary checkbox-inline">
+												<input type="checkbox" id="consignment" ng-model="company.pkp">
+												<label for="consignment">
+													PKP
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Nilai PPN</label>
+										<div class="col-md-2 input-group">
+											<input type="text" class="form-control" id="txtAddress" ng-model="company.ppn">
+											<span class="input-group-addon">%</span>
+										</div
+									</div>
+								</form>
+							</div>
+						</div>
+						<br/>
+						
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+				</tabset>	
+			</div>
+		</div>
+		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitCompany(company)">
+			<span>Simpan</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>
+		<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+			<span>Batal</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>-->
+	</div>
+	
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

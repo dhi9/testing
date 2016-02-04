@@ -1,0 +1,114 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="ItemMasterEditController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Ubah Barang {{ item.item_name }}</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlItemDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Barang</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlItemDetail" ng-init="pnlItemDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal" ng-submit="updateItem(item)">   
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtItemName" class="col-sm-2 control-label">Kode Barang</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtItemName" ng-model="item.item_code" readonly>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Panjang</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPICName" ng-model="item.length">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtItemName" class="col-sm-2 control-label">Nama Barang</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtItemName" ng-model="item.item_name">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Lebar</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPICName" ng-model="item.width">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-2 control-label">Unit</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtAddress" ng-model="item.item_unit">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPhoneNumber" class="col-sm-4 control-label">Tinggi</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPhoneNumber" ng-model="item.height">
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtItemName" class="col-sm-2 control-label">Divisi</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtCity" ng-model="item.division">
+											</div>
+										</div>
+									</div>
+									
+									<!--<div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtPostcode" ng-model="item.postcode">
+											</div>
+										</div>
+									</div>-->
+								</div>
+								
+								<button type="submit" class="btn btn-primary" ladda="buttonLoading">Simpan</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

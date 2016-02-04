@@ -1,0 +1,401 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Good Receive</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="PurchaseDeliveryRequestDetailController">  
+
+<div class="container-fluid container-fullw bg-white">
+    
+	<div class="row">
+		<div class="col-lg-12">
+            <div class="row">
+                <div class="col-md-10">
+
+                    <p>
+                        Mohon dilakukan good receive sesuai dengan kondisi penerimaan secara fisik:<br/>
+                        Permintaan Pengiriman &emsp;&emsp;&emsp; Permintaan Tanggal Kirim: {{ deliveryRequests[0].requested_date | date:'YYYY-mm-dd' }}
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <div ng-if="deliveryRequests.status != 'C'">
+                        <div class="checkbox clip-check check-primary pull-right">
+                            <input type="checkbox" ng-model="gr.status" id="s">
+                            <label for="s">
+                                GR Selesai {{grStatus}}
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-if="deliveryRequests.status == 'C'">
+                        <button class="btn btn-primary pull-right" ng-click="displayAfterGRModal()">Print Stock Card</button>
+                    </div>
+                </div>
+            </div>
+
+			<tabset class="tabbable">
+				<tab heading="Daftar Barang">
+					<div class="table-responsive">
+						<table class="table">
+							<tr>
+								<th>Nama Barang</th>
+                                <th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
+                                <th>Jumlah Order</th>
+								<th>Jumlah Permohonan Pengiriman</th>
+								<th>Unit</th>
+							</tr>
+							<tr ng-repeat="item in deliveryItemList">
+								<td>{{ lookupItemName(item.item_code) }}</td>
+                                <td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{item.attributes[attribute.attribute_name]}}</td>
+                                <td>{{ totalOrder(item) | currency:'':0  }}</td>
+								<td>{{ item.quantity | currency:'':0  }}</td>
+                                <td>{{ item.item_unit }}</td>
+							</tr>
+						</table>
+					</div>
+				</tab>
+				<tab heading="Good Receive">
+					<div class="table-responsive">
+						<table class="table">
+							<tr>
+								<th class="col-md-2">Kode Barang</th>
+								<th class="col-md-2">Nama Barang</th>
+                                <th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
+                                <th>Jumlah Diterima</th>
+								<th class="col-md-1">Unit</th>
+								<th>Tanggal</th>
+								<th class="col-md-1">Batch</th>
+								<th class="col-md-1">Lokasi</th>
+								<th class="col-md-1">Keterangan</th>
+							</tr>
+							<tr ng-repeat="item in deliveredItemList">
+								<td>{{ item.item_code }}</td>
+								<td>{{ lookupItemName(item.item_code) }}</td>
+                                <td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{item.attributes[attribute.attribute_name]}}</td>
+                                <td>{{ item.quantity | currency:'':0  }}</td>
+								<td>{{ item.item_unit }}</td>
+								<td>{{ item.date_recieved | date:'dd-MM-yyyy' }}</td>
+								<td>
+									<button class="btn btn-primary" ng-click="displayBatchModal(item)">Detail</button>
+								</td>
+								<td>
+									<button class="btn btn-primary" ng-click="displayLocationModal(item)">Detail</button>
+								</td>
+								<td>
+									<button class="btn btn-primary" ng-click="displayRemarkModal(item)">Detail</button>
+								</td>
+							</tr>
+							<tr ng-repeat="item in newDeliveredItemList">
+								<td>
+									<select ng-model="item.purchase_delivery_request_item_id" ng-options="code.purchase_delivery_request_item_id as code.item_code for code in item.item_code_list" ng-change="setItemCodeRequest($index, item)" required></select>
+								</td>
+								<td>{{ lookupItemName(item.item_code) }}</td>
+                                <td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{item.attributes[attribute.attribute_name]}}</td>
+                                <td><input type="number" ng-model="item.quantity" min="1" maxlength="15" required/></td>
+								<td>
+									<select ng-model="item.item_unit" ng-options="uom.alternative_uom as uom.alternative_uom for uom in item.uom_list" required></select>
+								</td>
+								<td><input type="date" ng-model="item.date_recieved" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" required/></td>
+								<td>
+									<button class="btn btn-primary" ng-class="{ 'btn-o': item.batch_reference == undefined || item.batch_reference == '' || item.production_date == NULL || item.expired_date == NULL }" ng-click="displayBatchModal(item)">Detail</button>
+								</td>
+								<td>
+									<button class="btn btn-primary" ng-class="{ 'btn-o': item.site_id == undefined|| item.storage_id == undefined || item.bin_id == undefined || item.bin_id == ''  }" ng-click="displayLocationModal(item)">Detail</button>
+								</td>
+								<td>
+									<button class="btn btn-primary" ng-click="displayRemarkModal(item)">Detail</button>
+								</td>
+								<td>
+									<a ng-hide="newDeliveredItemList.length == 0" ng-click="removeItemRequest(item)" class="text-danger">
+										<i class="fa fa-times"></i>
+									</a>
+								</td>
+							</tr>
+						</table>
+
+                        <button class="btn btn-primary" ng-hide="deliveryRequests.status == 'C'" ng-click="saveGR()">Simpan GR</button>
+                        <!--
+                        <button class="btn btn-primary" ng-hide="deliveryRequests.status == 'C'" ng-click="checkDeliveredItemBeforeSaving(newDeliveredItemList)">Simpan</button>
+                        -->
+						<button class="btn btn-primary" ng-hide="deliveryRequests.status == 'C'"  ng-click="addNewDeliveredItem()"><i class="ti-plus"></i>&nbsp;<span>Tambah Good Recieved</span></button>
+					</div>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="modal_batch">
+		<div class="modal-header">
+			<h3 class="modal-title">Batch</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Mohon memasukkan informasi batch produk</p>
+			<form role="form" class="form-horizontal" ng-submit="saveBatch(batch)">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Batch</label>
+					<div class="col-sm-10">
+                        <input type="hidden" class="form-control" ng-model="batch.batch_id"/>
+						<input type="text" class="form-control" ng-model="batch.batch_reference" ng-disabled="deliveryRequests.status == 'C'" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Tanggal Produksi</label>
+                    <div class="col-sm-5">
+                        <input type="date" class="form-control" ng-model="batch.production_date" ng-disabled="deliveryRequests.status == 'C'" />
+                    </div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Tanggal Kadaluarsa</label>
+					<div class="col-sm-5">
+						<input type="date" class="form-control" ng-model="batch.expired_date" ng-disabled="deliveryRequests.status == 'C'" />
+					</div>
+                    <div class="col-sm-5">
+                        <div class="checkbox clip-check check-primary pull-right">
+                            <input type="checkbox" ng-model="batch.auto_batch" id="remember" value="1">
+                            <label for="remember">
+                                Autobatch/ PieceID
+                            </label>
+                        </div>
+                    </div>
+				</div>
+                    <fieldset>
+                        <legend>
+                            Fungsi Autobatch/PieceID
+                        </legend>
+                        <div>
+                            <p>
+                                Buat batch per  QTY secara otomatis.
+                            </p>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">GR QTY: </label>
+                                    <div class="col-sm-3 control-label">
+                                        <span class="pull-left">{{batch.quantity}}</span>
+                                    </div>
+
+                                    <label class="col-sm-1 control-label">Unit: </label>
+                                    <div class="col-sm-3 control-label">
+                                        <span class="pull-left">{{batch.item_unit}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Buat Batch/PieceID</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" ng-model="batch.mass_batch_reference" ng-disabled="!batch.auto_batch" />
+                                    </div>
+                                    <div class="col-sm-2 control-label">
+                                        <span class="pull-left">+ Prefix</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Untuk setiap</label>
+                                    <div class="col-sm-4">
+                                        <input type="number" class="form-control" ng-model="batch.batch_limit" ng-disabled="!batch.auto_batch" />
+                                    </div>
+                                    <div class="col-sm-6 control-label">
+                                        <span class="pull-left">Base UOM: KG </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </fieldset>
+
+				<button type="submit" class="btn btn-primary" ng-if="deliveryRequests.status !== 'C'" >Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="modal_location">
+		<div class="modal-header">
+			<h3 class="modal-title">Lokasi</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Mohon memasukkan informasi lokasi barang</p>
+			<form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
+				<div class="form-group">
+					<label class="col-sm-1 control-label">Site</label>
+					<div class="col-sm-11">
+						<select class="form-control" ng-model="locations.site_id" ng-options="code.site_id as code.site_reference for code in siteList" ng-change="locations.bin_id = locations.site_id ? '': locations.bin_id" ng-disabled="deliveryRequests.status == 'C'"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-1 control-label">Lokasi</label>
+					<div class="col-sm-11">
+						<select class="form-control" ng-model="locations.storage_id" ng-disabled="!locations.site_id || deliveryRequests.status == 'C'" ng-options="code.storage_id as code.storage_name for code in storageList | filter:{ site_id : locations.site_id }" ></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-1 control-label">BIN</label>
+					<div class="col-sm-11">
+						<select class="form-control"  ng-model="locations.bin_id" ng-disabled="!locations.site_id || !locations.storage_id || deliveryRequests.status == 'C'" ng-options="code.bin_id as code.bin_name for code in binList | filter:{ storage_id : locations.storage_id }" ></select>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary" ng-if="deliveryRequests.status !== 'C'" >Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+
+    <script type="text/ng-template" id="modal_remark">
+        <div class="modal-header">
+            <h3 class="modal-title">Keterangan</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal" ng-submit="saveRemark(remark)">
+                <p>Mohon memasukkan keterangan tambahan untuk penerimaan barang</p>
+                <textarea class="form-control" ng-model="remark.remark" ng-disabled="deliveryRequests.status == 'C'" ></textarea>
+                <br/>
+                <p>Tag Produk</p>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" ng-model="add_tag_input"
+                               typeahead="tag.tag_name as tag.tag_name  for tag in tagList | filter:$viewValue | limitTo:20">
+                        <!-- typeahead-input-formatter="formatSearchCustomerText($model)"
+                        typeahead-on-select="getCustomerById()" -->
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" ng-click="addItemTag(add_tag_input)">Tambah</button>
+                    </div>
+                </div>
+                <br>
+                <span ng-repeat="tag in itemTagList" class="ng-scope">
+							<span style="margin-right: 3px;" class="ui-select-match-item btn btn-default btn-xs" type="button">
+								<span class="close ui-select-match-close" ng-click="removeItemTag(tag)">&nbsp;<i class="fa fa-times" style="font-size: smaller"></i> </span>
+								<span uis-transclude-append="">
+									<span class="ng-binding ng-scope">
+											{{tag.tag_name}}
+									</span>
+								</span>
+							</span>
+						</span>
+                <br><br>
+                <br>
+                <button type="submit" class="btn btn-primary" ng-if="deliveryRequests.status !== 'C'" >Simpan</button>
+                <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+            </form>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modal_after_gr">
+        <div class="modal-header">
+            <h3 class="modal-title">GR Selesai</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal">
+                <p>
+                    GR telah selesai dilakukan, stock card dapat dicetak apabila diperlukan
+                </p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Diterima</th>
+                        <th>Unit</th>
+                        <th>Tanggal</th>
+                        <th>Batch</th>
+                        <th>Lokasi</th>
+                        <th>Print Stock Card</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in deliveredItemList">
+                        <td>{{item.item_code}}</td>
+                        <td>{{lookupItemName(item.item_code)}}</td>
+                        <td>{{item.quantity}}</td>
+                        <td>{{item.item_unit}}</td>
+                        <td>{{item.date_recieved | date:'dd-MM-yyyy'}}</td>
+                        <td>{{lookupItemBatch(item.batch_id)}}</td>
+                        <td>{{lookupItemSite(item.site_id) + "/" + lookupItemStorage(item.storage_id) + "/" + lookupItemBin(item.bin_id)}}</td>
+                        <td>
+                          <button type="button" class="btn btn-primary" ng-click="openStockCard(item.purchase_delivered_item_id)">Open/ Print</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="" ng-click="openGR()">Download Laporan GR</a>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary pull-right" ng-click="closeModal()">Kembali</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modal_before_gr">
+        <div class="modal-header">
+            <h3 class="modal-title">GR Selesai</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal">
+                <p>
+                    Daftar barang yang belum GR
+                </p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Kekurangan</th>
+                        <th>Unit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in beforeGRItemList">
+                        <td>{{item.item_code}}</td>
+                        <td>{{lookupItemName(item.item_code)}}</td>
+                        <td>{{item.remain_quantity}}</td>
+                        <td>{{item.item_unit}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>
+                            Apabila masih ada barang-barang yang belum dikirim, Mohon konfirmasi ke vendor bahwa telah disepakati barang-barang diatas akan dibatalkan pengirimannya sebelum PO ini tutup.
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Keterangan
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea class="col-md-12" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <br>
+                        <button type="button" class="btn btn-primary" ng-click="saveLocation()">Simpan</button>
+                        <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </script>
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

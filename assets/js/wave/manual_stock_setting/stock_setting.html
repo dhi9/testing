@@ -1,0 +1,53 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Pengaturan Stock Manual</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="StockSettingController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="setting in $data">
+						<td data-title="'Dokumen'" sortable="'setting_code'">{{ setting.manual_stock_setting_reference }}</td>
+						<td data-title="'Tanggal Buat'" sortable="'date_created'">{{ setting.date_created }}</td>
+						<td data-title="'Tipe'" sortable="'type'">{{ setting.type }}</td>
+						<td data-title="'Material'" sortable="'material'">{{ setting.material }}</td>
+						<td data-title="'Pembuat'" sortable="''">{{ setting.creator }}</td>
+						<td data-title="'Approver'" sortable="'width'">{{ setting.approver }}</td>
+						<td data-title="'Status'" sortable="'height'">{{ setting.status }}</td>
+						<td>
+							<button class="btn btn-primary" ui-sref="app.inventory.manual_stock_setting_detail({reference: setting.manual_stock_setting_reference})">
+								<span>Detail</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+			<button class="btn btn-primary" ui-sref="app.inventory.manual_stock_setting_new">
+				<span>Tambah Pengaturan Manual</span>
+				<i class="glyph-icon icon-close"></i>
+			</button>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

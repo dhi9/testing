@@ -1,0 +1,349 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="DivisionDraftOrderDetailController">  
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">{{ draft.draft_reference }}</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div class="container-fluid container-fullw">
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <form class="form-inline">
+                <!--<div class="form-group">
+                    <label for="txtSearchCustomer"><h5>Cari Customer&nbsp;</h5></label>
+                    <div class="input-group">
+                        
+                        <input type="text" class="form-control" id="txtSearchCustomer" ng-model="customerIdToSearch" 
+                            typeahead="customerLU.customer_id as customerLU.customer_name + ' - ' + customerLU.pic_name for customerLU in customerLookupList | filter:$viewValue | limitTo:20"
+                            typeahead-input-formatter="formatSearchCustomerText($model)"
+							typeahead-on-select="getCustomerById()" >
+
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary" ng-click="getCustomerById()">
+                            <i class="fa fa-search"></i>
+                        </button> </span>
+                    </div>
+                    					<!--
+										<button class="btn btn-alt btn-hover btn-primary" ng-click="displayCustomerListModal()">
+												<span>Daftar Customer</span>
+										</button>
+                    
+                    <button class="btn btn-alt btn-hover btn-primary" ng-click="createNewCustomer()">
+                        <i class="ti-plus"></i>
+												<span> Customer Baru</span>
+                        <i class="glyph-icon icon-plus"></i>
+                    </button>
+                </div>-->
+                
+                <div class="form-group pull-right">
+                    <label for="exampleInputEmail2">PO Customer</label>
+                    <input type="text" class="form-control" id="exampleInputEmail2" ng-model="order.order_details.customer_po">
+								</div>
+            </form>
+            <br/>
+        </div>
+    </div>
+		<br/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white" id="pnlCustomerDetail">
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title text-primary">Detail Customer</h4>
+                    <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                </div>
+                <div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-2 control-label">Nama Customer</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtCustomerName" ng-model="order.customer_details.customer_name" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtPICName" ng-model="order.customer_details.pic_name" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtAddress" ng-model="order.customer_details.address" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtPhoneNumber" ng-model="order.customer_details.phone_number" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="txtCity" ng-model="order.customer_details.city" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtPostcode" ng-model="order.customer_details.postcode" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+                                        <div class="col-sm-10">
+                                            <input type="email" class="form-control" id="txtEmail" ng-model="order.customer_details.customer_email" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtFaxNumber" ng-model="order.customer_details.fax_number" ng-disabled="order.customer_input_type == 'E'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+											<span ng-show="order.customer_id" class="pull-right">
+                        <button class="btn btn-alt btn-hover btn-primary" ng-click="updateCustomer()" >
+													<span>Ubah Detail</span>
+													<i class="glyph-icon icon-plus"></i>
+                        </button>
+											</span>
+										</div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    
+    <div class="row">
+        
+        <div class="col-md-12">
+            <div class="panel panel-white" id="pnlItems">
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title text-primary">Detail Sales</h4>
+                    <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                </div>
+                <div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+                    <div class="panel-body">
+                        
+                        <tabset class="tabbable">
+                            <tab heading="Umum">
+                                
+                
+																<div class="table-responsive">
+																<table class="table">
+																		<thead>
+																				<tr>
+																						<th>Kode Barang (SKU)</th>
+																						<th>P x L x T (cm)</th>
+																						<th>Jumlah Order</th>
+																						<th>Unit</th>
+																						<th>Nama Barang</th>
+																						<th>Tipe Kain</th>
+																						<th>Remark</th>
+																				</tr>
+																		</thead>
+																		<tbody ng:repeat="item in order.order_details.order_items">
+																				<tr>
+																					<td>{{ item.item_code }}</td>
+																					<td>{{ item.length_width_height }}</td>
+																					<td>{{ item.quantity }}</td>
+																					<td>{{ item.item_unit }}</td>
+																					<td>{{ item.item_name }}</td>
+																					<td>{{ item.material_type }}</td>
+																					<td>{{ item.remark }}</td>
+																				</tr>
+																				<tr ng-if="item.level != 'S'" ng:repeat="itemChild in item.children" >
+																					<td>&nbsp;&nbsp;&nbsp;{{ itemChild.item_code }}</td>
+																					<td>{{ itemChild.length_width_height }}</td>
+																					<td>{{ itemChild.quantity }}</td>
+																					<td>{{ itemChild.item_unit }}</td>
+																					<td>{{ itemChild.item_name }}</td>
+																					<td>{{ itemChild.material_type }}</td>
+																					<td>{{ itemChild.remark }}</td>
+																				</tr>
+																		</tbody>
+																</table>
+																</div>
+                                
+                            </tab>
+                            <tab heading="Pengiriman">
+                                
+                                <!--@#JWBOOKMARK 2-->
+                                <div class="panel panel-white" id="panel1" ng:repeat="delivery in order.delivery_request_details">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title text-primary">Rencana Pengiriman {{ $index + 1}}</h4>
+                                        <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                                    </div>
+                                    <div collapse="panel1" ng-init="panel1=false" class="panel-wrapper">
+                                        <div class="panel-body">
+                                            
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label for="txtDeliveryDate{{ $index + 1 }}" class="col-sm-2 control-label">Tanggal Pengiriman</label>
+                                                    <div class="col-sm-10">
+                                                        
+                                                        <input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" 
+                                                               ng-model="delivery.requested_delivery_date" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}"
+                                                               ng-readonly="!delivery.HLPFIELD_is_edit_mode"
+                                                               required />
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="txtCustomerName" class="col-sm-2 control-label">Alamat</label>
+                                                    <div class="col-sm-10">
+                                                        <textarea class="form-control autosize msd-elastic: \n;" ng-model="delivery.requested_delivery_address" 
+                                                                  ng-readonly="!delivery.HLPFIELD_is_edit_mode"></textarea>
+                                                        
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                            </form>
+                                            
+																						<!-- TABLE if edit mode -->
+																						<div class="table-responsive">
+																						<table class="table table-bordered" ng-show="delivery.HLPFIELD_is_edit_mode">
+																								<thead>
+																										<tr>
+																												<th>Kode Barang (SKU)</th>
+																												<th>P x L x T (cm)</th>
+																												<th>Jumlah Order</th>
+																												<th>Jumlah Belum Direncanakan</th>
+																												<th>Jumlah Permohonan Pengiriman</th>
+																												<th>Unit</th>
+																												<th>Nama Barang</th>
+																												<th>Tipe Kain</th>
+																												<th>Remark</th>
+																										</tr>
+																								</thead>
+																								<tbody>
+																										<tr ng:repeat="item in delivery.requested_delivery_items">
+																												<td>{{ item.item_code }}</td>
+																												<td>{{ item.length_width_height }}</td>
+																												<td>{{ item.main_quantity }}</td>
+																												<td>{{ item.remains }}</td>
+																												<td><input type="text" class="form-control" id="" placeholder="0" ng-model="item.quantity" /></td>
+																												<td>{{ item.item_unit }}</td>
+																												<td>{{ item.item_name }}</td>
+																												<td>{{ item.material_type }}</td>
+																												<td>{{ item.remark }}</td>
+																										</tr>
+																								</tbody>
+																						</table>
+																						</div>
+																						
+																						<!-- TABLE NOT EDITABLE -->
+																						<div class="table-responsive">
+																						<table class="table table-bordered"  ng-show="!delivery.HLPFIELD_is_edit_mode">
+																								<thead>
+																										<tr>
+																												<th>Kode Barang (SKU)</th>
+																												<th>P x L x T (cm)</th>
+																												<th>Jumlah Permohonan Pengiriman</th>
+																												<th>Jumlah Order</th>
+																												<th>Unit</th>
+																												<th>Nama Barang</th>
+																												<th>Tipe Kain</th>
+																												<th>Remark</th>
+																										</tr>
+																								</thead>
+																								<tbody>
+																										<tr ng:repeat="item in delivery.requested_delivery_items | filter: filterNullAndZero(item)">
+																												<td>{{ item.item_code }}</td>
+																												<td>{{ item.length_width_height }}</td>
+																												<td>{{ item.quantity }}</td>
+																												<td>{{ item.main_quantity }}</td>
+																												<td>{{ item.item_unit }}</td>
+																												<td>{{ item.item_name }}</td>
+																												<td>{{ item.material_type }}</td>
+																												<td>{{ item.remark }}</td>
+																										</tr>
+																								</tbody>
+																						</table>
+																						</div>
+																						
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </tab>
+                            
+                        </tabset>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+		<div class="row">
+			<div class="col-md-2">
+				<select ng-model="draft.product_type" class="cs-skin-slide" ng-options="o.value as o.label for o in OPTIONS_division_types" disabled></select>
+			</div>
+	
+			<div class="checkbox clip-check check-primary pull-right" ng-show="hasSpecialRequestAccess">
+				<input type="checkbox" id="checkbox1" value="1" ng-model="order.order_details.special_request" disabled>
+				<label for="checkbox1">
+					Special request
+				</label>
+			</div>
+		</div>
+    
+		<div ng-show="draft.status == 'A'" ng-disable="draft.status != 'A'">
+			<button class="btn btn-alt btn-hover btn-primary" ng-click="approveDraftOrder()" ladda="approveButtonLoading">Approve</button>
+			<button class="btn btn-alt btn-hover btn-primary" ng-click="needChangedDraftOrder()" ladda="needChangedButtonLoading">Perlu Diganti</button>
+			<button class="btn btn-alt btn-hover btn-danger" ng-click="deleteDraftOrder()">Hapus</button>
+		</div>
+                                
+</div><!-- End of Customer Row -->
+
+
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

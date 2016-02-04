@@ -1,0 +1,624 @@
+<div ng-controller="NewDeliveryController">  
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Order {{ order.order_detail.order_reference }} PO {{ order.order_detail.customer_po }}</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div class="container-fluid container-fullw">
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white" id="pnlCustomerDetail">
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title text-primary">Detail Order</h4>
+                    <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                </div>
+                <div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-3 control-label">Order Reference</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control underline" id="txtCustomerName" ng-model="order.order_detail.order_reference" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-3 control-label">Pengiriman Berikutnya</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control underline" id="txtCustomerName" ng-model="order.order_detail.next_shipment" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-3 control-label">Rencana Pengiriman</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control underline" id="txtCustomerName" ng-model="order.order_detail.delivery_plans" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-3 control-label">Nama Customer</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control underline" id="txtCustomerName" ng-model="order.customer_detail.customer_name" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="txtCustomerName" class="col-sm-3 control-label">Tanggal Order terakhir direvisi</label>
+                                        <div class="col-sm-8">
+                                            <input type="date" class="form-control underline" id="txtCustomerName" ng-model="order.order_detail.production_completed_date" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white" id="pnlItems">
+                <div class="panel-heading border-light">
+                    <h4 class="panel-title text-primary">Pengiriman</h4>
+                    <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                </div>
+
+                <div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+                    <div class="panel-body">
+
+
+                        <!-- Panel Dalam BEGIN -->
+
+
+                        <div class="panel panel-white" id="panel1" ng:repeat="delivery_request in order.delivery_request_details">
+                            <div class="panel-heading">
+                                <h4 class="panel-title text-primary">Detail Surat Jalan {{ $index + 1}} {{ getDeliveryRequestCancelledString(delivery_request); }}{{ delivery_request.delivery_reference }}</h4>
+                                <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                            </div>
+                            <div collapse="panel1" ng-init="panel1=(delivery_request.status=='X')" class="panel-wrapper">
+
+                                <div class="panel-body">
+                                            <form class="form-horizontal" ng-if="delivery_request.deliveries.length == 0">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="txtDeliveryDate{{ $index + 1 }}"
+                                                                   class="col-sm-2 control-label">Tanggal Pengiriman</label>
+                                                            <div class="col-sm-10">
+
+                                                                <input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input"
+                                                                       ng-model="delivery_request.requested_delivery_date" placeholder="yyyy-MM-dd"
+                                                                       min="{{ getCurrentDateString(); }}"
+                                                                       ng-readonly="!delivery_request.HLPFIELD_is_edit_mode"
+                                                                       required />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="txtDeliveryTo{{ $index + 1 }}"
+                                                                   class="col-sm-4 control-label">Kirim ke</label>
+                                                            <div class="col-sm-8">
+                                                                <select id="txtDeliveryTo{{ $index + 1 }}" class="form-control" ng-model="delivery_request.delivery_address_id"  ng-change="updateSelectedAddress(delivery_request.delivery_address_id, $index)" ng-readonly="delivery_request.HLPFIELD_is_edit_mode">
+                                                                    <option value="0">Tambah Baru</option>
+                                                                    <option ng-repeat="delivery in deliveryAddressList" value="{{delivery.delivery_address_id}}">{{delivery.description}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="col-md-6">
+                                                                <div class="checkbox clip-check check-primary">
+                                                                    <input type="checkbox" class="col-md-1" id="checkbox2" value="1" ng-model="delivery_request.is_new_address" ng-disabled="delivery_request.delivery_address_id != 0">
+                                                                    <label for="checkbox2" class="col-md-6">
+                                                                        Simpan ke daftar alamat kirim
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control"  ng-disabled="delivery_request.delivery_address_id != 0" >
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="txtCustomerName" class="col-sm-2 control-label">Penerima</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" class="form-control" ng-model="delivery_request.reciever" ng-readonly="delivery_request.HLPFIELD_is_edit_mode">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="txtCustomerName" class="col-sm-2 control-label">Alamat</label>
+                                                            <div class="col-sm-10">
+                                                                <textarea class="form-control autosize msd-elastic: \n;"
+                                                                      ng-model="delivery_request.delivery_address"
+                                                                      ng-readonly="delivery_request.delivery_address_id != 0 || delivery_request.HLPFIELD_is_edit_mode"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <h4>Barang</h4>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Kode Barang (SKU)</th>
+                                                            <th>Jumlah Pengiriman</th>
+                                                            <th>Unit</th>
+                                                            <th>Nama Barang</th>
+                                                            <th>Remark</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr ng:repeat="item in delivery_request.delivery_request_items">
+                                                            <td>{{ item.item_code }}</td>
+                                                            <td>{{ item.quantity }}</td>
+                                                            <!--
+                                                            <td>{{ totalInDeliveries(delivery_request, item.item_code, item.material_type, item.remark) }}</td>
+                                                            <td>{{ item.quantity - totalInDeliveries(delivery_request, item.item_code, item.material_type, item.remark) }}</td>
+                                                            -->
+                                                            <td>{{ lookupItemUnit(item.item_code); }}</td>
+                                                            <td>{{ lookupItemName(item.item_code); }}</td>
+                                                            <td>{{ item.remark }}</td>
+                                                        </tr>
+
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+
+                                                <h4>Transportasi</h4>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="txtDelivery"
+                                                                   class="col-sm-2 control-label">Pengantar</label>
+                                                            <div class="col-sm-10">
+
+                                                                <input type="text" id="txtDelivery" name="input"
+                                                                       class="form-control"
+                                                                       ng-model="delivery_request.driver_name"
+                                                                       ng-readonly="delivery_request.HLPFIELD_is_edit_mode"
+                                                                       required />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="txtRemark"
+                                                                   class="col-sm-2 control-label">Keterangan</label>
+                                                            <div class="col-sm-10">
+
+                                                                <input type="text" id="txtRemark" name="input"
+                                                                       class="form-control"
+                                                                       ng-model="delivery_request.remark"
+                                                                       ng-readonly="delivery_request.HLPFIELD_is_edit_mode"
+                                                                       required />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-primary" ng-click="saveDelivery(delivery_request, $index)">Simpan</button>
+                                            </form>
+
+
+
+
+
+                                    <form class="form-horizontal" ng-if="delivery_request.deliveries.length > 0" ng-repeat="delivery in delivery_request.deliveries">
+
+                                        <h4>Nomor Surat Jalan : {{delivery.delivery_reference}} <span ng-if="delivery.status == 'X'">(Dibatalkan)</span></h4>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="txtDeliveryDate{{ $index + 1 }}"
+                                                           class="col-sm-2 control-label">Tanggal Pengiriman</label>
+                                                    <div class="col-sm-10">
+
+                                                        <input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input"
+                                                               ng-model="delivery_request.requested_delivery_date" placeholder="yyyy-MM-dd"
+                                                               min="{{ getCurrentDateString(); }}"
+                                                               ng-readonly="true"
+                                                               required />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="txtCustomerName" class="col-sm-2 control-label">Penerima</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" ng-model="delivery.reciever" ng-readonly="true">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="txtCustomerName" class="col-sm-2 control-label">Alamat</label>
+                                                    <div class="col-sm-10">
+                                                                <textarea class="form-control autosize msd-elastic: \n;"
+                                                                          ng-model="delivery.delivery_address"
+                                                                          ng-readonly="true"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <h4>Barang</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>Kode Barang (SKU)</th>
+                                                    <th>Jumlah Pengiriman</th>
+                                                    <th>Unit</th>
+                                                    <th>Nama Barang</th>
+                                                    <th>Remark</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng:repeat="item in delivery_request.delivery_request_items">
+                                                    <td>{{ item.item_code }}</td>
+                                                    <td>{{ item.quantity }}</td>
+                                                    <!--
+                                                    <td>{{ totalInDeliveries(delivery_request, item.item_code, item.material_type, item.remark) }}</td>
+                                                    <td>{{ item.quantity - totalInDeliveries(delivery_request, item.item_code, item.material_type, item.remark) }}</td>
+                                                    -->
+                                                    <td>{{ lookupItemUnit(item.item_code); }}</td>
+                                                    <td>{{ lookupItemName(item.item_code); }}</td>
+                                                    <td>{{ item.remark }}</td>
+                                                </tr>
+
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
+                                        <h4>Transportasi</h4>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="txtDelivery"
+                                                           class="col-sm-2 control-label">Pengantar</label>
+                                                    <div class="col-sm-10">
+
+                                                        <input type="text" id="txtDelivery" name="input"
+                                                               class="form-control"
+                                                               ng-model="delivery.driver_name"
+                                                               ng-readonly="true"
+                                                               required />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="txtRemark"
+                                                           class="col-sm-2 control-label">Keterangan</label>
+                                                    <div class="col-sm-10">
+
+                                                        <input type="text" id="txtRemark" name="input"
+                                                               class="form-control"
+                                                               ng-model="delivery.remark"
+                                                               ng-readonly="true"
+                                                               required />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-danger" ng-click="cancelDelivery(delivery)" ng-if="delivery.status != 'X'">Batal</button>
+                                    </form>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Panel Dalam END -->
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- END DELIVERY CREATION -->
+		
+	<button class="btn btn-alt btn-hover btn-purple" ng-click="">
+        <span>Print Order</span>
+        <i class="glyph-icon icon-plus"></i>
+    </button>
+    
+    <button class="btn btn-alt btn-hover btn-dark-beige" ng-click="displayOrderHistory()">
+        <span>Order History</span>
+        <i class="glyph-icon icon-plus"></i>
+    </button>
+	
+    <script type="text/ng-template" id="modal_content_order_history.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Order update history untuk order {{ order_reference }}</h3>
+        </div>
+        <div class="modal-body">
+					<div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+												<th>History</th>
+                        <th>Waktu Update</th>
+                        <th>Deskripsi</th>
+                        <th>Data Lama</th>
+                        <th>Data Baru</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng:repeat="update_history in order_update_history">
+											<td>{{ update_history.username }}</td>
+											<td>{{ update_history.update_timestamp }}</td>
+											<td>{{ update_history.update_description }}</td>
+											<td>{{ update_history.old_value }}</td>
+											<td>{{ update_history.new_value }}</td>
+										</tr>
+
+                </tbody>
+                
+            </table>
+					</div>
+            <button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+        </div>
+    </script>
+		
+		<style>
+			.table-cell {
+				border: 1px solid #000;
+				display: table-cell;
+				padding: 7px;
+			}
+		</style>
+		
+		<script type="text/ng-template" id="modal_print_delivery_reference">
+        <div class="modal-header">
+            <h3 class="modal-title">Template Print untuk Surat Jalan {{ deliveryReference }}</h3>
+        </div>
+        <div class="modal-body">
+					<div style="display: table; width: 100%; border-collapse: collapse;">
+						<div>
+							<div class="table-cell" style="width: 450px;">
+								Penjual<br/>
+								PT. Superpoly Industries<br/>
+								Komplek Perkantoran Kota Grogol Permai
+								Blok B-45, Jl. Prof. DR. Latumeten, Jakarta Barat 11460
+							</div>
+							<div class="table-cell" style="width: 225px;">Tanggal Dokumen</div>
+							<div class="table-cell" style="width: 225px;">Nomor Surat Jalan</div>
+						</div>
+						<div>
+							<div class="table-cell" style="width: 450px; height: 100px">Tujuan Pengiriman</div>
+							<div class="table-cell" style="width: 450px; height: 100px">
+								Dijual Kepada
+								<br/><br/><br/><br/>
+								No Telp
+							</div>
+						</div>
+						<div>
+							<div class="table-cell" style="width: 450px; height: 100px">Tanggal Pengiriman</div>
+							<div class="table-cell" style="width: 450px; height: 100px">Kendaraan Pengangkut</div>
+						</div>
+						<div>
+							<div class="table-cell" style="width: 50px;">No</div>
+							<div class="table-cell" style="width: 100px;">Kode Barang</div>
+							<div class="table-cell" style="width: 300px;">Nama Barang</div>
+							<div class="table-cell" style="width: 100px;">Jumlah</div>
+							<div class="table-cell" style="width: 100px;">UOM</div>
+							<div class="table-cell" style="width: 250px;">Keterangan</div>
+						</div>
+						<div ng-repeat="item in deliveryItems">
+							<div class="table-cell" style="width: 50px;">{{ $index+1 }}</div>
+							<div class="table-cell" style="width: 100px;">{{ item.item_code }}</div>
+							<div class="table-cell" style="width: 300px;">{{ item.item_name }}</div>
+							<div class="table-cell" style="width: 100px;">{{ item.quantity_sent }}</div>
+							<div class="table-cell" style="width: 100px;">{{ item.item_unit }}</div>
+							<div class="table-cell" style="width: 250px;">{{ item.material_type }}</div>
+							<div class="table-cell" style="width: 250px;">{{ item.remark }}</div>
+						</div>
+						<div>
+							<div class="table-cell" style="width: 900px;">
+								Keterangan Tambahan
+								<br/><br/><br/><br/><br/>
+								Mohon hubungi nomor berikut untuk keadaan darurat: XXXXXXXX
+							</div>
+						</div>
+						<div>
+							<div class="table-cell" style="width: 225px;">
+								Diperiksa
+								<br/><br/><br/><br/>
+								Tgl/ Nama Jelas
+							</div>
+							<div class="table-cell" style="width: 225px;">
+								Mengetahui
+								<br/><br/><br/><br/>
+								Tgl/ Nama Jelas
+							</div>
+							<div class="table-cell" style="width: 225px;">
+								Supir
+								<br/><br/><br/><br/>
+								Tgl/ Nama Jelas
+							</div>
+							<div class="table-cell" style="width: 225px;">
+								Tanda Tangan Penerima
+								<br/><br/><br/><br/>
+								Tgl/ Nama Jelas
+							</div>
+						</div>
+					</div>
+            
+            <button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+        </div>
+    </script>
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

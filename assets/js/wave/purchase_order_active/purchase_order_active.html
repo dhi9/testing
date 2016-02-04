@@ -1,0 +1,65 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Order Aktif</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="PurchaseOrderActiveController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<tabset class="tabbable" type="pills">
+				<tab heading="Aktif">
+					<input type="text" class="form-control" ng-model="searchActive.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="activePurchaseTableParams">
+							<tr ng:repeat="purchaseRequest in $data | filter: ownApprovedPurchaseDraftFilter">
+								<td class="col-md-2" data-title="'Status'" sortable="'statusLabel'">{{ purchaseRequest.statusLabel }}</td>
+								<td data-title="'Purchase Request/Service Request'" sortable="'requests_reference'">{{ purchaseRequest.requests_reference }}</td>
+								<td data-title="'Tanggal Dibuat'" sortable="'date_created'">{{ purchaseRequest.date_created | date:'dd-MM-yyyy'}}</td>
+								<td data-title="'Pembuat Purchase Request'" sortable="'creator'">{{ purchaseRequest.creator }}</td>
+								<td data-title="'Approver'" sortable="'approver'">{{ purchaseRequest.approver }}</td>
+								<td class="col-md-1">
+									<button class="btn btn-primary" ng-show="{{  purchaseRequest.type == 'PR' }}" ui-sref="app.purchase.active_purchase_detail({requests_reference : '{{ purchaseRequest.requests_reference }}'})">Detail</button>
+									<button class="btn btn-primary" ng-show="{{  purchaseRequest.type == 'SR' }}" ui-sref="app.purchase.active_service_detail({requests_reference : '{{ purchaseRequest.requests_reference }}'})">Detail</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</tab>
+				<tab heading="Selesai">
+					<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="completedPurchaseTableParams">
+							<tr ng:repeat="completedPurchase in $data">
+								<td class="col-sm-2" data-title="'Status'" sortable="'statusLabel'">{{ completedPurchase.statusLabel }}</td>
+								<td data-title="'Purchase Request/Service Request'" sortable="'requests_reference'">{{ completedPurchase.requests_reference }}</td>
+								<td class="col-sm-2" data-title="'Tanggal Selesai'" sortable="'date'">{{ completedPurchase.date_modified | date:'dd-MM-yyyy' }}</td>
+								<td class="col-sm-1">
+									<button class="btn btn-primary" ng-show="{{  completedPurchase.type == 'PR' }}" ui-sref="app.purchase.active_purchase_detail({requests_reference : '{{ completedPurchase.requests_reference }}'})">Detail</button>
+									<button class="btn btn-primary" ng-show="{{  completedPurchase.type == 'SR' }}" ui-sref="app.purchase.active_service_detail({requests_reference : '{{ completedPurchase.requests_reference }}'})">Detail</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

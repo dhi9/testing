@@ -1,0 +1,76 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Daftar Lokasi</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="SiteLocationsController">  
+
+<div class="container-fluid container-fullw bg-white">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<form class="form-horizontal">
+				<div class="form-group">
+					<label for="txtAddress" class="col-sm-1 control-label">Site ID</label>
+					<div class="col-sm-11">
+						<input type="text" class="form-control" id="txtAddress" ng-model="site.site_reference" disabled>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="txtAddress" class="col-sm-1 control-label">Name</label>
+					<div class="col-sm-11">
+						<input type="text" class="form-control" id="txtAddress" ng-model="site.site_name" disabled>
+					</div>
+				</div>
+			</form>
+			
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel-heading border-light">
+					<h4 class="panel-title text-primary">Lokasi</h4>
+					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+				</div>
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table" ng-table="tableParams">
+								<tr ng:repeat="location in $data">
+									<td data-title="'Lokasi'" sortable="'storage_name'">{{ location.storage_name }}</td>
+									<td data-title="'Detail Lokasi'" sortable="'storage_details'">{{ location.storage_details }}</td>
+									<td class="col-sm-2" data-title="'Status'" sortable="'statusLabel'">{{ location.statusLabel }}</td>
+									<td class="col-sm-3">
+										<button class="btn btn-primary" ui-sref="app.master.site_location_edit({storage_id: location.storage_id })">
+											<span>Detail</span>
+											<i class="glyph-icon icon-close"></i>
+										</button>
+										<button class="btn btn-primary" ui-sref="app.master.site_bin({ storage_id: location.storage_id })">
+											<span>Daftar Bin</span>
+											<i class="glyph-icon icon-close"></i>
+										</button>
+									</td>
+								</tr>
+							</table>
+							
+							<button class="btn btn-primary" ui-sref="app.master.site_location_new({site_id: site.site_id})">
+								<span>Buat Lokasi Baru</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

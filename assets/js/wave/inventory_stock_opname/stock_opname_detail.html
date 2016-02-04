@@ -1,0 +1,173 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="StockOpnameDetailController">
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-12">
+				<h1 class="mainTitle">Stock Opname {{ vendor.vendor_name }}</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-3 control-label">Tahun/Bulan</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="txtAddress" ng-model="opname.opname_date" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-3 control-label">Lokasi</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="txtAddress" ng-model="opname.site_name" disabled>
+								</div>
+							</div>
+						</div>
+					</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="txtAddress" class="col-sm-3 control-label">Status</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtAddress" ng-model="opname.status" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="txtAddress" class="col-sm-3 control-label">IRA</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtAddress" ng-model="opname.phone_number" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="txtAddress" class="col-sm-3 control-label">Pembuat STO</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtAddress" ng-model="opname.opname_creator" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</form>
+				<div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" ng-click="opnameModal()">
+                            Buka Detail
+                        </button>
+                    </div>
+                </div>
+				<br>
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Tindakan/ Status</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtAddress" class="col-sm-4 control-label">Tanggal Mulai</label>
+                                            <div class="col-sm-6">
+                                                <input type="date" class="form-control" id="txtAddress" ng-model="opname.opname_start_date" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtAddress" class="col-sm-4 control-label">Tanggal Selesai</label>
+                                            <div class="col-sm-6">
+                                                <input type="date" class="form-control" id="txtAddress" ng-model="opname.opname_finish_date" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtAddress" class="col-sm-4 control-label">Tanggal Validasi</label>
+                                            <div class="col-sm-6">
+                                                <input type="date" class="form-control" id="txtAddress" ng-model="opname.opname_valid_date" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.inventory.stock_opname">
+					<span>Kembali</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="opname_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">STO Form</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Site</th>
+						<th>ItemID/SKU</th>
+						<th>Batch</th>
+						<th>UOM Dasar</th>
+						<th>Aktual QTY</th>
+						<th>System QTY</th>
+                        <th>Keterangan</th>
+                        <th>Adjustment</th>
+                        <th>Approved</th>
+                        <th>Approver</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="oi in opnameItemList">
+						<td>{{ oi.site_name | date:'dd/MM/yy'}}</td>
+						<td>{{ oi.item_code | date:'H:mm'}}</td>
+						<td>{{ oi.batch_reference }}</td>
+						<td>{{ oi.base_uom }}</td>
+                        <td ng-if="!access">{{ oi.aktual_quantity }}</td>
+                        <td ng-if="access && oi.status == 'A'">{{ oi.aktual_quantity }}</td>
+                        <td ng-if="access && oi.status == 'X'"><input type="number" ng-model="oi.aktual_quantity"> </td>
+						<td>{{ oi.system_quantity }}</td>
+                        <td>{{ oi.remark }}</td>
+                        <td>{{ adjustmentQuantity(oi) }}</td>
+                        <td ng-if="!access">{{ oi.status }}</td>
+                        <td ng-if="!access && oi.status == 'X'">N/A</td>
+                        <td ng-if="access && oi.status == 'A'">Y</td>
+                        <td ng-if="access && oi.status == 'X'"><button class="btn btn-primary" ng-click="approveOpnameItem(oi)">Approve</button></td>
+                        <td>{{ oi.approver_id }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

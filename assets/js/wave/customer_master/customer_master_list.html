@@ -1,0 +1,203 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Daftar Customer</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="CustomerMasterListController">  
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<div ng-show="table_loading">Loading...</div>
+				<div ng-show="!table_loading">
+					<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$" placeholder="Filter"/>
+					<br/>
+					<div class="table-responsive">
+						<table class="table" ng-table="tableParams">
+							<tr ng:repeat="customer in $data | filter: search">
+								<td data-title="'Customer ID'" sortable="'customer_reference'">{{ customer.customer_reference }}</td>
+								<td data-title="'Nama Customer'" sortable="'customer_name'">{{ customer.customer_name }}</td>
+								<td data-title="'Nama PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
+								<td class="col-md-5">
+									<button class="btn btn-primary" ng-click="displayMarketingModal(customer)">
+										<span>Marketing</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+									<button class="btn btn-primary" ng-click="displayConsginmentModal(customer)">
+										<span>Konsinyasi</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+									<button class="btn btn-primary" ng-click="displayPaymentModal(customer)">
+										<span>Pembayaran</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+									<button class="btn btn-primary" ui-sref="app.master.customer_edit({customer_id: '{{ customer.customer_id }}'})">
+										<span>Detail</span>
+										<i class="glyph-icon icon-close"></i>
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary"  ui-sref="app.master.customer_new">
+                    <span>Buat Customer Baru</span>
+                </button>
+            </div>
+        </div>
+	</div>
+	<script type="text/ng-template" id="payment_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Pembayaran</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Metode Pembayaran</p>{{customer.pay}}
+			<form role="form" class="form-horizontal" ng-submit="savePayment(customer)">
+				<div class="form-group" align="center">
+					<div class="col-sm-5 radio clip-radio radio-primary radio-inline">
+						<input type="radio" id="sendiri" name="inline" ng-model="customer.payment_term_type" value="C" ng-click="customer.payment_term_value = 0" checked="checked" >
+						<label for="sendiri">Cash</label>
+					</div>
+					<div class="col-sm-5 radio clip-radio radio-primary radio-inline">
+						<input type="radio" id="antar" name="inline" ng-model="customer.payment_term_type" value="T" ng-click="customer.payment_term_value = 0 ">
+						<label for="antar">Termin</label>
+					</div>
+				</div>
+				<div class="form-group" align="right">
+					<div class="col-sm-4">
+					</div>
+					<div class="col-sm-8">
+						<label class="col-sm-5 label-control">Hari</label>
+						<input type="number" class="col-sm-7 form-control" id="antar" name="inline" placeholder="0" ng-model="customer.payment_term_value" ng-disabled="customer.payment_term_type !== 'T'" style="width: 50px" maxlength="3" max="999" min="0">
+					</div>
+				</div>
+				<div class="form-group" align="right">
+					<div class="col-sm-4">
+					</div>
+					<div class="col-sm-8">
+						<label class="col-sm-5 label-control">Credit Limit (IDR)</label>
+						<input type="number" class="col-sm-6" id="antar" name="inline" placeholder="0" ng-model="customer.payment_term_credit_limit" ng-disabled="customer.payment_term_type !== 'T'" style="" min="0">
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+	
+	
+	<script type="text/ng-template" id="consignment_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Konsinyasi</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<form role="form" class="form-horizontal" ng-submit="saveConsignment()">
+				<div class="form-group">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<div class="checkbox clip-check check-primary checkbox-inline">
+							<input type="checkbox" id="consignment" ng-model="customer.consignment">
+							<label for="consignment">
+								Aktifkan mode konsinyasi
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						SideID untuk pelacakan stock:
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-1"></div>
+					<div class="col-md-10">
+						<select class="form-control" ng-model="customer.site_id" ng-options="site.site_id as site.site_reference for site in siteConsignmentList" ng-disabled="!customer.consignment"></select>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+	
+	
+	<script type="text/ng-template" id="marketing_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Marketing</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<form role="form" class="form-horizontal" ng-submit="saveCommission(customer)">
+				<div class="form-group">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<div class="checkbox clip-check check-primary checkbox-inline">
+							<input type="checkbox" id="consignment" ng-model="customer.commission">
+							<label for="consignment">
+								Aktifkan marketing fee
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<div class="form-group">
+							<div class="col-sm-12">
+								Persentase marketing fee dalam penjualan
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<div class="form-group" align="center">
+							<div class="col-sm-5 radio clip-radio radio-primary radio-inline">
+								<input type="radio" id="percent" name="inline" ng-model="customer.commission_type" value="P" ng-click="static = 0" ng-disabled="!customer.commission">
+								<label for="percent">Persen nilai jual</label>
+							</div>
+							<div class="col-sm-5 radio clip-radio radio-primary radio-inline">
+								<input type="radio" id="static" name="inline" ng-model="customer.commission_type" value="S" ng-click="percent = 0" ng-disabled="!customer.commission">
+								<label for="static">Per penjualan</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<div class="form-group" align="center">
+							<div class="col-sm-5">
+								<input type="text" id="percent" placeholder="0" ng-model="customer.commission_persent" ng-disabled="customer.commission_type !== 'P' || !customer.commission" style="width: 50px"  max="100" min="0"> %
+							</div>
+							<div class="col-sm-5">
+								<input type="number" id="static" placeholder="0" ng-model="customer.commission_value" ng-disabled="customer.commission_type !== 'S' || !customer.commission" style="width: 150px" maxlength="15" min="0"> Rupiah
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<button type="submit" class="btn btn-primary" ng-disabled="!isCommissionFormValid()">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+	
+	
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

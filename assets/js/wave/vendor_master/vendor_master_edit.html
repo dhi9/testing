@@ -1,0 +1,248 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="VendorMasterEditController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Ubah Vendor {{ vendor.vendor_name }}</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-primary pull-right" ng-click="historyModal()">
+					<span>History</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-1 control-label">Nama</label>
+						<div class="col-sm-11">
+							<input type="text" class="form-control" id="txtAddress" ng-model="vendor.vendor_name" disabled/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-1 control-label">Alamat</label>
+						<div class="col-sm-11">
+							<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="vendor.address"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Kota</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.city">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Kode Pos</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.postcode">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">No. Telp</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.phone_number">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Fax</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.fax_number">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail AM Vendor</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-2 control-label">PIC Sales</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.sales_pic">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-2 control-label">Email</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.sales_email">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Pembayaran</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-4 control-label">Term Pembayaran</label>
+											<div class="col-sm-2">
+												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.payment_term_value">
+											</div>
+											<span class="help-inline col-sm-6">hari</span>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-4 control-label">Denda Keterlambatan</label>
+											<div class="col-sm-2">
+												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.penalty_percent">
+											</div>
+											<span class="help-inline col-sm-6">% per hari</span>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-2 control-label">PIC Keuangan</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_pic">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-2 control-label">Email</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_email">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-2 control-label">Nomor Rek.</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_number">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-2 control-label">Nama di Rek.</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_name">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-4 control-label">Nama Bank</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_name">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-2 control-label">Cabang</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_branch">
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Status Vendor</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-2 control-label">Status</label>
+									<div class="col-sm-2">
+										<select class="form-control" ng-model="vendor.status">
+											<option value="A">Aktif</option>
+											<option value="N">Non Aktif</option>
+											<option value="B">Blok</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="updateVendor()">
+					<span>Simpan</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.vendor">
+					<span>Batal</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="history_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">History Vendor</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Tanggal</th>
+						<th>Waktu</th>
+						<th>User</th>
+						<th>Bagian</th>
+						<th>Field</th>
+						<th>Data Lama</th>
+						<th>Data Baru</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="history in historyList">
+						<td>{{ history.datetime | date:'dd/MM/yy'}}</td>
+						<td>{{ history.datetime | date:'H:mm'}}</td>
+						<td>{{ history.username }}</td>
+						<td>{{ history.section }}</td>
+						<td>{{ history.field }}</td>
+						<td>{{ history.old_data }}</td>
+						<td>{{ history.new_data }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

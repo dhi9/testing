@@ -1,0 +1,149 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="StockMasterNewController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Tambah Barang</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Item ID/SKU</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="item.item_code">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Nama</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="item.item_name">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Kategori</label>
+						<div class="col-sm-10">
+							<select class="form-control" ng-model="item.category_id" ng-options="category.category_id as category.category_name for category in categoryActiveList"></select>
+						</div>
+					</div>
+					<div class="form-group hide">
+						<label for="txtAddress" class="col-sm-2 control-label">Tipe</label>
+						<div class="col-sm-10">
+							<select class="form-control" ng-model="item.item_type">
+								<option value="RAW">RAW</option>
+								<option value="FINI">FINI</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group hide">
+						<label for="txtAddress" class="col-sm-2 control-label">Kategori</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="item.item_category">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Extra 1</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="item.extra1">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Extra 2</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="txtAddress" ng-model="item.extra2">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress" class="col-sm-2 control-label">Catatan</label>
+						<div class="col-sm-10">
+							<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="item.remarks"></textarea>
+						</div>
+					</div>
+				</form>
+				
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="insertItem()">
+					<span>Simpan</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.stock">
+					<span>Batal</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="edit_conversion_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Ubah Konversi</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Untuk perubahan konversi, lengkapi informasi yang diperlukan dibawah ini:</p>
+			<p>UOM dasar adalah: <span class="text-bold">{{ item.item_unit }}</span></p>
+			<p>Untuk 1 <input type="text" ng-model="uom.alternative_uom" /> aUOM, adalah sebesar <input type="number" ng-model="uom.base_amount"/> {{ item.item_unit }}</p>
+			<p>Keterangan tambahan:</p>
+			<p>Deskripsi aUOM <input type="text" ng-model="uom.alternative_uom" /> adalah <input type="text" ng-model="uom.alternative_uom_description" /></p>
+			<button class="btn btn-primary" ng-click="updateUomConversion()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="new_conversion_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Konversi Baru</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Untuk pembuatan konversi baru, lengkapi informasi yang diperlukan dibawah ini:</p>
+			<p>UOM dasar adalah: <span class="text-bold">{{ item.item_unit }}</span></p>
+			<p>Untuk 1 <input type="text" ng-model="uom.alternative_uom" /> aUOM, adalah sebesar <input type="number" ng-model="uom.base_amount"/> {{ item.item_unit }}</p>
+			<p>Keterangan tambahan:</p>
+			<p>Deskripsi aUOM <input type="text" ng-model="uom.alternative_uom" /> adalah <input type="text" ng-model="uom.alternative_uom_description" /></p>
+			<button class="btn btn-primary" ng-click="submitUomConversion()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="history_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">History UOM</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Tanggal</th>
+						<th>Waktu</th>
+						<th>User</th>
+						<th>Bagian</th>
+						<th>Field</th>
+						<th>Data Lama</th>
+						<th>Data Baru</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="history in historyList">
+						<td>{{ history.datetime | date:'dd/MM/yy'}}</td>
+						<td>{{ history.datetime | date:'H:mm'}}</td>
+						<td>{{ history.username }}</td>
+						<td>{{ history.section }}</td>
+						<td>{{ history.field }}</td>
+						<td>{{ history.old_data }}</td>
+						<td>{{ history.new_data }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

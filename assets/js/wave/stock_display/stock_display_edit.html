@@ -1,0 +1,508 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="StockMasterEditController">  
+    
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Ubah Barang {{ item.item_code }}</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-primary pull-right" ng-click="historyModal()">
+					<span>History</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-md-12">
+				<tabset class="tabbable">
+					<tab heading="Umum">	
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Item ID/SKU</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="item.item_code" disabled>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Nama</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="item.item_name">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Kategori</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="item.category_id" ng-options="category.category_id as category.category_name for category in categoryActiveList"></select>
+								</div>
+							</div>
+							<div class="form-group hide">
+								<label for="txtAddress" class="col-sm-2 control-label">Tipe</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="item.item_type">
+										<option value="RAW">RAW</option>
+										<option value="FINI">FINI</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group hide">
+								<label for="txtAddress" class="col-sm-2 control-label">Kategori</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="item.item_category">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Extra 1</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="item.extra1">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Extra 2</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="txtAddress" ng-model="item.extra2">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="txtAddress" class="col-sm-2 control-label">Catatan</label>
+								<div class="col-sm-10">
+									<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="item.remarks"></textarea>
+								</div>
+							</div>
+						</form>
+						
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateItem()">
+							<span>Simpan</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					
+					<tab heading="UOM">
+						<div class="row">
+							<form>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-4 control-label">UOM Dasar</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-model="item.item_unit">
+									</div>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="txtAddress" class="col-sm-3 control-label">Deskripsi UOM</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="item.unit_description">
+									</div>
+								</div>
+							</div>
+							</form>
+						</div>
+						<br/>
+						<div class="row">
+							<div class="col-md-12">
+								<!--<h5>Tabel Konversi</h5>-->
+								<h5 class="margin-bottom-15 text-bold">Tabel Konversi</h5>
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Unit</th>
+											<th>aUOM</th>
+											<th>aUOM Text</th>
+											<th>=</th>
+											<th>Unit</th>
+											<th>bUOM</th>
+											<th>bUOM Text</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="conversion in conversionList">
+											<td>{{ conversion.alternative_amount | number:2 }}</td>
+											<td>{{ conversion.alternative_uom }}</td>
+											<td>{{ conversion.alternative_uom_description }}</td>
+											<td>=</td>
+											<td>{{ conversion.base_amount  }}</td>
+											<td>{{ conversion.base_uom }}</td>
+											<td>{{ conversion.base_uom_description }}</td>
+											<td>
+												<button class="btn btn-primary" ng-click="editConversionModal($index)">
+													<span>Ubah</span>
+													<i class="glyph-icon icon-close"></i>
+												</button>
+												<button class="btn btn-danger" ng-click="deleteConversion($index)">
+													<span>Hapus</span>
+													<i class="glyph-icon icon-close"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								
+								<button class="btn btn-alt btn-hover btn-primary" ng-click="newConversionModal()" ng-disabled="!item.item_unit || !item.unit_description ">
+									<span>Buat Konversi Baru</span>
+									<i class="glyph-icon icon-plus"></i>
+								</button>
+							</div>
+						</div>
+						<br/>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateItemBaseUom()">
+							<span>Simpan</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					
+					<tab heading="Nilai">	
+						<p>UOM Dasar <span class="text-bold">{{ item.item_unit }}</span></p>
+						<form role="form" class="form-inline">
+							<div class="form-group">
+								<label for="txtAddress" class="control-label">
+									Nilai per <span class="text-bold">{{ item.item_unit }}</span>
+								</label>
+								&nbsp;
+								<select class="form-control" ng-model="item.value_currency">
+									<option value="IDR">IDR</option>
+									<option value="USD">USD</option>
+								</select>
+								<input type="number" class="form-control" ng-model="item.value_amount" />
+							</div>
+						</form>
+						<br/>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateItem()">
+							<span>Simpan</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+						<!--<button class="btn btn-alt btn-hover btn-danger" ng-click="confirmItemsEdit()">
+							<span>Batal</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>-->
+					</tab>
+					
+					<tab heading="Pembelian">	
+						<div class="checkbox clip-check check-primary col-md-auto">
+							<input type="checkbox" id="checkbox401" ng-model="item.availability">
+							<label for="checkbox401">Stock tersedia untuk dibeli</label>
+						</div>
+						<hr>
+						<p>Daftar Konversi Item</p>
+						<table class="table">
+							<tr>
+								<th>ItemID/SKU</th>
+								<th>Nama</th>
+								<th></th>
+							</tr>
+							<tr ng-repeat="alternate in itemAlternateList" ng-if="alternate.status == 'A'">
+								<td>{{ alternate.alternate_code }}</td>
+								<td>{{ alternate.alternate_name }}</td>
+								<td>
+									<button class="btn btn-danger" ng-click="removeItemAlternate($index)">Hapus</button>
+								</td>
+							</tr>
+						</table>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="itemAlternateModal()">
+							<span>Tambah ItemID/ SKU</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+						<br/><br/>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateItemAlternate()">
+							<span>Simpan</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+					</tab>
+					
+					<tab heading="Penjualan">
+						<p>Tentukan nilai penjualan barang</p>
+							<div class="col-md-12">Harga jual</div>
+							<div class="radio clip-radio radio-primary">
+								<input type="radio" id="percent_last_payment" ng-model="item.sell_price_type"  value="P">
+								<label for="percent_last_payment">
+									<input type="number" placeholder="0" min="0" max="100" ng-click="item.sell_price_type = 'P'" ng-model="item.sell_price_perc_last_buy_price">
+									% dari harga beli terakhir
+								</label>
+							</div>	
+							<div class="radio clip-radio radio-primary">
+								<input type="radio" id="additional_last_payment" ng-model="item.sell_price_type"  value="M">
+								<label for="additional_last_payment">
+									<input type="number" placeholder="0" min="0" ng-click="item.sell_price_type = 'M'" ng-model="item.sell_price_markup_last_buy_price">
+									tambahan dari harga terakhir
+								</label>
+							</div>
+							<div class="radio clip-radio radio-primary">
+								<input type="radio" id="fixed_price" ng-model="item.sell_price_type"  value="F">
+								<label for="fixed_price">
+									<input type="number" placeholder="0" min="0" ng-click="item.sell_price_type = 'F'" ng-model="item.sell_price_fix">
+									harga tetap
+								</label>
+							</div>
+							
+							<br>
+							<div class="col-md-12">Diskon</div>
+							<div class="radio clip-check clip-radio radio-primary">
+								<input type="radio" id="a11" ng-model="item.discount_type"  value="N">
+								<label for="a11">
+									harga normal
+								</label>
+							</div>
+							<div class="radio clip-check clip-radio radio-primary">
+								<input type="radio" id="a22" ng-model="item.discount_type"  value="P">
+								<label for="a22" style="line-height:40px;">
+									<input type="number" placeholder="0" min="0" max="100" ng-click="item.discount_type = 'P'" ng-model="item.discount_perc">
+									% dari harga jual
+									<ul class="list-inline">
+										<li>dari tanggal: <input type="date" ng-click="item.discount_type = 'P'" ng-model="item.discount_perc_start_date" name="vertical"/></li>
+										<li>sampai tanggal: <input type="date" ng-click="item.discount_type = 'P'" ng-model="item.discount_perc_end_date" name="vertical"/></li>
+									</ul>
+								</label>
+							</div>
+							<div class="radio clip-check clip-radio radio-primary">
+								<input type="radio" id="a33" ng-model="item.discount_type" value="S"> 
+								<label for="a33" style="line-height:40px;">
+									<input type="number" placeholder="0" min="0" ng-click="item.discount_type = 'S'" ng-model="item.discount_special_price">
+									harga tetap
+									<ul class="list-inline">
+										<li>dari tanggal: <input type="date" ng-click="item.discount_type = 'S'" ng-model="item.discount_special_price_start_date" name="vertical"/></li>
+										<li>sampai tanggal: <input type="date" ng-click="item.discount_type = 'S'" ng-model="item.discount_special_price_end_date" name="vertical"/></li>
+									</ul>
+								</label>
+							</div>
+						
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateItem()">
+							<span>Simpan</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+					</tab>
+					
+					<tab heading="Lokasi">	
+						<p>Daftar Lokasi yang direkomendasikan dalam penerimaan barang</p>
+						<table class="table">
+							<tr>
+								<th>SiteID</th>
+								<th>Storage Location</th>
+								<th>Bin</th>
+								<th class="col-md-1"></th>
+							</tr>
+							<tr ng-repeat="location in item.location_list" ng-if="location.status == 'A'">
+								<td>{{ location.site_reference }}</td>
+								<td>{{ location.storage_name }}</td>
+								<td>{{ location.bin_name }}</td>
+								<td>
+									<button class="btn btn-danger" ng-click="removeItemLocation($index)">Hapus</button>
+								</td>
+							</tr>
+						</table>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="itemLocationModal()">
+							<span>Tambah Lokasi</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+						<br/><br/>
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateItemLocation()">
+							<span>Simpan</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+					</tab>
+					
+					<tab heading="Tag">	
+						<p>Daftar Tag yang tersedia</p>
+						<span ng-repeat="tag in itemTagList" class="ng-scope">
+							<span style="margin-right: 3px;" class="ui-select-match-item btn btn-default btn-xs" type="button">
+								<span class="close ui-select-match-close" ng-click="removeItemTag(tag)">&nbsp;×</span>
+								<span uis-transclude-append="">
+									<span class="ng-binding ng-scope">
+											{{tag.tag_name}} 
+									</span>
+								</span>
+							</span>
+						</span>
+						<br><br>
+						<p>Buat Tag baru</p>
+						<div class="row">
+							<div class="col-md-6">
+								<input type="text" class="form-control" ng-model="add_tag_input" 
+								typeahead="tag.tag_name as tag.tag_name  for tag in tagList | filter:$viewValue | limitTo:20">
+								<!-- typeahead-input-formatter="formatSearchCustomerText($model)"
+								typeahead-on-select="getCustomerById()" -->
+							</div>
+							<div class="col-md-1">
+								<button class="btn btn-primary" ng-click="addItemTag(add_tag_input)">Tambah</button>
+							</div>
+						</div>
+					</tab>
+					
+					<tab heading="Gambar">	
+						<p>Upload Gambar</p>
+						<div class="row">
+							<div class="form-group">
+								<div class="col-md-12">
+									<input type="file" class="form-control" id="txtAddress" ng-model="item.item_image" accept="image/*" multiple app-filereader>
+									
+									dimensi tidak lebih dari 600x600px (.jpg, .gif atau .png)
+								</div>
+							</div>
+							<div class="form-group" ng-if="item.item_image">
+								<div class="col-md-12">
+									<img ng-if="item.item_image" ng-repeat="image in item.item_image" ng-src="{{image}}" width="600" height="600" />
+								</div>
+							</div>
+						</div>
+						
+						<button class="btn btn-alt btn-hover btn-primary" ng-click="updateItem()">
+							<span>Simpan</span>
+							<i class="glyph-icon icon-plus"></i>
+						</button>
+					</tab>
+				</tabset>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/ng-template" id="edit_conversion_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Ubah Konversi</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Untuk perubahan konversi, lengkapi informasi yang diperlukan dibawah ini:</p>
+			<p>UOM dasar adalah: <span class="text-bold">{{ item.item_unit }}</span></p>
+			<p>Untuk 1 <input type="text" ng-model="uom.alternative_uom" /> aUOM, adalah sebesar <input type="number" ng-model="uom.base_amount"/> {{ item.item_unit }}</p>
+			<p>Keterangan tambahan:</p>
+			<p>Deskripsi aUOM <input type="text" ng-model="uom.alternative_uom" /> adalah <input type="text" ng-model="uom.alternative_uom_description" /></p>
+			<button class="btn btn-primary" ng-click="updateUomConversion()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="new_conversion_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Konversi Baru</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Untuk pembuatan konversi baru, lengkapi informasi yang diperlukan dibawah ini:</p>
+			<p>UOM dasar adalah: <span class="text-bold">{{ item.item_unit }}</span></p>
+			<p>Untuk 1 <input type="text" ng-model="uom.alternative_uom" /> aUOM, adalah sebesar <input type="number" ng-model="uom.base_amount"/> {{ item.item_unit }}</p>
+			<p>Keterangan tambahan:</p>
+			<p>Deskripsi aUOM <input type="text" ng-model="uom.alternative_uom" /> adalah <input type="text" ng-model="uom.alternative_uom_description" /></p>
+			<button class="btn btn-primary" ng-click="submitUomConversion()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="history_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">History UOM</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Tanggal</th>
+						<th>Waktu</th>
+						<th>User</th>
+						<th>Bagian</th>
+						<th>Field</th>
+						<th>Data Lama</th>
+						<th>Data Baru</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="history in historyList">
+						<td>{{ history.datetime | date:'dd/MM/yy'}}</td>
+						<td>{{ history.datetime | date:'H:mm'}}</td>
+						<td>{{ history.username }}</td>
+						<td>{{ history.section }}</td>
+						<td>{{ history.field }}</td>
+						<td ng-if="history.section !== 'Gambar'">{{ history.old_data }}</td>
+						<td ng-if="history.section !== 'Gambar'">{{ history.new_data }}</td>
+						<td ng-if="history.section == 'Gambar'">
+							<img ng-repeat="image in history.old_data" ng-src="{{image}}" width="30" height="30" />
+						</td>
+						<td ng-if="history.section == 'Gambar'">
+							<img ng-repeat="image in history.new_data" ng-src="{{image}}" width="30" height="30" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="item_location_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Lokasi Stock</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
+				<div class="form-group">
+					<label class="col-sm-1 control-label">Site</label>
+					<div class="col-sm-11">
+						<select class="form-control" ng-model="location.site_id" ng-options="code.site_id as code.site_reference for code in siteList"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-1 control-label">Lokasi</label>
+					<div class="col-sm-11">
+						<select class="form-control" ng-model="location.storage_id" ng-disabled="!location.site_id" ng-options="code.storage_id as code.storage_name for code in storageList | filter:{ site_id : location.site_id }" ></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-1 control-label">BIN</label>
+					<div class="col-sm-11">
+						<select class="form-control"  ng-model="location.bin_id" ng-disabled="!location.site_id || !location.storage_id" ng-options="code.bin_id as code.bin_name for code in binList | filter:{ storage_id : location.storage_id }" ></select>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary" ng-click="addItemLocation(location)">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+	
+	
+	<script type="text/ng-template" id="item_alternate_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Daftar Konversi Item</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Item Code</label>
+					<div class="col-sm-10">
+						<input  type="text" class="form-control" ng-model="alternate.item_code" disabled></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Alternate Item Code</label>
+					<div class="col-sm-10">
+						<input  type="text" class="form-control" ng-model="alternate.alternate_code"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Alternate Item Name</label>
+					<div class="col-sm-10">
+						<input  type="text" class="form-control" ng-model="alternate.alternate_name"></select>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary" ng-click="addItemAlternate(alternate)">Simpan</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+	
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

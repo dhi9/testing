@@ -1,0 +1,49 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Vehicle Master</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="VehicleMasterController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+			<br/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="vehicle in $data">
+						<td data-title="'Vendor'" sortable="'vehicle_plate'">{{ vehicle.vendor_name }}</td>
+						<td data-title="'No Kendaraan'" sortable="'vehicle_plate'">{{ vehicle.vehicle_plate }}</td>
+						<!--<td data-title="'Vehicle Type'" sortable="'vehicle_type'">{{vehicleType[vehicle.vehicle_type-1].vehicle_type}}</td>-->
+						<td data-title="'Tipe Kendaraan'" sortable="'vehicle_type'">{{vehicle.vehicle_type}}</td>
+						<td class="col-md-2" data-title="'Status'" sortable="'status'">{{ vehicle.statusLabel }}</td>
+						<td class="col-md-1">
+							<button class="btn btn-primary" ui-sref="app.master.vehicle_edit({vehicle_id: '{{ vehicle.vehicle_id }}'})">
+								<span>Ubah</span>
+								<i class="glyph-icon icon-close"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+				<button class="btn btn-primary" ui-sref="app.master.vehicle_new">
+					<span>Tambah Kendaraan Baru</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+	</div>                     
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

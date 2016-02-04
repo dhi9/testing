@@ -1,0 +1,317 @@
+<!-- start: PAGE TITLE -->
+<div ng-controller="CustomerMasterEditController">  
+
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<h1 class="mainTitle">Ubah Customer</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+	<div class="container-fluid container-fullw">
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-primary pull-right" ng-click="historyModal()">
+					<span>History</span>
+					<i class="glyph-icon icon-close"></i>
+				</button>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Customer</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+							<div class="panel-body">
+									<form class="form-horizontal">
+											
+											<div class="row">
+												<div class="col-md-8">
+													<div class="form-group">
+														<label for="txtCustomerName" class="col-sm-2 control-label">Nama Customer</label>
+														<div class="col-sm-10">
+															<input type="text" class="form-control" id="txtCustomerName" ng-model="customer_details.customer_name" disabled>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+														<label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" id="txtPICName" ng-model="customer_details.pic_name">
+														</div>
+													</div>
+												</div>
+											</div>
+											
+											<div class="row">
+												<div class="col-md-8">
+													<div class="form-group">
+														<label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+														<div class="col-sm-10">
+															<input type="text" class="form-control" id="txtAddress" ng-model="customer_details.address">
+														</div>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+														<label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" id="txtPhoneNumber" ng-model="customer_details.phone_number">
+														</div>
+													</div>
+												</div>
+											</div>
+											
+											<div class="row">
+												<div class="col-md-8">
+													<div class="form-group">
+														<label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+														<div class="col-sm-10">
+															<input type="text" class="form-control" id="txtCity" ng-model="customer_details.city">
+														</div>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+														<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" id="txtPostcode" ng-model="customer_details.postcode">
+														</div>
+													</div>
+												</div>
+											</div>
+											
+											<div class="row">
+												<div class="col-md-8">
+													<div class="form-group">
+														<label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+														<div class="col-sm-10">
+															<input type="text" class="form-control" id="txtEmail" ng-model="customer_details.customer_email">
+														</div>
+													</div>
+												</div>
+												<div class="col-md-4">
+												 <div class="form-group">
+													 <label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+													 <div class="col-sm-8">
+														 <input type="text" class="form-control" id="txtFaxNumber" ng-model="customer_details.fax_number">
+													 </div>
+												 </div>
+												</div>
+											</div>
+									</form>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white" id="pnlCustomerDescription">
+                    <div class="panel-heading border-light">
+                        <h4 class="panel-title text-primary">Alamat Pengiriman</h4>
+                        <ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+                    </div>
+                    <div collapse="pnlCustomerDescription" ng-init="pnlCustomerDescription=false" class="panel-wrapper">
+                        <div class="panel-body">
+                            <div class="table-responsive" ng-show="deliveryAddresses.length > 0 || newDeliveryAddresses.length > 0">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Deskripsi</th>
+                                        <th>Alamat</th>
+                                        <th>PIC Pengiriman</th>
+                                        <th>Status</th>
+                                        <th class="col-md-1"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in deliveryAddresses">
+                                        <td>{{ item.description }}</td>
+                                        <td>{{ item.delivery_address }}</td>
+                                        <td>{{ item.pic_name }}</td>
+                                        <td>{{ statusLabel(item.status) }}</td>
+                                        <td>
+                                            <button class="btn btn-alt btn-hover btn-primary" ng-click="displayEditCustomerModal(item)">Detail</button>
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="newItem in newDeliveryAddresses">
+                                        <td>{{ newItem.description }}</td>
+                                        <td>{{ newItem.delivery_address }}</td>
+                                        <td>{{ newItem.pic_name }}</td>
+                                        <td>{{ statusLabel(newItem.status) }}</td>
+                                        <td>
+                                            <button class="btn btn-alt btn-hover btn-primary" ng-click="displayEditCustomerModal(newItem1)">Detail</button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-alt btn-hover btn-primary" ng-click="displayNewCustomerModal()"><i class="ti-plus"></i>&nbsp;Tambah Alamat</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-alt btn-hover btn-primary" ng-click="updateCustomer()">Simpan</button>
+                <button class="btn btn-alt btn-hover btn-danger" ui-sref="app.master.customer_list">Batal</button>
+            </div>
+        </div>
+	</div>
+    <script type="text/ng-template" id="modal_new_customer">
+        <div class="modal-header">
+            <h3 class="modal-title">Deskripsi</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal" ng-submit="addDeliveryAddress()">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Deskripsi</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.description"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Alamat</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" ng-model="deliveryAddress.delivery_address" ></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Area</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.area"/>
+                    </div>
+                    <label class="col-sm-2 control-label">City</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.city"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Postal Code</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.post_code">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">PIC Pengiriman</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.pic_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Telp</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.phone_number">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+            </form>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modal_edit_customer">
+        <div class="modal-header">
+            <h3 class="modal-title">Deskripsi</h3>
+        </div>
+        <div class="modal-body bg-white">
+            <form role="form" class="form-horizontal" ng-submit="changeDeliveryAddress()">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Deskripsi</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.description"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Alamat</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" ng-model="deliveryAddress.delivery_address" ></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Area</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.area"/>
+                    </div>
+                    <label class="col-sm-2 control-label">City</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.city"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Postal Code</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.post_code">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">PIC Pengiriman</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.pic_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Telp</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="deliveryAddress.phone_number">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Status</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" ng-model="deliveryAddress.status">
+                            <option value="A">Aktif</option>
+                            <option value="X">Non Aktif</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+								<button type="button" class="btn btn-danger pull-right" ng-click="removeDeliveryAddress()">Hapus</button>
+            </form>
+        </div>
+    </script>
+	
+	<script type="text/ng-template" id="history_modal">
+		<div class="modal-header">
+			<h3 class="modal-title">Customer History</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Tanggal</th>
+						<th>Waktu</th>
+						<th>User</th>
+						<th>Bagian</th>
+						<th>Field</th>
+						<th>Data Lama</th>
+						<th>Data Baru</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="history in historyList">
+						<td>{{ history.datetime | date:'dd/MM/yy'}}</td>
+						<td>{{ history.datetime | date:'H:mm'}}</td>
+						<td>{{ history.username }}</td>
+						<td>{{ history.section }}</td>
+						<td>{{ history.field }}</td>
+						<td>{{ history.old_data }}</td>
+						<td>{{ history.new_data }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

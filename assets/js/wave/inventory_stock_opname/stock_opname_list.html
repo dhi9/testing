@@ -1,0 +1,104 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Stock Opname</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="StockOpnameListController">
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-lg-12">
+			<tabset class="tabbable" type="pills">
+				<tab heading="Aktif">
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table class="table" ng-table="stockOpnameTableParams">
+								<tr ng:repeat="purchaseRequest in $data | filter: search">
+                                    <td data-title="'Site'" sortable="'site_name'">{{ purchaseRequest.site_name }}</td>
+                                    <td data-title="'Tahun/Bulan'" sortable="'draft_reference'">{{ purchaseRequest.opname_date}}</td>
+                                    <td class="col-md-2" data-title="'Status'" sortable="'statusLabel'">{{ purchaseRequest.statusLabel }}</td>
+                                    <td data-title="'IRA'" sortable="'a'">{{ purchaseRequest.a }}</td>
+                                    <td data-title="'User'" sortable="'opname_creator'">{{ purchaseRequest.opname_creator }}</td>
+                                    <td data-title="'Tanggal Mulai'" sortable="'opname_start_date'">{{ purchaseRequest.opname_start_date | date:'dd-MM-yyyy'}}</td>
+									<td data-title="'Tanggal Selesai'" sortable="'opname_finish_date'">{{ purchaseRequest.opname_finish_date | date:'dd-MM-yyyy' }}</td>
+									<td class="col-md-1">
+										<button class="btn btn-primary" ui-sref="app.inventory.stock_opname_detail({stock_opname_id : '{{ purchaseRequest.stock_opname_id }}'})" >Detail</button>
+                                    </td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div ng-show="table_loading">Loading...</div>
+				</tab>
+                <!--
+				<tab heading="Semua">
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" ng-model="purchaseDraftFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table class="table" ng-table="purchaseTableParams">
+								<tr ng:repeat="purchaseRequest in $data | filter: purchaseDraftFilter">
+									<td class="col-md-2" data-title="'Status'" sortable="'statusLabel'">{{ purchaseRequest.statusLabel }}</td>
+									<td data-title="'Purchase Request/Service Request'" sortable="'draft_reference'">{{ purchaseRequest.draft_reference }}</td>
+									<td data-title="'Tanggal Dibuat'" sortable="'date_created'">{{ purchaseRequest.date_created | date:'dd-MM-yyyy'}}</td>
+									<td data-title="'Pembuat Purchase Request'" sortable="'draft_creator_name'">{{ purchaseRequest.draft_creator_name }}</td>
+									<td data-title="'Approver'" sortable="'approver_name'">{{ purchaseRequest.data.approver_name }}</td>
+									<td class="col-md-1">
+										<button class="btn btn-primary" ng-show="{{  purchaseRequest.status == 'A' && sortingRequest(purchaseRequest.draft_reference) == 'P'  }}" ui-sref="app.purchase.approve_purchase_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+										<button class="btn btn-primary" ng-show="{{  purchaseRequest.status == 'U' && sortingRequest(purchaseRequest.draft_reference) == 'P' }}" ui-sref="app.purchase.change_purchase_request_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+										<button class="btn btn-primary" ng-show="{{  purchaseRequest.status == 'A' && sortingRequest(purchaseRequest.draft_reference) == 'S'  }}" ui-sref="app.service.approve_service_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+										<button class="btn btn-primary" ng-show="{{  purchaseRequest.status == 'U' && sortingRequest(purchaseRequest.draft_reference) == 'S' }}" ui-sref="app.service.change_service_request_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div ng-show="table_loading">Loading...</div>
+				</tab>
+				<tab heading="Selesai">
+					<div ng-show="!table_loading">
+						<input type="text" class="form-control" ng-model="ownApprovedPurchaseDraftFilter.$" placeholder="Filter"/>
+						<br/>
+						<div class="table-responsive">
+							<table class="table" ng-table="ownApprovedPurchaseTableParams">
+								<tr ng:repeat="purchaseRequest in $data | filter: ownApprovedPurchaseDraftFilter">
+									<td class="col-md-2" data-title="'Status'" sortable="'statusLabel'">{{ purchaseRequest.statusLabel }}</td>
+									<td data-title="'Purchase Request/Service Request'" sortable="'draft_reference'">{{ purchaseRequest.requests_reference }}</td>
+									<td data-title="'Tanggal Dibuat'" sortable="'date_created'">{{ purchaseRequest.date_created | date:'dd-MM-yyyy'}}</td>
+									<td data-title="'Pembuat Purchase Request'" sortable="'draft_creator_name'">{{ purchaseRequest.draft_creator_name }}</td>
+									<td data-title="'Approver'" sortable="'approver_name'">{{ purchaseRequest.approver_name }}</td>
+									<td class="col-md-1">
+										<button class="btn btn-primary" ng-show="{{  purchaseRequest.status == 'C' && sortingRequest(purchaseRequest.draft_reference) == 'P' }}" ui-sref="app.purchase.approve_purchase_approved_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+										<button class="btn btn-primary" ng-show="{{  purchaseRequest.status == 'C' && sortingRequest(purchaseRequest.draft_reference) == 'S' }}" ui-sref="app.service.approve_service_approved_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div ng-show="table_loading">Loading...</div>
+				</tab>
+				-->
+			</tabset>
+            <button class="btn btn-primary" ui-sref="app.inventory.stock_opname_new">
+                <span>Buat Stock Opname Baru</span>
+                <i class="glyph-icon icon-close"></i>
+            </button>
+		</div>
+	</div>
+                                
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->
