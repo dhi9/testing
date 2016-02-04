@@ -57,7 +57,7 @@ app.controller('stockStatusDetailController', function($http ,$scope, $filter, $
 		},
 		{
 			field: "proses",
-			displayName: "proses Pengadaan"
+			displayName: "Proses Pengadaan"
 		},
 		{
 			field: "so",

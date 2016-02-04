@@ -392,4 +392,102 @@ class Inventory_bl extends CI_Model {
 			}
 		}
 	}
+	
+	public function set_stock_status_data_by($where)
+	{
+		$this->load->model(array('attribute_db'));
+		
+		$items = $this->inventory_db->get_all_inventory_by($where)->result_array();
+		
+		$attribute_list = $this->attribute_db->get_attribute_active_list()->result_array();
+		
+		$data = array();
+		
+		$tmp_item_code = '';
+		$tmp_site_id = 0;
+		$tmp_storage_id = 0;
+		$tmp_bin_id = 0;
+		
+		foreach($items as $i){
+			if($tmp_item_code != $i['item_code']){
+				$tmp_item_code = $i['item_code'];
+				$tmp_site_id = 0;
+				
+				$quantity = $this->db
+					->select_sum('quantity')
+					->where('item_code', $tmp_item_code)
+				->get('inventory_stocks')->row()->quantity;
+				
+				$konsinyasi = $this->db
+					->select_sum('quantity')
+					->where('item_code', $tmp_item_code)
+				->get('consignment_stocks')->row()->quantity;
+				
+				$row = array(
+					"parentId" => "",
+					"selfId" => $i['item_code'],
+					"name" => $i['item_code'],
+					"quantity" => $quantity,
+					"quality" => $i['quality'],
+					"block_status" => $i['block_status'],
+					"item_code" => $i['item_code'],
+					"batch_reference" => 0,
+					"is" => 'item',
+					"konsinyasi" => $konsinyasi
+				);
+				array_push($data, $row);
+			}
+			
+			if($tmp_site_id != $i['site_id']){
+				$tmp_site_id = $i['site_id'];
+				$tmp_storage_id = 0;
+				
+				$quantity = $this->db
+					->select_sum('quantity')
+					->where('item_code', $tmp_item_code)
+					->where('site_id', $tmp_site_id)
+				->get('inventory_stocks')->row()->quantity;
+				
+				$row = array(
+					"parentId" => $i['item_code'],
+					"selfId" => $i['site_reference'],
+					"name" => $i['site_reference'],
+					"quantity" => $quantity,
+					"quality" => $i['quality'],
+					"block_status" => $i['block_status'],
+					"item_code" => $i['item_code'],
+					"batch_reference" => 0,
+					"is" => 'site'
+				);
+				array_push($data, $row);
+			}
+			
+			if($tmp_storage_id != $i['storage_id']){
+				$tmp_storage_id = $i['storage_id'];
+				$tmp_bin_id = 0;
+				
+				$quantity = $this->db
+					->select_sum('quantity')
+					->where('item_code', $tmp_item_code)
+					->where('site_id', $tmp_site_id)
+					->where('storage_id', $tmp_storage_id)
+				->get('inventory_stocks')->row()->quantity;
+				
+				$row = array(
+					"parentId" => $i['site_reference'],
+					"selfId" => $i['storage_name'],
+					"name" => $i['storage_name'],
+					"quantity" => $quantity,
+					"quality" => $i['quality'],
+					"block_status" => $i['block_status'],
+					"item_code" => $i['item_code'],
+					"batch_reference" => $i['batch_reference'],
+					"is" => 'storage'
+				);
+				array_push($data, $row);
+			}
+		}
+		
+		return $data;
+	}
 }

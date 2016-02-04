@@ -404,4 +404,29 @@ class Inventory_db extends CI_Model {
 			$data
 		);
 	}
+	
+	public function get_all_inventory_by($where)
+	{
+		$this->db->select('is.*, b.batch_reference, s.site_reference, sl.storage_name, bn.bin_name');
+		//$this->db->select('is.*, s.site_reference, sl.storage_name');
+		$this->db->from('inventory_stocks is');
+		$this->db->join('batchs b', 'b.batch_id = is.batch_id', 'left');
+		$this->db->join('sites s', 's.site_id = is.site_id', 'left');
+		$this->db->join('storage_locations sl', 'sl.storage_id = is.storage_id', 'left');
+		$this->db->join('bin_locations bn', 'bn.bin_id = is.bin_id', 'left');
+		
+		if(!empty($where['item_code'])){
+			$this->db->where('is.item_code', $where['item_code']);
+		}
+		if(!empty($where['site_id'])){
+			$this->db->where_in('is.site_id', $where['site_id']);
+		}
+		if(!empty($where['storage_id'])){
+			$this->db->where_in('is.storage_id', $where['storage_id']);
+		}
+		
+		$this->db->order_by('is.item_code, is.site_id, is.storage_id, is.bin_id');
+		
+		return $this->db->get();
+	}
 }
