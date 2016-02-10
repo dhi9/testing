@@ -25,6 +25,7 @@
 						<td data-title="'Vendor ID'" sortable="'vendor_reference'">{{ vendor.vendor_reference }}</td>
 						<td data-title="'Nama'" sortable="'vendor_name'">{{ vendor.vendor_name }}</td>
 						<td data-title="'PIC'" sortable="'sales_pic'">{{ vendor.sales_pic }}</td>
+						<td data-title="'Status'" sortable="'status'">{{ statusLabel(vendor.status) }}</td>
 						<td>
 							<button class="btn btn-primary" ui-sref="app.master.vendor_edit({reference: '{{ vendor.vendor_reference }}'})">
 								<span>Ubah</span>

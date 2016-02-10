@@ -52,4 +52,19 @@ app.controller('VendorMasterController', function($filter, $scope, $http, Vendor
 		}
 	});
 
+	$scope.statusLabel = function(status){
+		switch(status) {
+			case 'A':
+				return 'Aktif';
+				break;
+			case 'N':
+				return 'Non Aktif';
+				break;
+			case 'B':
+				return 'Block';
+				break;
+			default:
+				return 'Aktif';
+		}
+	}
 });

@@ -27,31 +27,31 @@
 			<div class="col-md-12">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label for="txtAddress" class="col-sm-1 control-label">Nama</label>
+						<label for="txtVendorName" class="col-sm-1 control-label">Nama</label>
 						<div class="col-sm-11">
-							<input type="text" class="form-control" id="txtAddress" ng-model="vendor.vendor_name" disabled/>
+							<input type="text" class="form-control" id="txtVendorName" ng-model="vendor.vendor_name" disabled/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="txtAddress" class="col-sm-1 control-label">Alamat</label>
+						<label for="txtVendorAddress" class="col-sm-1 control-label">Alamat</label>
 						<div class="col-sm-11">
-							<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="vendor.address"></textarea>
+							<textarea id="txtVendorAddress" class="form-control autosize area-animated msd-elastic: \n;" ng-model="vendor.address" required></textarea>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="txtAddress" class="col-sm-2 control-label">Kota</label>
+								<label for="txtVendorCity" class="col-sm-2 control-label">Kota</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.city">
+									<input type="text" class="form-control" id="txtVendorCity" ng-model="vendor.city" required>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="txtAddress" class="col-sm-2 control-label">Kode Pos</label>
+								<label for="txtVendorPostalCode" class="col-sm-2 control-label">Kode Pos</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.postcode">
+									<input type="text" class="form-control" id="txtVendorPostalCode" ng-model="vendor.postcode" required>
 								</div>
 							</div>
 						</div>
@@ -59,41 +59,41 @@
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="txtAddress" class="col-sm-2 control-label">No. Telp</label>
+								<label for="txtVendorPhone" class="col-sm-2 control-label">No. Telp</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.phone_number">
+									<input type="text" class="form-control" id="txtVendorPhone" ng-model="vendor.phone_number" required>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="txtAddress" class="col-sm-2 control-label">Fax</label>
+								<label for="txtVendorFax" class="col-sm-2 control-label">Fax</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.fax_number">
+									<input type="text" class="form-control" id="txtVendorFax" ng-model="vendor.fax_number">
 								</div>
 							</div>
 						</div>
 					</div>
 				</form>
 				
-				<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel panel-white" id="pnlVendorPICDetail">
 					<div class="panel-heading border-light">
-						<h4 class="panel-title text-primary">Detail AM Vendor</h4>
+						<h4 class="panel-title text-primary">Detail Vendor PIC</h4>
 						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
 					</div>
-					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div collapse="pnlVendorPICDetail" ng-init="pnlVendorPICDetail=false" class="panel-wrapper">
 						<div class="panel-body">
 							<form class="form-horizontal">
 								<div class="form-group">
-									<label for="txtAddress" class="col-sm-2 control-label">PIC Sales</label>
+									<label for="txtVendorPICSales" class="col-sm-2 control-label">PIC Sales</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.sales_pic">
+										<input type="text" class="form-control" id="txtVendorPICSales" ng-model="vendor.sales_pic" required>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="txtAddress" class="col-sm-2 control-label">Email</label>
+									<label for="txtVendorEmail" class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.sales_email">
+										<input type="text" class="form-control" id="txtVendorEmail" ng-model="vendor.sales_email" required>
 									</div>
 								</div>
 							</form>
@@ -101,72 +101,72 @@
 					</div>
 				</div>
 				
-				<div class="panel panel-white" id="pnlCustomerDetail">
+				<div class="panel panel-white" id="pnlPaymentDetail">
 					<div class="panel-heading border-light">
 						<h4 class="panel-title text-primary">Detail Pembayaran</h4>
 						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
 					</div>
-					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div collapse="pnlPaymentDetail" ng-init="pnlPaymentDetail=false" class="panel-wrapper">
 						<div class="panel-body">
 							<form class="form-horizontal">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="txtAddress" class="col-sm-4 control-label">Term Pembayaran</label>
+											<label for="txtVendorTerm" class="col-sm-4 control-label">Term Pembayaran</label>
 											<div class="col-sm-2">
-												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.payment_term_value">
+												<input type="number" class="form-control" id="txtVendorTerm" ng-model="vendor.payment_term_value" required>
 											</div>
 											<span class="help-inline col-sm-6">hari</span>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="txtAddress" class="col-sm-4 control-label">Denda Keterlambatan</label>
+											<label for="txtVendorPenaltyPayment" class="col-sm-4 control-label">Denda Keterlambatan</label>
 											<div class="col-sm-2">
-												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.penalty_percent">
+												<input type="number" class="form-control" id="txtVendorPenaltyPayment" ng-model="vendor.penalty_percent" required>
 											</div>
 											<span class="help-inline col-sm-6">% per hari</span>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="txtAddress" class="col-sm-2 control-label">PIC Keuangan</label>
+									<label for="txtVendorFinance" class="col-sm-2 control-label">PIC Keuangan</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_pic">
+										<input type="text" class="form-control" id="txtVendorFinance" ng-model="vendor.payment_pic" required>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="txtAddress" class="col-sm-2 control-label">Email</label>
+									<label for="txtVendorFinanceEmail" class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_email">
+										<input type="text" class="form-control" id="txtVendorFinanceEmail" ng-model="vendor.payment_email" required>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="txtAddress" class="col-sm-2 control-label">Nomor Rek.</label>
+									<label for="txtVendorBankNumber" class="col-sm-2 control-label">Nomor Rek.</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_number">
+										<input type="text" class="form-control" id="txtVendorBankNumber" ng-model="vendor.payment_account_number" required>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="txtAddress" class="col-sm-2 control-label">Nama di Rek.</label>
+									<label for="txtVendorBankOwnerName" class="col-sm-2 control-label">Nama di Rek.</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_name">
+										<input type="text" class="form-control" id="txtVendorBankOwnerName" ng-model="vendor.payment_account_name" required>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="txtAddress" class="col-sm-4 control-label">Nama Bank</label>
+											<label for="txtVendorBankName" class="col-sm-4 control-label">Nama Bank</label>
 											<div class="col-sm-8">
-												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_name">
+												<input type="text" class="form-control" id="txtVendorBankName" ng-model="vendor.payment_bank_name" required>
 											</div>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="txtAddress" class="col-sm-2 control-label">Cabang</label>
+											<label for="txtVendorSubBankName" class="col-sm-2 control-label">Cabang</label>
 											<div class="col-sm-10">
-												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_branch">
+												<input type="text" class="form-control" id="txtVendorSubBankName" ng-model="vendor.payment_bank_branch" required>
 											</div>
 										</div>
 									</div>
@@ -185,9 +185,9 @@
 						<div class="panel-body">
 							<form class="form-horizontal">
 								<div class="form-group">
-									<label for="txtAddress" class="col-sm-2 control-label">Status</label>
+									<label for="txtVendorStatus" class="col-sm-2 control-label">Status</label>
 									<div class="col-sm-2">
-										<select class="form-control" ng-model="vendor.status">
+										<select id="txtVendorStatus" class="form-control" ng-model="vendor.status">
 											<option value="A">Aktif</option>
 											<option value="N">Non Aktif</option>
 											<option value="B">Blok</option>

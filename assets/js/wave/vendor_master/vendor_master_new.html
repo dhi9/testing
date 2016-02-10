@@ -20,13 +20,13 @@
 					<div class="form-group">
 						<label for="txtAddress" class="col-sm-1 control-label">Nama</label>
 						<div class="col-sm-11">
-							<input type="text" class="form-control" id="txtAddress" ng-model="vendor.vendor_name" />
+							<input type="text" class="form-control" id="txtAddress" ng-model="vendor.vendor_name" required/>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="txtAddress" class="col-sm-1 control-label">Alamat</label>
 						<div class="col-sm-11">
-							<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="vendor.address"></textarea>
+							<textarea class="form-control autosize area-animated msd-elastic: \n;" ng-model="vendor.address" required></textarea>
 						</div>
 					</div>
 					<div class="row">
@@ -34,7 +34,7 @@
 							<div class="form-group">
 								<label for="txtAddress" class="col-sm-2 control-label">Kota</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.city">
+									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.city" required>
 								</div>
 							</div>
 						</div>
@@ -42,7 +42,7 @@
 							<div class="form-group">
 								<label for="txtAddress" class="col-sm-2 control-label">Kode Pos</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.postcode">
+									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.postcode" required>
 								</div>
 							</div>
 						</div>
@@ -52,7 +52,7 @@
 							<div class="form-group">
 								<label for="txtAddress" class="col-sm-2 control-label">No. Telp</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.phone_number">
+									<input type="text" class="form-control" id="txtAddress" ng-model="vendor.phone_number" required>
 								</div>
 							</div>
 						</div>
@@ -69,7 +69,7 @@
 				
 				<div class="panel panel-white" id="pnlCustomerDetail">
 					<div class="panel-heading border-light">
-						<h4 class="panel-title text-primary">Detail AM Vendor</h4>
+						<h4 class="panel-title text-primary">Detail Vendor PIC</h4>
 						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
 					</div>
 					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
@@ -78,13 +78,13 @@
 								<div class="form-group">
 									<label for="txtAddress" class="col-sm-2 control-label">PIC Sales</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.sales_pic">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.sales_pic" required>
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="txtAddress" class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-10">
-										<input type="email" class="form-control" id="txtAddress" ng-model="vendor.sales_email">
+										<input type="email" class="form-control" id="txtAddress" ng-model="vendor.sales_email" required>
 									</div>
 								</div>
 							</form>
@@ -105,7 +105,7 @@
 										<div class="form-group">
 											<label for="txtAddress" class="col-sm-4 control-label">Term Pembayaran</label>
 											<div class="col-sm-2">
-												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.payment_term_value">
+												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.payment_term_value" min="0" required>
 											</div>
 											<span class="help-inline col-sm-6">hari</span>
 										</div>
@@ -114,7 +114,7 @@
 										<div class="form-group">
 											<label for="txtAddress" class="col-sm-4 control-label">Denda Keterlambatan</label>
 											<div class="col-sm-2">
-												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.penalty_percent">
+												<input type="number" class="form-control" id="txtAddress" ng-model="vendor.penalty_percent" min="0" required>
 											</div>
 											<span class="help-inline col-sm-6">% per hari</span>
 										</div>
@@ -123,25 +123,25 @@
 								<div class="form-group">
 									<label for="txtAddress" class="col-sm-2 control-label">PIC Keuangan</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_pic">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_pic" required>
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="txtAddress" class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_email">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_email" required>
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="txtAddress" class="col-sm-2 control-label">Nomor Rek.</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_number">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_number" required>
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="txtAddress" class="col-sm-2 control-label">Nama di Rek.</label>
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_name">
+										<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_account_name" required>
 									</div>
 								</div>
 								<div class="row">
@@ -149,7 +149,7 @@
 										<div class="form-group">
 											<label for="txtAddress" class="col-sm-4 control-label">Nama Bank</label>
 											<div class="col-sm-8">
-												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_name">
+												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_name" required>
 											</div>
 										</div>
 									</div>
@@ -157,7 +157,7 @@
 										<div class="form-group">
 											<label for="txtAddress" class="col-sm-2 control-label">Cabang</label>
 											<div class="col-sm-10">
-												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_branch">
+												<input type="text" class="form-control" id="txtAddress" ng-model="vendor.payment_bank_branch" required>
 											</div>
 										</div>
 									</div>
