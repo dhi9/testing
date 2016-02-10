@@ -14,8 +14,10 @@ app.controller('LoginController', function($scope, $state, $stateParams, ApiCall
 		ApiCallService.login($scope.user).
 			success(function(data, status, headers, config) {
 				if (data.call_status === "success") {
+					$scope.user.full_name = data.full_name;
 					ItemLookupService.retrieveItemLookup();
 					localStorage.setItem('vontisUsername', JSON.stringify($scope.user.username));
+					localStorage.setItem('vontisFullname', JSON.stringify($scope.user.full_name));
 					$state.go('app.dashboard');
 				}
 				else {

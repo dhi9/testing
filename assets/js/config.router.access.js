@@ -11,6 +11,7 @@ app.run(function ($rootScope, $state, $location, AuthService, ApiCallService) {
 						if (data.is_logged_on == 1) {
 							//console.log("user is logged on");
 							$rootScope.username = JSON.parse(localStorage.getItem('vontisUsername'));
+							$rootScope.full_name = JSON.parse(localStorage.getItem('vontisFullname'));
 							
 							if (toState.data.role == "") {
 								return;

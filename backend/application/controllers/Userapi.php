@@ -54,6 +54,8 @@ class Userapi extends CI_Controller {
 					
 					$feedback['call_status'] = 'success';
 					$feedback['permission'] = $get_user_permission;
+					$feedback['full_name'] = $get_user->row()->full_name;
+
 				}
 			}
 			else
