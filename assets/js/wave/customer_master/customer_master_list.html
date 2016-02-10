@@ -24,8 +24,11 @@
 						<table class="table" ng-table="tableParams">
 							<tr ng:repeat="customer in $data | filter: search">
 								<td data-title="'Customer ID'" sortable="'customer_reference'">{{ customer.customer_reference }}</td>
-								<td data-title="'Nama Customer'" sortable="'customer_name'">{{ customer.customer_name }}</td>
-								<td data-title="'Nama PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
+								<td data-title="'Nama'" sortable="'customer_name'">{{ customer.customer_name }}</td>
+								<td data-title="'PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
+								<td data-title="'Term'" sortable="'payment_term_type'">{{ paymentLabel(customer) }}</td>
+								<td data-title="'Konsinyasi'" sortable="'consignment'">{{ consignmentLabel(customer.consignment) }}</td>
+								<td data-title="'Status'" sortable="'pic_name'">{{ statusLabel(customer.status) }}</td>
 								<td class="col-md-5">
 									<button class="btn btn-primary" ng-click="displayMarketingModal(customer)">
 										<span>Marketing</span>

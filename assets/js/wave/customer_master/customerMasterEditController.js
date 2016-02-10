@@ -1,9 +1,9 @@
-app.controller('CustomerMasterEditController', function($scope, $state, $modal, $stateParams, CustomerFactory) {
-	$scope.customer_details = CustomerFactory.customer;
+app.controller('CustomerMasterEditController', function($scope, $rootScope, $state, $modal, $stateParams, CustomerFactory) {
+	$scope.customer = CustomerFactory.customer;
 	$scope.deliveryAddresses = CustomerFactory.deliveryAddressList;
 	
 	CustomerFactory.getCustomerById($stateParams.customer_id).then(function(){
-		$scope.customer_details = CustomerFactory.customer;
+		$scope.customer = CustomerFactory.customer;
 		$scope.deliveryAddresses = CustomerFactory.deliveryAddressList;
 	});
 	
@@ -78,7 +78,7 @@ app.controller('CustomerMasterEditController', function($scope, $state, $modal, 
 });
 
 app.controller('HistoryModalCtrl', function ($scope, $modalInstance, CustomerFactory) {
-	CustomerFactory.getCustomerHistoryListByCustomerId($scope.customer_details.customer_id).then(function(){
+	CustomerFactory.getCustomerHistoryListByCustomerId($scope.customer.customer_id).then(function(){
 		$scope.historyList = CustomerFactory.historyList;
 	});
 	

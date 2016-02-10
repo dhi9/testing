@@ -50,7 +50,34 @@ app.controller('CustomerMasterListController', function($scope, $filter, $modal,
 			currentPage = null;
 		}
 	});
-	
+
+	$scope.statusLabel = function(status){
+		if (status == 'A') {
+			return 'Aktif';
+		}
+		else {
+			return 'Non Aktif';
+		}
+	}
+
+	$scope.consignmentLabel = function(consignment){
+		if (consignment == '1') {
+			return 'Y';
+		}
+		else {
+			return 'N';
+		}
+	}
+
+	$scope.paymentLabel = function(payment){
+		if (payment.payment_term_type == 'C') {
+			return 'Cash';
+		}
+		else {
+			return payment.payment_term_value;
+		}
+	}
+
 	$scope.displayPaymentModal = function(item) {
 		var pass_data = {
 			item: item
