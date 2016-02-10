@@ -8,7 +8,7 @@ class Itemapi extends CI_Controller {
 		// Call the CI_Model constructor
 		parent::__construct();
 		
-		$this->load->model(array('item_model', 'auditlog_model','user_model', 'item_db', 'item_bl', 'attribute_db', 'site_model', 'category_db'));
+		$this->load->model(array('item_model', 'auditlog_model','user_model', 'item_db', 'item_bl', 'attribute_db', 'site_model', 'category_db', 'inventory_db'));
 	}
 	
 	public function _check_is_logged_on()
@@ -1354,6 +1354,16 @@ class Itemapi extends CI_Controller {
 			);
 		}
 	
+		echo json_encode($array);
+	}
+	
+	public function get_location_list_by_item_code ($item_code){
+		$inventory = $this->inventory_db->get_stock_by_data(array('item_code' => $item_code))->result_array();
+		
+		$array = array(
+			'call_status' => 'success',
+			'inventory' => $inventory
+		);
 		echo json_encode($array);
 	}
 }

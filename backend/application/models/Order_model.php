@@ -254,9 +254,11 @@ class Order_model extends CI_Model {
 	
 	public function get_good_issue_items($order_id)
 	{
-		return $this->db
-			->where('order_id', $order_id)
-		->get('order_item_delivery');
+		return $this->db->query("
+			SELECT *, COLUMN_JSON(attributes) as attributes
+			FROM `order_item_delivery`
+			WHERE `order_id` = $order_id
+		");
 	}
 	
 	public function get_order_by_order_reference($order_reference)

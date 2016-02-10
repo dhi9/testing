@@ -189,6 +189,32 @@ class Item_bl extends CI_Model {
 		}
 	}
 	
+	public function convert_to_basic_uom_quantity($item_code, $quantity, $uom)
+	{
+		$item_uom = $this->db
+			->where('item_code', $item_code)
+			->where('alternative_uom', $uom)
+		->get('item_uom_conversions')->row_array();
+		
+		return $quantity / $item_uom['base_amount'];
+	}
+	
+	public function set_base_uom_to_conversion($item_code)
+	{
+		$item = $this->item_db->get_item_by_item_code($item_code)->row_array();
+		
+		if($item['item_unit'] != NULL){
+			$insert = array(
+				'item_code' => $item['item_code'],
+				'alternative_uom' => $item['item_unit'],
+				'alternative_uom_description' => $item['unit_description'],
+				'base_amount' => 1,
+				'base_uom' => $item['item_unit'],
+				'base_uom_description' => $item['unit_description'],
+			);
+			$this->item_db->insert_item_uom_conversion($insert);
+		}
+	}
 	public function update_item_location($data)
 	{
 		foreach($data as $location){

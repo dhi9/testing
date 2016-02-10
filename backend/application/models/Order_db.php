@@ -254,6 +254,24 @@ class Order_db extends CI_Model {
 		}
 	}
 	
+	public function insert_good_issue($data)
+	{
+		if(! empty($data['attributes'])){
+			$attributes = $data['attributes'];
+			$this->db->set('attributes', "COLUMN_CREATE($attributes)", FALSE);
+			unset($data['attributes']);
+		}
+		
+		if ( $this->db->insert('order_item_delivery', $data) )
+		{
+			return $this->db->insert_id();
+		} 
+		else
+		{
+			return 0;
+		}
+	}
+	
 	public function update_order($data)
 	{
 		$this->db->update(

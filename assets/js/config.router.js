@@ -71,7 +71,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.order.new_draft_order', {
 			url:'/buatdraftorder',
 			templateUrl: "assets/js/wave/sales_order/new_draft_order.html",
-			resolve: loadSequence('ngTable', 'newDraftOrderController', 'customerService', 'customerFactory', 'attributeFactory', 'companyFactory'),
+			resolve: loadSequence('ngTable', 'newDraftOrderController', 'customerService', 'customerFactory', 'attributeFactory', 'companyFactory', 'itemService'),
 			title: "Buat Draft Order",
 			data : { logged_on_only: true, role: 'BUATSALESORDER' },
 			ncyBreadcrumb: {

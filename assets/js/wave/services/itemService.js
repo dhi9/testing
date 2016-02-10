@@ -78,9 +78,13 @@ app.service('ItemService', function($http, apiUrl) {
         return $http.post(url + 'itemapi/get_all_inventory', data);
     }
 
-    this.getInventoryListByItemCode = function(itemCode){
-        return $http.get(url + 'itemapi/get_all_inventory_by_item_code/' + itemCode);
-    }
+	this.getInventoryListByItemCode = function(itemCode){
+		return $http.get(url + 'itemapi/get_all_inventory_by_item_code/' + itemCode);
+	}
+
+	this.getLocationListByItemCode = function(itemCode){
+		return $http.get(url + 'itemapi/get_location_list_by_item_code/' + itemCode);
+	}
 
 	this.getInventoryBySiteReference = function(siteReference, itemCode){
 		return $http.get(url + 'itemapi/get_all_inventory_by_site_reference/' + siteReference + '/' + itemCode);

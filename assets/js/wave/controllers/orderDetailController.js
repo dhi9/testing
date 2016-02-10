@@ -1,4 +1,4 @@
-app.controller('OrderDetailController', function($rootScope, $scope, $state, $stateParams, $modal, $filter, ItemLookupService, PurchaseService, CustomerService, ApiCallService, SweetAlert, AttributeFactory) {
+app.controller('OrderDetailController', function($rootScope, $scope, $state, $stateParams, $modal, $filter, ItemLookupService, PurchaseService, CustomerService, ApiCallService, SweetAlert, AttributeFactory, ItemService) {
 	
 	$scope.state = $state.current;
 	
@@ -68,9 +68,16 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 	
 	$scope.setAttributesGoodIssue = function (index, item){
 		$scope.goodIssue.items[index].attributes = item.attributes;
+		$scope.goodIssue.items[index].item_unit = item.item_unit;
+		ItemService.getItemUomConversionListByItemCode(item.item_code).success(function(data) {
+			if (data.call_status === "success") {
+				$scope.goodIssue.items[index].uom_list = data.conversion_list;
+			}
+		});
 	}
 	
 	$scope.updateGoodIssue = function (){
+		console.log($scope.goodIssue);
 		if($scope.goodIssue.confirmGoodsIssue == null || $scope.goodIssue.confirmGoodsIssue == undefined || $scope.goodIssue.confirmGoodsIssue == false){
 			ApiCallService.updateGoodIssue($scope.goodIssue).success(function(data){
 				if(data.call_status == "success" ){
@@ -82,6 +89,10 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 						closeOnConfirm: true,
 						animation: "slide-from-top"
 					});
+					if(data.good_issue_status){
+						$scope.order.order_detail.good_issue_status = "A";
+					}
+					console.log($scope.order.order_detail.good_issue_status);
 				}
 			});
 		}else{
@@ -652,6 +663,9 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 							closeOnConfirm: true,
 							animation: "slide-from-top"
 						});
+						if(data.is_order_complete){
+							$scope.order.order_detail.status = "R";
+						}
 					}
 					else if (data.call_status === "error") {
 						if(data.error_code == "701") {
@@ -991,8 +1005,11 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 				if (data.call_status === "success") {
 					$scope.order = data.order;
 					$scope.order.order_type = $scope.order.order_detail.order_type;
-					
+
 					$scope.goodIssue.order_id = $scope.order.order_detail.order_id;
+					$scope.goodIssue.customer_id = $scope.order.customer_detail.customer_id;
+					$scope.goodIssue.delivery_type = $scope.order.order_detail.delivery_type;
+					$scope.goodIssue.delivery_address_id = 0;
 					$scope.goodIssue.good_issue_remark = $scope.order.order_detail.good_issue_remark;
 					
 					//simpan value awal untuk perbandingan sebelum di save
@@ -1000,14 +1017,18 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 					$scope.original_value.production_start_date = null;
 					$scope.original_value.production_completed_date = null;
 					$scope.original_value.good_issue_date = null;
-					
+
+					$scope.goodIssue.type = $scope.order.order_type;
+
 					ApiCallService.getGoodIssueItems($scope.retrievedOrderId).success(function(data){
 						if(data.call_status == "success"){
 							$scope.goodIssue.items = data.good_issue_items;
 							
 							for(var i = 0; $scope.goodIssue.items.length; i += 1){
 								$scope.goodIssue.items[i].quantity = parseInt($scope.goodIssue.items[i].quantity);
-								$scope.goodIssue.items[i].location = $scope.goodIssue.items[i].site_id+"/"+$scope.goodIssue.items[i].storage_id+"/"+$scope.goodIssue.items[i].bin_id
+								$scope.goodIssue.items[i].location = $scope.goodIssue.items[i].site_id+"/"+$scope.goodIssue.items[i].storage_id+"/"+$scope.goodIssue.items[i].bin_id;
+								$scope.goodIssue.items[i].attributes = JSON.parse($scope.goodIssue.items[i].attributes);
+								console.log($scope.goodIssue.items[i].attributes);
 							}
 						}
 					});
@@ -1031,8 +1052,6 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 					if ($scope.order.order_detail.good_issue_date !== null) {
 						$scope.order.order_detail.good_issue_date = new Date(moment($scope.order.order_detail.good_issue_date).format('YYYY-MM-DD'));
 						$scope.goodIssue.good_issue_date = $scope.order.order_detail.good_issue_date;
-						$scope.goodIssue.good_issue = true;
-						$scope.goodIssue.confirmGoodsIssue = true;
 						//simpan value awal untuk perbandingan sebelum di save
 						$scope.original_value.good_issue_date = new Date(moment($scope.order.order_detail.good_issue_date).format('YYYY-MM-DD'));
 					}
@@ -1148,6 +1167,7 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 	}
 	
 	$scope.init();
+	console.log($scope);
 });
 
 app.controller('OrderUpdateHistoryModalCtrl', function ($scope, $modalInstance, passed_data, ApiCallService) {
@@ -1263,7 +1283,13 @@ app.controller('OrderNotesModalCtrl', function ($scope, $modalInstance, $state, 
 
 app.controller('LocationModalCtrl', function ($scope, $modalInstance, ItemService, PurchaseService, passed_data, SweetAlert) {
     $scope.locations = passed_data.item;
-    $scope.getSiteName = function(site_id){
+	$scope.inventory = [];
+
+	ItemService.getLocationListByItemCode($scope.locations.item_code).success(function(data){
+		$scope.inventory = data.inventory;
+		console.log(data);
+	});
+	$scope.getSiteName = function(site_id){
         for(var j = 0; j<$scope.siteList.length; j += 1){
             if($scope.siteList[j].site_id == site_id){
                 return $scope.siteList[j].site_reference;

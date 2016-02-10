@@ -10,7 +10,8 @@ class Orderapi extends CI_Controller {
 		$this->load->model(array(
 			'customer_model', 'order_model', 'delivery_model',
 			'auditlog_model', 'update_history_model', 'status_model',
-			'user_model', 'order_bl', 'inventory_bl', 'delivery_db'
+			'user_model', 'order_bl', 'inventory_bl', 'delivery_db',
+			'purchase_bl', 'item_bl'
 		));
 	}
 	
@@ -1093,7 +1094,7 @@ class Orderapi extends CI_Controller {
 			{
 				// array untuk update database
 				$update = array();
-				
+				$isComplete = FALSE;
 				if ($data['is_production_start_date_changed'] == 1) {
 					$update['production_start_date'] = $data['production_start_date'];
 					
@@ -1112,7 +1113,7 @@ class Orderapi extends CI_Controller {
 				
 				if ($data['is_production_completed_date_changed'] == 1) {
 					$update['production_completed_date'] = $data['production_completed_date'];
-					
+					$isComplete = TRUE;
 					$production_completed_date_old_value = $this->update_history_model->get_old_value('orders', 'order_id', $data['order_id'], 'production_completed_date');
 					
 					$update_history = array(
@@ -1136,7 +1137,8 @@ class Orderapi extends CI_Controller {
 				
 				// feedback API
 				$feedback = array(
-					'call_status' => 'success'
+					'call_status' => 'success',
+					'is_order_complete' => $isComplete
 				);
 			}
 			
@@ -1183,22 +1185,6 @@ class Orderapi extends CI_Controller {
 			}
 			else
 			{
-				// array untuk update database
-				$update = array(
-					"order_id" => $data['order_id']
-				);
-				if(isset($data['good_issue_date'])){
-					$update['good_issue_date'] = $data['good_issue_date'];
-				};
-				if(isset($data['good_issue_remark'])){
-					$update['good_issue_remark'] = $data['good_issue_remark'];
-				};
-				if(isset($data['confirmGoodsIssue'])){
-					//$update['good_issue_remark'] = $data['confirmGoodsIssue'];
-				};
-				
-				$this->order_model->update_order($update);
-				$aw = null;
 				foreach ($data['items'] as $gi) {
 					if($gi['is'] == "U"){
 						$update = array(
@@ -1221,17 +1207,77 @@ class Orderapi extends CI_Controller {
 							'storage_id' => $gi['storage_id'],
 							'bin_id' => $gi['bin_id'],
 							'status' => $gi['status'],
+							'attributes' => $this->purchase_bl->array_to_cb((array)$gi['attributes'])
 							);
-						$insert['attributes'] = (array)$gi['attributes'];
-						$aw = json_decode($gi['attributes'], TRUE);
-						$this->order_model->insert_good_issue($insert);
+						$this->order_db->insert_good_issue($insert);
 					}
 				}
+				
+				// array untuk update order database
+				$update = array(
+					"order_id" => $data['order_id']
+				);
+				if(isset($data['good_issue_date'])){
+					$update['good_issue_date'] = $data['good_issue_date'];
+				};
+				if(isset($data['good_issue_remark'])){
+					$update['good_issue_remark'] = $data['good_issue_remark'];
+				};
+				$update['good_issue_status'] = "X";	
+				if(isset($data['confirmGoodsIssue']) == TRUE){
+					$update['good_issue_status'] = "A";
+					if($data['type'] == "K"){
+						foreach($data['items'] as $i){
+							$insert_consignment_stock = array(
+								"customer_id"	=> $data['customer_id'],
+								"delivery_address_id" => $data['delivery_address_id'],
+								"item_code"	=> $i['item_code'],
+								"quantity" => $i['quantity'],
+								//"site_id" => $i['site_id'],
+								//"storage_id" => $i['storage_id'],
+								//"bin_id" => $i['bin_id']
+								//"batch_id" => $i['batch_id']
+							);
+							if(! empty($i['attributes'])){
+								$insert_consignment_stock['attributes'] = $this->purchase_bl->array_to_cb((array)$i['attributes']);
+							}
+							$this->inventory_db->insert_consignment_stock($insert_consignment_stock);
+						}
+					}else{
+						foreach($data['items'] as $i){
+							$gi = array(
+								'item_code' => $i['item_code'],
+								'site_id' => $i['site_id'],
+								'storage_id' => $i['storage_id'],
+								//'bin_id' => $item['bin_id'],
+							);
+							
+							if(isset($i['bin_id'])){
+								$gi['bin_id'] = $i['bin_id'];
+							}
+							if(isset($i['batch_id'])){
+								$gi['batch_id'] = $i['batch_id'];
+							}
+							
+							if(! empty($i['attributes'])){
+								$gi['attributes'] = $this->purchase_bl->array_to_cb((array)$i['attributes']);
+							}
+							
+							//$basic_uom_quantity = $this->item_bl->convert_to_basic_uom_quantity($i['item_code'], $i['quantity'], $i['item_unit']);
+							$basic_uom_quantity = $i['quantity'];
+							$this->inventory_bl->subtract_stock_quantity($gi, $basic_uom_quantity);
+						}
+					}
+				};
+				
+				$this->order_model->update_order($update);
+				
 
 				// feedback API
 				$feedback = array(
 					'call_status' => 'success',
 					'data' => $data,
+					'good_issue_status' => $update['good_issue_status']
 				);
 			}
 			

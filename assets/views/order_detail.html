@@ -537,7 +537,7 @@
 		</div>
 	</div>
 	
-	<div class="row">
+	<div class="row" >
 		<div class="col-md-12">
 			<div class="panel panel-white" id="pnlItems">
 				<div class="panel-heading border-light">
@@ -546,17 +546,17 @@
 				</div>
 				<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
 					<div class="panel-body">
-						<div ng-if="order.order_detail.delivery_type == 'A'">
+						<div ng-if="order.order_detail.delivery_type == 'A' && order.order_detail.status == 'R'">
 							<form class="form-horizontal">
 								<div class="form-group">
 									<label for="txtCity" class="col-sm-3 control-label">Good Issue ( GI Date )</label>
 									<div class="col-sm-3">
 										<input type="date" class="form-control" id="txtOrderCreatedDate" name="input" 
-											 ng-model="goodIssue.good_issue_date" placeholder="yyyy-MM-dd"  ng-disabled="goodIssue.good_issue" />
+											 ng-model="goodIssue.good_issue_date" placeholder="yyyy-MM-dd"  ng-disabled="order.order_detail.good_issue_status == 'A'" />
 									</div>
-									<button class="btn btn-o btn-light-azure" ng-if="!goodIssue.good_issue" ng-click="goodIssue.good_issue_date=setToCurrentDate();">Hari Ini</button>
+									<button class="btn btn-o btn-light-azure" ng-if="order.order_detail.good_issue_status != 'A'" ng-click="goodIssue.good_issue_date=setToCurrentDate();">Hari Ini</button>
 									<div class="col-sm-3 checkbox clip-check check-primary pull-right">
-										<input type="checkbox" id="checkbox1" value="1" ng-model="goodIssue.confirmGoodsIssue" ng-disabled="goodIssue.good_issue">
+										<input type="checkbox" id="checkbox1" value="1" ng-model="goodIssue.confirmGoodsIssue" ng-disabled="order.order_detail.good_issue_status == 'A'">
 										<label for="checkbox1">
 											Konfirmasi Goods Issue
 										</label>
@@ -583,7 +583,7 @@
 								<tbody ng:repeat="item in goodIssue.items" ng-if="item.status == 'A'" ng-init="itemIndex = $index" >
 									<tr>
 										<td>
-											<select class="form-control" ng-model="item.item_code" ng-options="item.item_code as item.item_code for item in order.order_detail.order_items" ng-change="setAttributesGoodIssue($index, item)" ng ng-disabled="goodIssue.good_issue" ></select>
+											<select class="form-control" ng-model="item.item_code" ng-options="item.item_code as item.item_code for item in order.order_detail.order_items" ng-change="setAttributesGoodIssue($index, item)" ng-disabled="order.order_detail.good_issue_status == 'A'" ></select>
 										</td>
 										<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
 											{{ lookupAttibute(item.item_code, attrib.attribute_name, itemIndex)}}
@@ -593,13 +593,15 @@
 										</td>
 										<td>{{ lookupItemUnit(item.item_code) }}</td>
 										<td>{{ lookupItemName(item.item_code) }}</td>
-										<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="0" ng-disabled="goodIssue.good_issue" /></td>
-										<td><input type="text" class="form-control" placeholder="" ng-model="item.item_unit" ng-disabled="goodIssue.good_issue" /></td>
+										<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="0" ng-disabled="order.order_detail.good_issue_status == 'A'" /></td>
+										<td>
+											<select ng-model="item.item_unit" ng-options="uom.alternative_uom as uom.alternative_uom for uom in item.uom_list" required></select>
+										</td>
 										<td>
 											<div class="input-group">
-												<input type="text" class="form-control" ng-model="item.location" ng-click="displayLocationModal(item)" ng-disabled="goodIssue.good_issue" >
+												<input type="text" class="form-control" ng-model="item.location" ng-click="displayLocationModal(item)" ng-disabled="order.order_detail.good_issue_status == 'A'" >
 												<span class="input-group-btn">
-													<button type="button" class="btn btn-primary" ng-click="displayLocationModal(item)" ng-disabled="goodIssue.good_issue" ><i class="fa fa-search"></i>
+													<button type="button" class="btn btn-primary" ng-click="displayLocationModal(item)" ng-disabled="order.order_detail.good_issue_status == 'A'" ><i class="fa fa-search"></i>
 													</button>
 												</span>
 											</div>
@@ -617,7 +619,7 @@
 								<tr>
 									<td colspan="3" style="border-bottom: none">
 										<div>
-											<button class="btn btn-alt btn-hover btn-primary"ng-click="addGoodIssueItem()" ng-if="!goodIssue.good_issue" >
+											<button class="btn btn-alt btn-hover btn-primary"ng-click="addGoodIssueItem()" ng-if="order.order_detail.good_issue_status != 'A'" >
 												<i class="ti-plus"></i> <span> Tambah</span>
 											</button>
 										</div>
@@ -636,22 +638,25 @@
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<textarea class="col-sm-12" rows="5" ng-model="goodIssue.good_issue_remark" ng-disabled="goodIssue.good_issue" ></textarea>
+									<textarea class="col-sm-12" rows="5" ng-model="goodIssue.good_issue_remark" ng-disabled="order.order_detail.good_issue_status == 'A'" ></textarea>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
 									<br>
-									<button class="btn btn-alt btn-hover btn-primary" ng-click="updateGoodIssue()" ladda="updateButtonLoading" ng-if="!goodIssue.good_issue" >
+									<button class="btn btn-alt btn-hover btn-primary" ng-click="updateGoodIssue()" ladda="updateButtonLoading" ng-if="order.order_detail.good_issue_status != 'A'" >
 										<span>Simpan</span>
 										<i class="glyph-icon icon-plus"></i>
 									</button>
 								</div>
 							</div>
 						</div>
-						<div ng-if="order.order_detail.delivery_type == 'D'">
+						<div ng-if="order.order_detail.delivery_type == 'D' && order.order_detail.status == 'R'">
 							<p>Sales order ini membutuhkan pengiriman. Mohon untuk melanjutkan ke modul pengiriman untuk mengatur detail pengiriman dan melakukan Good Issue ( GI ).</p>
 							<button ng-click="saveDelivery()" class="btn btn-primary"  ladda="createDeliveryButtonLoading">Buka modul pengiriman</button>
+						</div>
+						<div ng-if="order.order_detail.status != 'R'">
+							<p>Good Issue belum bisa dilakukan sebelum proses pengadaan selesai</p>
 						</div>
 					</div>
 				</div>
@@ -935,7 +940,32 @@
 		</div>
 		<div class="modal-body bg-white">
 			<p>Lakukan proses pengambilan barang dari lokasi yang telah ditentukan dibawah untuk proses Good Issue (GI)</p>
-			
+			<table class="table table-responsive" ng-hide="true">
+				<thead>
+					<tr>
+						<th>PieceID</th>
+						<th>SiteID</th>
+						<th>Storage Location</th>
+						<th>Bin</th>
+						<th>QTY Tersedia</th>
+						<th>Tanggal GR</th>
+						<th>QTY Ambil</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="inven in inventory">
+						<td>{{getBatchName(inven.batch_id)}}</td>
+						<td>{{getSiteName(inven.site_id)}}</td>
+						<td>{{getStorageName(inven.storage_id)}}</td>
+						<td>{{getBinName(inven.bin_id)}}</td>
+						<td>{{inven.quantity}}</td>
+						<td>{{}}</td>
+						<td>
+							<input type="number">
+						</td>
+					</tr>
+				</tbody>
+			</table>
 			<form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
 				<div class="form-group">
 					<label class="col-sm-1 control-label">Site</label>
