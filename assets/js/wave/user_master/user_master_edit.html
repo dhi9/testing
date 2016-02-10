@@ -1,6 +1,6 @@
 <!-- start: PAGE TITLE -->
-<div ng-controller="UserMasterEditController">  
-    
+
+<div ng-controller="UserMasterEditController">
 	<section id="page-title" class="padding-top-15 padding-bottom-15" >
 		<div class="row">
 			<div class="col-sm-7">
@@ -17,7 +17,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<tabset class="tabbable">
-					<tab heading="User Detail" active="tab[0]">	
+					<tab heading="User Detail" active="tab[0]">
 						<!-- CONTENT -->
 						<div class="row">
 							<div class="col-md-12">
@@ -68,7 +68,6 @@
 							</div>
 						</div>
 					</tab>
-					
 					<tab heading="Access Level" active="tab[1]">
 						<form role="form" class="form-horizontal" >
 							<!--<div ng-repeat="acl in accessList">
@@ -101,8 +100,8 @@
 							</ul>
 						</form>
 					</tab>
-					
-					<tab heading="Approval"  active="tab[2]">	
+
+					<tab heading="Approval"  active="tab[2]">
 						<!-- CONTENT -->
 						<!--<form role="form" class="form-horizontal" ng-submit="setApprove()">-->
 						<form role="form" class="form-horizontal">
@@ -110,7 +109,7 @@
 								<input type="checkbox" id="checkbox{{$index + 20}}" ng-model="user.approval[apl.code]" >
 								<label for="checkbox{{$index + 20}}">{{ apl.label }}</label>
 							</div>-->
-							
+
 							<div class="checkbox clip-check check-primary col-md-auto">
 								<input type="checkbox" id="checkbox301" ng-model="user.approval.po_approval">
 								<label for="checkbox301">
@@ -154,8 +153,8 @@
 							</div>
 						</form>
 					</tab>
-					
-					<tab heading="Password Reset"  active="tab[3]">	
+
+					<tab heading="Password Reset"  active="tab[3]">
 						<!-- CONTENT -->
 						<div class="row">
 							<div class="col-md-12">
@@ -187,6 +186,7 @@
 											</div>
 										</div>
 									</div>
+										<!--
 									<div class="row">
 										<div class="col-md-7">
 											<div class="form-group">
@@ -200,11 +200,12 @@
 											</div>
 										</div>
 									</div>
+									-->
 								</form>
 							</div>
 						</div>
 					</tab>
-					
+
 					<tab heading="Email" active="tab[4]">
 						<form role="form" class="form-horizontal" >
 							<div class="checkbox clip-check check-primary col-md-auto">
@@ -229,6 +230,10 @@
 			</div>
 		</div>
 	</div>
+
 </div>
 
+
+
 <!-- end: YOUR CONTENT HERE -->
+

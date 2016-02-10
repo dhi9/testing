@@ -17,17 +17,19 @@
 		<div class="row">
 			<div class="col-md-12">
 				<form role="form" class="form-horizontal" ng-submit="insertUser()">
-					<div class="form-group" ng-class="{'has-error': !usernameAvailable}">
-						<label class="col-sm-2 control-label" for="inputEmail3">Username</label>
+					<div class="form-group" ng-class="{'has-error': !usernameAvailable, 'has-error': !usernameNotNull}">
+						<label class="col-sm-2 control-label" for="inputEmail3">Username <span class="symbol required"></span></label>
 						<div class="col-sm-8">
-							<input type="text" placeholder="Username" id="inputEmail3" class="form-control" ng-model="user.username" ng-blur="isUsernameAvailable()">
-							<span class="error text-small block" ng-show="!usernameAvailable">Username not available</span>
+							<input type="text" placeholder="Username" id="inputEmail3" class="form-control" ng-model="user.username" ng-blur="isUsernameAvailable(); isUsernameNotNull(user.username)">
+							<span class="error text-small block" ng-show="!usernameAvailable">Username tidak tersedia</span>
+							<span class="error text-small block" ng-show="!usernameNotNull">Tidak boleh kosong</span>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="col-sm-2 control-label" for="inputEmail3">Full Name</label>
+					<div class="form-group" ng-class="{'has-error': !fullnameNotNull}">
+						<label class="col-sm-2 control-label" for="inputEmail3">Full Name <span class="symbol required"></span></label>
 						<div class="col-sm-8">
-							<input type="text" placeholder="Full Name" id="inputEmail3" class="form-control" ng-model="user.full_name">
+							<input type="text" placeholder="Full Name" id="inputEmail3" class="form-control" ng-model="user.full_name" ng-blur="isFullnameNotNull(user.full_name)">
+							<span class="error text-small block" ng-show="!fullnameNotNull">Tidak boleh kosong</span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -36,16 +38,18 @@
 							<input type="text" placeholder="Enter a Valid Email" id="inputEmail3" class="form-control ng-dirty ng-invalid ng-valid-email ng-invalid-required ng-touched" ng-model="user.email">
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="col-sm-2 control-label" for="inputEmail3">Password</label>
+					<div class="form-group" ng-class="{'has-error': !passwordNotNull}">
+						<label class="col-sm-2 control-label" for="inputEmail3">Password <span class="symbol required"></span></label>
 						<div class="col-sm-8">
-							<input type="password" placeholder="Password" id="inputEmail3" class="form-control" ng-model="user.password">
+							<input type="password" placeholder="Password" id="inputEmail3" class="form-control" ng-model="user.password"  ng-blur="isPasswordNotNull(user.password)">
+							<span class="error text-small block" ng-show="!passwordNotNull">Tidak boleh kosong</span>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group" ng-class="{'has-error': !passwordNotSame}">
 						<label class="col-sm-2 control-label" for="inputEmail3">Repeat Password</label>
 						<div class="col-sm-8">
-							<input type="password" placeholder="Ulangi Password" id="inputEmail3" class="form-control" ng-model="user.repeatedPassword">
+							<input type="password" placeholder="Ulangi Password" id="inputEmail3" class="form-control" ng-model="user.repeatedPassword" ng-blur="isPasswordSame(user)">
+							<span class="error text-small block" ng-show="!passwordNotSame">Password tidak sama</span>
 						</div>
 					</div>
 					

@@ -107,12 +107,20 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			$scope.tab['2']=true;
 		}else if (!$scope.isChangePasswordValid()) {
 			SweetAlert.swal({
-					title: "Perhatian",
-					text: "Password tidak sama", 
-					type: "warning", 
-					animation: "slide-from-top"
-				});
+				title: "Perhatian",
+				text: "Password tidak sama",
+				type: "warning",
+				animation: "slide-from-top"
+			});
 			$scope.tab['3']=true;
+		}else if ($scope.user.full_name == '' || $scope.user.full_name == null || $scope.user.full_name == undefined) {
+			SweetAlert.swal({
+				title: "Perhatian",
+				text: "Kolom Full Name tidak boleh kosong",
+				type: "warning",
+				animation: "slide-from-top"
+			});
+			$scope.tab['0']=true;
 		}else{
 			UserService.updateUser($scope.user).success(function(data) {
 				SweetAlert.swal({
@@ -141,10 +149,10 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			"label":"Buat Sales Order",
 			"code":"BUATSALESORDER"
 		},
-		{
+		/*{
 			"label":"Sales Order Troli",
 			"code":"SALESORDERTROLI"
-		},
+		},*/
 		{
 			"label":"Sales Order Aktif",
 			"code":"SALESORDERAKTIF"
@@ -157,14 +165,14 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			"label":"Buat Purchase Request",
 			"code":"BUATPURCHASEREQUEST"
 		},
-		{
+		/*{
 			"label":"Buat Service Request",
 			"code":"BUATSERVICEREQUEST"
 		},
 		{
 			"label":"Buat Stock Transfer Order",
 			"code":"BUATSTOCKTRANSFERORDER"
-		},
+		},*/
 		{
 			"label":"Approve Request",
 			"code":"APPROVEREQUEST"
@@ -181,7 +189,7 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			"label":"Stock Status",
 			"code":"STOCKSTATUS"
 		},
-		{
+		/*{
 			"label":"Stock Opname",
 			"code":"STOCKOPNAME"
 		},
@@ -220,7 +228,7 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 		{
 			"label":"Laporan Pelanggan",
 			"code":"LAPORANPELANGGAN"
-		},
+		},*/
 		{
 			"label":"Master Database",
 			"code":""
@@ -245,7 +253,7 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			"label":"Site Master",
 			"code":"SITEMASTER"
 		},
-		{
+		/*{
 			"label":"Attribute Master",
 			"code":"ATTRIBUTEMASTER"
 		},
@@ -260,7 +268,7 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 		{
 			"label":"Company Master",
 			"code":"COMPANYMASTER"
-		},
+		},*/
 	];
 	
 	$scope.approvalList=[
