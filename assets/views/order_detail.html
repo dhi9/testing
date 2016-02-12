@@ -169,12 +169,12 @@
 													<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
 														{{item.attributes[attrib.attribute_name]}}
 													</td>
-													<td>{{ item.quantity }}</td>
+													<td>{{ item.quantity || 0 | number:0 }}</td>
 													<td>{{ item.item_unit }}</td>
 													<td>{{ item.item_name }}</td>
-													<td>{{ item.cost }}</td>
+													<td>{{ item.cost || 0 | number:2 }}</td>
 													<td>{{ item.disc_percent }}</td>
-													<td>{{ item.disc_value }}</td>
+													<td>{{ item.disc_value || 0 | number:2 }}</td>
 													<td>{{(item.quantity*item.cost)-(item.quantity*item.cost*item.disc_percent/100)-(item.disc_value) || 0 | number:2}}</td>
 													<td>{{ item.remark }}</td>
 												</tr>
@@ -231,10 +231,10 @@
 													<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
 														{{item.attributes[attrib.attribute_name]}}
 													</td>
-													<td>{{ item.quantity }}</td>
+													<td>{{ item.quantity || 0 | number:0 }}</td>
 													<td>{{ item.item_unit }}</td>
 													<td>{{ item.item_name }}</td>
-													<td>{{ item.cost }}</td>
+													<td>{{ item.cost || 0 | number:2 }}</td>
 													<td>{{ item.disc_percent }}</td>
 													<td>{{(item.quantity*item.cost)-(item.quantity*item.cost*item.disc_percent/100) || 0 | number:2}}</td>
 													<td>{{ item.remark }}</td>
@@ -413,8 +413,8 @@
 																<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
 																	{{item.attributes[attrib.attribute_name]}}
 																</td>
-																<td>{{ item.main_quantity }}</td>
-																<td>{{ item.remains }}</td>
+																<td>{{ item.main_quantity || 0 | number:0 }}</td>
+																<td>{{ item.remains || 0 | number:0 }}</td>
 																<td><input type="text" class="form-control" id="" placeholder="0" ng-model="item.quantity" /></td>
 																<td>{{ item.item_unit }}</td>   
 																<td>{{ item.item_name }}</td>
@@ -447,9 +447,9 @@
 																<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
 																	{{item.attributes[attrib.attribute_name]}}
 																</td>
-																<td>{{ item.main_quantity }}</td>
-																<td>{{ item.remains }}</td>
-																<td>{{ item.quantity }}</td>
+																<td>{{ item.main_quantity || 0 | number:0 }}</td>
+																<td>{{ item.remains || 0 | number:0 }}</td>
+																<td>{{ item.quantity || 0 | number:0 }}</td>
 																<td>{{ item.item_unit }}</td>
 																<td>{{ item.item_name; }}</td>
 																<td>{{ item.remark }}</td>
@@ -583,13 +583,13 @@
 								<tbody ng:repeat="item in goodIssue.items" ng-if="item.status == 'A'" ng-init="itemIndex = $index" >
 									<tr>
 										<td>
-											<select class="form-control" ng-model="item.item_code" ng-options="item.item_code as item.item_code for item in order.order_detail.order_items" ng-change="setAttributesGoodIssue($index, item)" ng-disabled="order.order_detail.good_issue_status == 'A'" ></select>
+											<select class="form-control" ng-model="item.selected" ng-options="i as i.item_code for i in order.order_detail.order_items" ng-change="setAttributesGoodIssue($index, item.selected)" ng-disabled="order.order_detail.good_issue_status == 'A'" ></select>
 										</td>
 										<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
-											{{ lookupAttibute(item.item_code, attrib.attribute_name, itemIndex)}}
+											{{ item.attributes[attrib.attribute_name] }}
 										</td>
 										<td>
-											{{ lookupQuantity(item.item_code)}}
+											{{ item.requested_quantity || 0 | number:0}}
 										</td>
 										<td>{{ lookupItemUnit(item.item_code) }}</td>
 										<td>{{ lookupItemName(item.item_code) }}</td>
@@ -958,7 +958,7 @@
 						<td>{{getSiteName(inven.site_id)}}</td>
 						<td>{{getStorageName(inven.storage_id)}}</td>
 						<td>{{getBinName(inven.bin_id)}}</td>
-						<td>{{inven.quantity}}</td>
+						<td>{{inven.quantity || 0 | number:0}}</td>
 						<td>{{}}</td>
 						<td>
 							<input type="number">
@@ -993,6 +993,54 @@
 				</div>
 				<button type="submit" class="btn btn-primary">Simpan</button>
 				<button type="button" class="btn btn-danger" ng-click="closeModal()">Batal</button>
+			</form>
+		</div>
+	</script>
+
+
+	<script type="text/ng-template" id="modal_before_gi">
+		<div class="modal-header">
+			<h3 class="modal-title">Konfirmasi GI</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Mohon konfirmasi untuk Good Issue</p>
+			<table class="table table-responsive">
+				<thead>
+					<tr>
+						<th>ArticleID (SKU)</th>
+						<th>Jumlah Order</th>
+						<th>Unit</th>
+						<th>Nama Barang</th>
+						<th>Actual</th>
+						<th>Unit</th>
+						<th>PieceID/SiteID/Storage Location/Bin</th>
+						<th>VAR</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="i in items">
+						<td>{{i}}</td>
+						<td>{{getBatchName(i.batch_id)}}</td>
+						<td>{{getSiteName(i.site_id)}}</td>
+						<td>{{getStorageName(i.storage_id)}}</td>
+						<td>{{getBinName(i.bin_id)}}</td>
+						<td>{{i.quantity || 0 | number:0}}</td>
+						<td>{{}}</td>
+						<td>
+							<input type="number">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
+				<div class="form-group">
+					<label class="col-sm-1 control-label">PieceID</label>
+					<div class="col-sm-11">
+						Potong stock sesuai dengan aktual pengeluaran barang
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary">Lakukan Goods Issue</button>
+				<button type="button" class="btn btn-danger" ng-click="closeModal()">Kembali</button>
 			</form>
 		</div>
 	</script>
