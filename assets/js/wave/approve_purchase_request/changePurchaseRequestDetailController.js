@@ -1,6 +1,8 @@
 app.controller('changePurchaseRequestDetailController', function($filter, $scope, $http, $modal, $stateParams, $rootScope, PurchaseService, VendorService, ItemService, WarehouseService, SweetAlert, AttributeFactory, SiteService) {
 	var draftReference = $stateParams.reference;
 	//$scope.username = $rootScope.username;
+    
+    console.log($scope);
 	
 	$scope.edit = {};
 	$scope.edit.itemList = true;
@@ -15,7 +17,9 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 	$scope.approver = false;
 		
 	$scope.supplierList = [];
-	$scope.purchase = []
+    
+	$scope.warehouse = {};
+    $scope.warehouse.addresses = [];
 
     $scope.siteList = [];
     SiteService.getSiteList().success(function(data){
@@ -62,11 +66,11 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 			$scope.itemRequestList = $scope.purchase.item_request_list;
 			$scope.deliveryRequestList = $scope.purchase.delivery_request_list;
 			
-			for(var i = 0; i < $scope.itemRequestList.length; i++){
+/*			for(var i = 0; i < $scope.itemRequestList.length; i++){
                 $scope.itemRequestList[i].attributes = JSON.parse($scope.itemRequestList[i].attributes);
 				$scope.loadItemRequest(i, $scope.itemRequestList[i]);
 			}
-			
+*/			
 			for(var i = 0; i < $scope.deliveryRequestList.length; i++){
 				$scope.deliveryRequestList[i].date = new Date(moment($scope.purchase.delivery_request_list[i].date));
 			}

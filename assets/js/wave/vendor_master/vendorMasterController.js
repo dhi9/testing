@@ -6,6 +6,11 @@ app.controller('VendorMasterController', function($filter, $scope, $http, Vendor
 
     VendorFactory.getVendorList().then(function(){
         $scope.vendorList = VendorFactory.vendorList;
+
+        for(var i = 0; i < $scope.vendorList.length; i += 1){
+        	$scope.vendorList[i].restatus = $scope.statusLabel($scope.vendorList[i].status);
+        }
+
         $scope.tableParams.total($scope.vendorList.length);
         $scope.tableParams.reload();
     })

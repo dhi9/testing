@@ -1,4 +1,7 @@
 app.controller('NewServiceRequestController', function($filter, $scope, $http, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService) {
+    
+    console.log($scope);
+    
 	$scope.edit = {};
 	$scope.edit.itemList = true;
 	$scope.edit.sendEmail = false;

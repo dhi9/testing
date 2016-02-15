@@ -372,8 +372,8 @@
 													</div>
 												</td>
 												
-												<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
-													<input type="text" class="form-control" placeholder="{{attrib.default_value}}" ng-model="item[attrib.attribute_name]" />
+												<td ng-repeat="attrib in attributeActiveList"">
+													<select ng-model="item[attrib.attribute_name]" ng-options="attribute.attribute_item as attribute.attribute_item for attribute in attrib.attribute_items"></select>
 												</td>
 												<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="1" /></td>
 												<td>{{ item.item_unit }}</td>
