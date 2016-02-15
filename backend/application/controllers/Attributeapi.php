@@ -101,7 +101,11 @@ class Attributeapi extends CI_Controller {
 					$this->auditlog_model->insert_audit_log("attributeapi","insert_attribute",$json);
 					
 					$attribute_id = $this->attribute_db->insert_attribute($data);
-					
+					$attribute_items = array(
+						'attribute_id' => $attribute_id,
+						'attribute_item' => $data['default_value']
+					);
+					$attribute_item_id = $this->attribute_db->insert_attribute_item($attribute_items);
 					/*$insert = array(
 						'attribute_id' => $attribute_id,
 						'user_id' => $this->session->userdata('user_id'),

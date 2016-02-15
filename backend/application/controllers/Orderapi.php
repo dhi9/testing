@@ -11,7 +11,7 @@ class Orderapi extends CI_Controller {
 			'customer_model', 'order_model', 'delivery_model',
 			'auditlog_model', 'update_history_model', 'status_model',
 			'user_model', 'order_bl', 'inventory_bl', 'delivery_db',
-			'purchase_bl', 'item_bl'
+			'purchase_bl', 'item_bl', 'company_db'
 		));
 	}
 	
@@ -648,7 +648,8 @@ class Orderapi extends CI_Controller {
 			if (count($gi)>0) {
 				# code...
 			}
-			for ($i=0; $i < count($gi); $i++) { 
+			for ($i=0; $i < count($gi); $i++) {
+				$gi[$i]['uom_list'] = $this->item_db->get_item_uom_conversion_list_by_item_code($gi[$i]['item_code'])->result_array();
 				$gi[$i]['is'] = "U";
 			}
 
@@ -673,8 +674,12 @@ class Orderapi extends CI_Controller {
 			$order_detail = $this->order_model->get_order($order_id)->row_array();
 			
 			// buat data order items agar sesuai dengan struktur feedback API
-			$order_detail['order_items'] = $this->order_bl->get_order_item_list_by_order_id($order_id);
-			
+			$order_detail['order_items'] = array();
+			$order_items = $this->order_bl->get_order_item_list_by_order_id($order_id);
+			foreach($order_items as $item){
+				$item['uom_list'] = $this->item_db->get_item_uom_conversion_list_by_item_code($item['item_code'])->result_array();
+				array_push($order_detail['order_items'], $item);
+			}
 			$delivery_request_details = $this->delivery_model->get_delivery_requests($order_id)->result_array();
 			
 			foreach ($delivery_request_details as &$delivery_request_detail) {
@@ -1611,7 +1616,7 @@ class Orderapi extends CI_Controller {
 			$array = array(
 				"call_status" => "error",
 				"error_code" => "701",
-				"error_message" => "User not logged on"
+				"error_messaage" => "User not logged on"
 			);
 		}
 		else {
@@ -1622,5 +1627,62 @@ class Orderapi extends CI_Controller {
 			
 			echo json_encode($array);
 		}
+	}
+	
+	public function pay_order(){
+		$data = json_decode(file_get_contents('php://input'), true);
+			
+		$invoice = $this->order_db->get_sales_invoice_by_order_id($data['order_id']);
+		if($invoice->num_rows() > 0 ){
+			$feedback = array(
+				"call_status" => "error",
+				"error_code" => "409",
+				"error_messages" => "Pembayaran Telah diterima/selesai"
+			);
+		}else{
+			// update bahwa order sudah dibayar/lunas (X = belum lunas, P = lunas)
+			/*
+			$update_order = array(
+				"payment_status" => "P"					  
+			);
+			$this->order_model->update_order($update_order);
+			*/
+			
+			$company = $this->company_db->get_company()->row();
+			$insert_invoice = array(
+				"order_id" => $data['order_id'],
+				"customer_id" => $data['customer_id'],
+				"payment_type" => $data['payment_type'],
+			);
+			$invoice_id = $this->order_db->insert_sales_invoice($insert_invoice);
+			$this->order_bl->generate_sales_invoice_reference($invoice_id);
+			
+			foreach($data['order_items'] as $item){
+				$insert_invoice_item = array(
+					"invoice_id" => $invoice_id,
+					"item_code" => $item['item_code'],
+					"quantity" => $item['quantity'],
+					"item_unit" => $item['item_unit'],
+					"cost" => $item['cost']
+				);
+				if(!empty($item['disc_percent'])){
+					$insert_invoice_item['disc_percent'] = $item['disc_percent'];
+				}
+				if(!empty($item['disc_value'])){
+					$insert_invoice_item['disc_value'] = $item['disc_value'];
+				}
+				$this->order_db->insert_sales_invoice_item($insert_invoice_item);
+			}
+			// feedback API
+			$feedback = array(
+					"call_status" => "success",
+					"data" => $data,
+					"invoice_id" => $invoice_id,
+					"company" => $company
+			);
+		}
+		
+		
+		echo json_encode($feedback);
 	}
 }
