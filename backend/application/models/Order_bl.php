@@ -8,7 +8,7 @@ class Order_bl extends CI_Model {
 		// Call the CI_Model constructor
 		parent::__construct();
 		
-		$this->load->model(array('item_model', 'order_db', 'purchase_bl'));
+		$this->load->model(array('item_model', 'order_db', 'purchase_bl', 'company_db'));
 	}
 	
 	public function generate_order_reference($order_id)
@@ -296,4 +296,45 @@ class Order_bl extends CI_Model {
 			return 0;
 		}
 	}
+	
+	public function generate_sales_invoice_reference($invoice_id)
+	{
+		$company_invoice = $this->company_db->get_company()->row()->ir_prefix;
+		
+		$query = $this->db->get('sales_invoices');
+		
+		if($query->num_rows() > 0)
+		{
+			$date_created = $query->row()->date_created;
+			$year = date('y', strtotime($date_created));
+		}
+		else
+		{
+			$year = date('y');
+		}
+		
+		$initial_date = date('Y-m-d', strtotime('Jan 1')).' 00:00:00';
+		
+		// hitung jumlah date created yang sama
+		$query = $this->db
+		->where('date_created <=', $date_created)
+		->where('date_created >', $initial_date)
+		->get('draft_orders');
+		$count = $query->num_rows();
+		
+		// buat urutannya
+		$sequence = str_pad($count, 6, "0", STR_PAD_LEFT);
+		
+		$invoice_reference = $company_invoice.$year.'A'.$sequence;
+		
+		$data = array(
+			'invoice_reference' => $invoice_reference
+		);
+		
+		$this->db->where('invoice_id', $invoice_id);
+		$this->db->update('sales_invoices', $data);
+		
+		return $invoice_reference;
+	}
+	
 }

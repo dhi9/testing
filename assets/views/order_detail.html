@@ -762,7 +762,7 @@
 	</script>
 	
 	<script type="text/ng-template" id="/cash.html">
-		<div class="row">mod
+		<div class="row">
 			<div class="col-md-10">
 				<form role="form" class="form-horizontal">
 					<div class="form-group">
@@ -775,7 +775,7 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
 					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
@@ -810,7 +810,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -844,7 +845,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -878,7 +880,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -904,7 +907,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -1006,30 +1010,29 @@
 			<p>Mohon konfirmasi untuk Good Issue</p>
 			<table class="table table-responsive">
 				<thead>
-					<tr>
-						<th>ArticleID (SKU)</th>
-						<th>Jumlah Order</th>
-						<th>Unit</th>
-						<th>Nama Barang</th>
-						<th>Actual</th>
-						<th>Unit</th>
-						<th>PieceID/SiteID/Storage Location/Bin</th>
-						<th>VAR</th>
-					</tr>
+				<tr>
+					<th>ArticleID (SKU)</th>
+					<th>Jumlah Order</th>
+					<th>Unit</th>
+					<th>Nama Barang</th>
+					<th>Actual</th>
+					<th>Unit</th>
+					<th>PieceID/SiteID/Storage Location/Bin</th>
+					<th>VAR</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="i in items">
-						<td>{{i}}</td>
-						<td>{{getBatchName(i.batch_id)}}</td>
-						<td>{{getSiteName(i.site_id)}}</td>
-						<td>{{getStorageName(i.storage_id)}}</td>
-						<td>{{getBinName(i.bin_id)}}</td>
-						<td>{{i.quantity || 0 | number:0}}</td>
-						<td>{{}}</td>
-						<td>
-							<input type="number">
-						</td>
-					</tr>
+				<tr ng-repeat="i in items">
+					<td>{{i.item_code}}</td>
+					<td>{{i.requested_quantity}}</td>
+					<td>{{i.requested_unit}}</td>
+					<td>{{i.item_name}}</td>
+					<td>{{i.aktual_quantity}}</td>
+					<td>{{i.item_unit}}</td>
+					<td>{{getBatchName(i.batch_id)}}/{{getSiteName(i.site_id)}}/{{getStorageName(i.storage_id)}}/{{getBinName(i.bin_id)}}</td>
+
+					<td></td>
+				</tr>
 				</tbody>
 			</table>
 			<form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
@@ -1042,6 +1045,29 @@
 				<button type="submit" class="btn btn-primary">Lakukan Goods Issue</button>
 				<button type="button" class="btn btn-danger" ng-click="closeModal()">Kembali</button>
 			</form>
+		</div>
+	</script>
+
+
+	<script type="text/ng-template" id="modal_payment_receipt">
+		<div class="modal-header">
+			<h3 class="modal-title">Cetak Kwitansi Pembayaran</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Apakah anda mau mencetak kwitansi pembayaran</p>
+			<table class="table table-responsive no-border">
+				<tr>
+					<td class="col-md-4" align="center">
+						<button type="submit" class="btn btn-primary">Cetak</button>
+					</td>
+					<td class="col-md-4" align="center">
+						<button type="submit" class="btn btn-primary">Download PDF</button>
+					</td>
+					<td class="col-md-4" align="center">
+						<button type="submit" class="btn btn-danger" ng-click="closeModal()">Tidak Cetak</button>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</script>
 </div><!-- End of Customer Row -->
