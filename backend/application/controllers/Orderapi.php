@@ -648,8 +648,7 @@ class Orderapi extends CI_Controller {
 			if (count($gi)>0) {
 				# code...
 			}
-			for ($i=0; $i < count($gi); $i++) {
-				$gi[$i]['uom_list'] = $this->item_db->get_item_uom_conversion_list_by_item_code($gi[$i]['item_code'])->result_array();
+			for ($i=0; $i < count($gi); $i++) { 
 				$gi[$i]['is'] = "U";
 			}
 
@@ -674,12 +673,8 @@ class Orderapi extends CI_Controller {
 			$order_detail = $this->order_model->get_order($order_id)->row_array();
 			
 			// buat data order items agar sesuai dengan struktur feedback API
-			$order_detail['order_items'] = array();
-			$order_items = $this->order_bl->get_order_item_list_by_order_id($order_id);
-			foreach($order_items as $item){
-				$item['uom_list'] = $this->item_db->get_item_uom_conversion_list_by_item_code($item['item_code'])->result_array();
-				array_push($order_detail['order_items'], $item);
-			}
+			$order_detail['order_items'] = $this->order_bl->get_order_item_list_by_order_id($order_id);
+			
 			$delivery_request_details = $this->delivery_model->get_delivery_requests($order_id)->result_array();
 			
 			foreach ($delivery_request_details as &$delivery_request_detail) {
@@ -1616,7 +1611,7 @@ class Orderapi extends CI_Controller {
 			$array = array(
 				"call_status" => "error",
 				"error_code" => "701",
-				"error_messaage" => "User not logged on"
+				"error_message" => "User not logged on"
 			);
 		}
 		else {
@@ -1628,61 +1623,112 @@ class Orderapi extends CI_Controller {
 			echo json_encode($array);
 		}
 	}
+
+
+	    public function pay_order(){
+        $data = json_decode(file_get_contents('php://input'), true);
+            
+        $invoice = $this->order_db->get_sales_invoice_by_order_id($data['order_id']);
+        if($invoice->num_rows() > 0 ){
+            $feedback = array(
+                "call_status" => "error",
+                "error_code" => "409",
+                "error_messages" => "Pembayaran Telah diterima/selesai"
+            );
+        }else{
+            // update bahwa order sudah dibayar/lunas (X = belum lunas, P = lunas)
+            /*
+            $update_order = array(
+                "payment_status" => "P"                      
+            );
+            $this->order_model->update_order($update_order);
+            */
+            
+            $company = $this->company_db->get_company()->row();
+            $insert_invoice = array(
+                "order_id" => $data['order_id'],
+                "customer_id" => $data['customer_id'],
+                "payment_type" => $data['payment_type'],
+            );
+            $invoice_id = $this->order_db->insert_sales_invoice($insert_invoice);
+            $this->order_bl->generate_sales_invoice_reference($invoice_id);
+            
+            foreach($data['order_items'] as $item){
+                $insert_invoice_item = array(
+                    "invoice_id" => $invoice_id,
+                    "item_code" => $item['item_code'],
+                    "quantity" => $item['quantity'],
+                    "item_unit" => $item['item_unit'],
+                    "cost" => $item['cost']
+                );
+                if(!empty($item['disc_percent'])){
+                    $insert_invoice_item['disc_percent'] = $item['disc_percent'];
+                }
+                if(!empty($item['disc_value'])){
+                    $insert_invoice_item['disc_value'] = $item['disc_value'];
+                }
+                $this->order_db->insert_sales_invoice_item($insert_invoice_item);
+            }
+            // feedback API
+            $feedback = array(
+                    "call_status" => "success",
+                    "data" => $data,
+                    "invoice_id" => $invoice_id,
+                    "company" => $company
+            );
+        }
+    }
+
+
+
+
+	public function sales_invoice($order_id){
+
+
+		$SalesInvoiceCompanyDetail = $this->company_db->get_company()->row();
 	
-	public function pay_order(){
-		$data = json_decode(file_get_contents('php://input'), true);
-			
-		$invoice = $this->order_db->get_sales_invoice_by_order_id($data['order_id']);
-		if($invoice->num_rows() > 0 ){
-			$feedback = array(
-				"call_status" => "error",
-				"error_code" => "409",
-				"error_messages" => "Pembayaran Telah diterima/selesai"
-			);
-		}else{
-			// update bahwa order sudah dibayar/lunas (X = belum lunas, P = lunas)
-			/*
-			$update_order = array(
-				"payment_status" => "P"					  
-			);
-			$this->order_model->update_order($update_order);
-			*/
-			
-			$company = $this->company_db->get_company()->row();
-			$insert_invoice = array(
-				"order_id" => $data['order_id'],
-				"customer_id" => $data['customer_id'],
-				"payment_type" => $data['payment_type'],
-			);
-			$invoice_id = $this->order_db->insert_sales_invoice($insert_invoice);
-			$this->order_bl->generate_sales_invoice_reference($invoice_id);
-			
-			foreach($data['order_items'] as $item){
-				$insert_invoice_item = array(
-					"invoice_id" => $invoice_id,
-					"item_code" => $item['item_code'],
-					"quantity" => $item['quantity'],
-					"item_unit" => $item['item_unit'],
-					"cost" => $item['cost']
-				);
-				if(!empty($item['disc_percent'])){
-					$insert_invoice_item['disc_percent'] = $item['disc_percent'];
-				}
-				if(!empty($item['disc_value'])){
-					$insert_invoice_item['disc_value'] = $item['disc_value'];
-				}
-				$this->order_db->insert_sales_invoice_item($insert_invoice_item);
-			}
-			// feedback API
-			$feedback = array(
-					"call_status" => "success",
-					"data" => $data,
-					"invoice_id" => $invoice_id,
-					"company" => $company
-			);
-		}
+
+		$this->db->where('order_id', $order_id);
+		$invoice = $this->db->get('sales_invoices')->row_array();
+
+		
+
+		$this->db->where('invoice_id', $invoice['invoice_id']);
+		$query = $this->db->get('sales_invoice_items')->result_array();
+
+		
+
+		$SalesInvoiceCompanyDetail->img = "<img src='".$SalesInvoiceCompanyDetail->delivery_image."'>";
 		
 		
-		echo json_encode($feedback);
+
+		$data['SalesInvoiceCompanyDetail'] = $SalesInvoiceCompanyDetail;
+		$data['DataList'] = $query;
+		$data['DataBank'] = $invoice;
+
+		$filename = "SALES INVOICE";
+
+		$pdfFilePath = FCPATH."/docs/".$filename.".pdf";
+
+			ini_set('memory_limit', '-1');
+			ini_set('max_execution_time', 600);
+			$html = $this->load->view('pdf-so-invoice', $data);
+
+				$this->load->library('pdf');
+			$pdf = $this->pdf->load('','A4',9,'dejavusans');
+			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
+			$pdf->WriteHTML($html); 
+			ob_clean();
+			$pdf->Output($request_reference.".pdf", 'D');
+			//$pdf->Output($request_reference.".pdf", 'F');
+			//$pdf->Output();
+			//force_download($filename.".pdf","./docs/".$filename.".pdf");
+			
+			
+		//}
 	}
+
+	
+
+
 }
