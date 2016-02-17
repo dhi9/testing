@@ -231,9 +231,10 @@
 														</span>
 													</div>
 												</td>
-												
-												<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
-													<input type="text" class="form-control" placeholder="{{attrib.default_value}}" ng-model="item[attrib.attribute_name]" />
+
+												<td ng-repeat="attrib in attributeActiveList">
+												<!--<input type="text" class="form-control" placeholder="{{attrib.default_value}}" ng-model="item[attrib.attribute_name]" />-->
+												<select ng-model="item[attrib.attribute_name]" ng-options="attribute.attribute_item as attribute.attribute_item for attribute in attrib.attribute_items"></select>
 												</td>
 												<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="1" /></td>
 												<td>{{ item.item_unit }}</td>
@@ -377,9 +378,10 @@
 														</span>
 													</div>
 												</td>
-												
-												<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
-													<input type="text" class="form-control" placeholder="{{attrib.default_value}}" ng-model="item[attrib.attribute_name]" />
+
+												<td ng-repeat="attrib in attributeActiveList">
+													<!--<input type="text" class="form-control" placeholder="{{attrib.default_value}}" ng-model="item[attrib.attribute_name]" />-->
+													<select ng-model="item[attrib.attribute_name]" ng-options="attribute.attribute_item as attribute.attribute_item for attribute in attrib.attribute_items"></select>
 												</td>
 												<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="1" /></td>
 												<td>{{ item.item_unit }}</td>
@@ -477,24 +479,24 @@
 										</div>
 										<br>
 										<div class="btn-group" ng-if="order.order_type == 'K'">
-											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'konsinyasi' }" ng-model="order.payment_type" btn-radio="'konsinyasi'" uncheckable="" ng-click="tabs[5].active = true">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'konsinyasi' }" ng-model="order.payment_type" btn-radio="'konsinyasi'" ng-click="tabs[5].active = true">
 												<i class="ti-package"></i><br><span> KONSINYASI</span>
 											</label>
 										</div>
 										<div class="btn-group" ng-if="order.order_type == 'B'">
-											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'cash' }" ng-model="order.payment_type" btn-radio="'cash'" uncheckable="" ng-click="tabs[0].active = true">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'cash' }" ng-model="order.payment_type" btn-radio="'cash'" ng-click="tabs[0].active = true">
 												<i class="ti-package"></i><br><span> CASH</span>
 											</label>
-											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'transfer'}" ng-model="order.payment_type" btn-radio="'transfer'" uncheckable="" ng-click="tabs[1].active = true">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'transfer'}" ng-model="order.payment_type" btn-radio="'transfer'" ng-click="tabs[1].active = true">
 												<i class="ti-package"></i><br><span> TRANSFER</span>
 											</label>
-											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'debit'}" ng-model="order.payment_type" btn-radio="'debit'" uncheckable="" ng-click="tabs[2].active = true">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'debit'}" ng-model="order.payment_type" btn-radio="'debit'" ng-click="tabs[2].active = true">
 												<i class="ti-package"></i><br><span> DEBIT CARD</span>
 											</label>
-											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'credit'}" ng-model="order.payment_type" btn-radio="'credit'" uncheckable="" ng-click="tabs[3].active = true">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'credit'}" ng-model="order.payment_type" btn-radio="'credit'" ng-click="tabs[3].active = true">
 												<i class="ti-package"></i><br><span> CREDIT CARD</span>
 											</label>
-											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'term'}" ng-model="order.payment_type" btn-radio="'term'" uncheckable="" ng-click="tabs[4].active = true">
+											<label class="btn btn-primary ng-untouched ng-valid ng-dirty" ng-class="{'btn-o': order.payment_type !== 'term'}" ng-model="order.payment_type" btn-radio="'term'" ng-click="tabs[4].active = true">
 												<i class="ti-package"></i><br><span> TERM</span>
 											</label>
 										</div>
@@ -740,7 +742,7 @@
 						<i class="glyph-icon icon-plus"></i>
 					</button>
 					<button class="btn btn-alt btn-hover btn-primary" ng-click="saveCart()" ladda="submitButtonLoading">
-						<span>Submit Draft Order</span>
+						<span>Simpan Draft</span>
 						<i class="glyph-icon icon-plus"></i>
 					</button>
 				</div>
@@ -756,6 +758,7 @@
 	<div>
 
 		<div ng-show="is_order_saved">
+
 			<button class="btn btn-alt btn-hover btn-primary" ng-click="clearPage()"  >
 				<span>Buat Baru</span>
 				<i class="glyph-icon icon-plus"></i>

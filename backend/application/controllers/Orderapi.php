@@ -1197,6 +1197,7 @@ class Orderapi extends CI_Controller {
 							'order_id' => $gi['order_id'],
 							'item_code' => $gi['item_code'],
 							'quantity' => $gi['quantity'],
+							'item_unit' => $gi['item_unit'],
 							'site_id' => $gi['site_id'],
 							'storage_id' => $gi['storage_id'],
 							'bin_id' => $gi['bin_id'],
@@ -1208,6 +1209,7 @@ class Orderapi extends CI_Controller {
 							'order_id' => $gi['order_id'],
 							'item_code' => $gi['item_code'],
 							'quantity' => $gi['quantity'],
+							'item_unit' => $gi['item_unit'],
 							'site_id' => $gi['site_id'],
 							'storage_id' => $gi['storage_id'],
 							'bin_id' => $gi['bin_id'],
@@ -1229,7 +1231,7 @@ class Orderapi extends CI_Controller {
 					$update['good_issue_remark'] = $data['good_issue_remark'];
 				};
 				$update['good_issue_status'] = "X";	
-				if(isset($data['confirmGoodsIssue']) == TRUE){
+				if($data['confirmGoodsIssue'] == TRUE){
 					$update['good_issue_status'] = "A";
 					if($data['type'] == "K"){
 						foreach($data['items'] as $i){
@@ -1636,8 +1638,8 @@ class Orderapi extends CI_Controller {
 		if($invoice->num_rows() > 0 ){
 			$feedback = array(
 				"call_status" => "error",
-				"error_code" => "409",
-				"error_messages" => "Pembayaran Telah diterima/selesai"
+				"error_code" => "Perhatian",
+				"error_messages" => "Pembayaran telah diterima/selesai"
 			);
 		}else{
 			// update bahwa order sudah dibayar/lunas (X = belum lunas, P = lunas)

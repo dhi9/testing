@@ -51,6 +51,7 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 	$scope.customerIdToSearch = "";
 
 	$scope.goodIssue = {};
+	$scope.goodIssue.confirmGoodsIssue = false;
 	$scope.goodIssue.good_issue = false;
 	$scope.goodIssue.items = [];
 
@@ -151,13 +152,28 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 		for (var j = 0; j < $scope.goodIssue.items.length; j += 1){
 			for(var l = 0; l < $scope.goodIssue.items[j].uom_list.length; l += 1){
 				if($scope.goodIssue.items[j].uom_list[l].alternative_uom == $scope.goodIssue.items[j].item_unit ){
-					$scope.goodIssue.items[j].aktual_quantity += $scope.goodIssue.items[j].uom_list[l].base_amount *  parseInt($scope.goodIssue.items[j].quantity);
+					$scope.goodIssue.items[j].aktual_quantity = $scope.goodIssue.items[j].uom_list[l].base_amount *  parseInt($scope.goodIssue.items[j].quantity);
 				}
 			}
 		}
-		$scope.displayBeforeGIModal($scope.goodIssue.items);
+
 		if($scope.goodIssue.confirmGoodsIssue == null || $scope.goodIssue.confirmGoodsIssue == undefined || $scope.goodIssue.confirmGoodsIssue == false){
-			$scope.checkGoodIssue();
+			//$scope.checkGoodIssue();
+			ApiCallService.updateGoodIssue($scope.goodIssue).success(function(data){
+				if(data.call_status == "success" ){
+					SweetAlert.swal({
+						title: "Berhasil",
+						text: "Semua item telah masuk good issue.",
+						type: "success",
+						confirmButtonText: "Ok",
+						closeOnConfirm: true,
+						animation: "slide-from-top"
+					});
+				}
+			});
+
+		}else{
+			$scope.displayBeforeGIModal($scope.goodIssue.items);
 			/*
 			ApiCallService.updateGoodIssue($scope.goodIssue).success(function(data){
 				if(data.call_status == "success" ){
@@ -172,22 +188,6 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 					if(data.good_issue_status){
 						$scope.order.order_detail.good_issue_status = "A";
 					}
-					console.log($scope.order.order_detail.good_issue_status);
-				}
-			});
-			*/
-		}else{
-			/*
-			ApiCallService.updateGoodIssue($scope.goodIssue).success(function(data){
-				if(data.call_status == "success" ){
-					SweetAlert.swal({
-						title: "Berhasil",
-						text: "Semua item telah masuk good issue.",
-						type: "success",
-						confirmButtonText: "Ok",
-						closeOnConfirm: true,
-						animation: "slide-from-top"
-					});
 				}
 			});
 			*/
@@ -215,6 +215,35 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 		}
 		return quantity;
 	};
+
+	$scope.getSiteName = function(site_id){
+		for(var j = 0; j<$scope.siteList.length; j += 1){
+			if($scope.siteList[j].site_id == site_id){
+				return $scope.siteList[j].site_reference;
+			}
+		}
+	}
+	$scope.getStorageName = function(storage_id){
+		for(var j = 0; j<$scope.storageList.length; j += 1){
+			if($scope.storageList[j].storage_id == storage_id){
+				return $scope.storageList[j].storage_name;
+			}
+		}
+	}
+	$scope.getBinName = function(bin_id){
+		for(var j = 0; j<$scope.binList.length; j += 1){
+			if($scope.binList[j].bin_id == bin_id){
+				return $scope.binList[j].bin_name;
+			}
+		}
+	}
+	$scope.getBatchName = function(batch_id){
+		for(var j = 0; j<$scope.batchList.length; j += 1){
+			if($scope.batchList[j].batch_id == batch_id){
+				return $scope.batchList[j].batch_reference;
+			}
+		}
+	}
 
 	$scope.tabs = [
 		{
@@ -837,7 +866,8 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 
 	$scope.displayBeforeGIModal = function(item) {
 		var pass_data = {
-			item: item
+			item: item,
+			goodIssue: $scope.goodIssue
 		};
 
 		var modalInstance = $modal.open({
@@ -1136,10 +1166,26 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 						if(data.call_status == "success"){
 							$scope.goodIssue.items = data.good_issue_items;
 
-							for(var i = 0; $scope.goodIssue.items.length; i += 1){
+							for(var i = 0; i < $scope.goodIssue.items.length; i += 1){
 								$scope.goodIssue.items[i].quantity = parseInt($scope.goodIssue.items[i].quantity);
-								$scope.goodIssue.items[i].location = $scope.goodIssue.items[i].site_id+"/"+$scope.goodIssue.items[i].storage_id+"/"+$scope.goodIssue.items[i].bin_id;
+								$scope.goodIssue.items[i].location = $scope.getBatchName($scope.goodIssue.items[i].batch_id)+", "+$scope.getSiteName($scope.goodIssue.items[i].site_id)+"/"+$scope.getStorageName($scope.goodIssue.items[i].storage_id)+"/"+$scope.getBinName($scope.goodIssue.items[i].bin_id);
 								$scope.goodIssue.items[i].attributes = JSON.parse($scope.goodIssue.items[i].attributes);
+								$scope.goodIssue.items[i].aktual_quantity = 0;
+								for(var j = 0; j < $scope.order.order_detail.order_items.length; j += 1 ){
+									var itemGI = JSON.stringify($scope.goodIssue.items[i].attributes);
+									var itemOrder = JSON.stringify($scope.order.order_detail.order_items[j].attributes);
+									if($scope.goodIssue.items[i].item_code == $scope.order.order_detail.order_items[j].item_code
+									&& itemGI == itemOrder){
+										$scope.goodIssue.items[i].requested_quantity = $scope.order.order_detail.order_items[j].quantity;
+										$scope.goodIssue.items[i].requested_unit = $scope.order.order_detail.order_items[j].item_unit;
+									}
+								}
+								for(var k = 0; k < $scope.goodIssue.items[i].uom_list.length; k += 1){
+									if($scope.goodIssue.items[i].uom_list[k].alternative_uom == $scope.goodIssue.items[i].item_unit ){
+										//$scope.goodIssue.items[i].aktual_quantity += $scope.goodIssue.items[i].uom_list[k].base_amount *  parseInt($scope.goodIssue.items[i].quantity);
+										console.log($scope.goodIssue.items[i]);
+									}
+								}
 							}
 						}
 					});
@@ -1428,6 +1474,7 @@ app.controller('LocationModalCtrl', function ($scope, $modalInstance, ItemServic
 	ItemService.getLocationListByItemCode($scope.locations.item_code).success(function(data){
 		$scope.inventory = data.inventory;
 	});
+
 	$scope.getSiteName = function(site_id){
 		for(var j = 0; j<$scope.siteList.length; j += 1){
 			if($scope.siteList[j].site_id == site_id){
@@ -1456,6 +1503,7 @@ app.controller('LocationModalCtrl', function ($scope, $modalInstance, ItemServic
 			}
 		}
 	}
+
 	$scope.saveLocation = function(data){
 
 		var i = $scope.goodIssue.items.indexOf(passed_data.item);
@@ -1477,8 +1525,26 @@ app.controller('LocationModalCtrl', function ($scope, $modalInstance, ItemServic
 });
 
 
-app.controller('BeforeGIModalCtrl', function ($scope, $modalInstance, ItemService, PurchaseService, passed_data, SweetAlert) {
+app.controller('BeforeGIModalCtrl', function ($scope, $modalInstance, ItemService, PurchaseService, passed_data, SweetAlert, ApiCallService) {
 	$scope.items = passed_data.item;
+	$scope.goodIssue = passed_data.goodIssue;
+	console.log($scope.items);
+	$scope.confirmGoodsIssue = function (){
+		ApiCallService.updateGoodIssue($scope.goodIssue).success(function(data){
+			if(data.call_status == "success" ){
+				SweetAlert.swal({
+					title: "Berhasil",
+					text: "Semua item telah masuk good issue.",
+					type: "success",
+					confirmButtonText: "Ok",
+					closeOnConfirm: true,
+					animation: "slide-from-top"
+				});
+				$scope.order.order_detail.good_issue_status = data.good_issue_status;
+				$modalInstance.dismiss();
+			}
+		});
+	}
 
 	$scope.closeModal = function () {
 		$modalInstance.dismiss();
