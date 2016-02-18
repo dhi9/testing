@@ -1631,6 +1631,7 @@ class Orderapi extends CI_Controller {
 		}
 	}
 	
+	
 	public function pay_order(){
 		$data = json_decode(file_get_contents('php://input'), true);
 			
@@ -1638,17 +1639,18 @@ class Orderapi extends CI_Controller {
 		if($invoice->num_rows() > 0 ){
 			$feedback = array(
 				"call_status" => "error",
-				"error_code" => "409",
-				"error_messages" => "Pembayaran Telah diterima/selesai"
+				"error_code" => "Perhatian",
+				"error_messages" => "Pembayaran telah diterima/selesai"
 			);
 		}else{
 			// update bahwa order sudah dibayar/lunas (X = belum lunas, P = lunas)
-			/*
+			
 			$update_order = array(
-				"payment_status" => "P"					  
+				"order_id" => $data['order_id'],
+				"payment_date" => date('Y-m-d'),
+				"payment_status" => "P"			  
 			);
 			$this->order_model->update_order($update_order);
-			*/
 			
 			$company = $this->company_db->get_company()->row();
 			$insert_invoice = array(
@@ -1706,8 +1708,6 @@ public function sales_invoice($order_id){
 
 		$SalesInvoiceCompanyDetail->img = "<img src='".$SalesInvoiceCompanyDetail->delivery_image."'>";
 		
-		
-
 		$data['SalesInvoiceCompanyDetail'] = $SalesInvoiceCompanyDetail;
 		$data['DataList'] = $query;
 		$data['DataBank'] = $invoice;
@@ -1718,18 +1718,17 @@ public function sales_invoice($order_id){
 
 			ini_set('memory_limit', '-1');
 			ini_set('max_execution_time', 600);
-			$html = $this->load->view('pdf-so-invoice', $data);
-
-				$this->load->library('pdf');
+			$html = $this->load->view('pdf-so-invoice', $data, true);
+			//$html = $this->load->view('pdf-stock-card');
+			$this->load->library('pdf');
 			$pdf = $this->pdf->load('','A4',9,'dejavusans');
 			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
 			$pdf->WriteHTML($html); 
 			ob_clean();
-			$pdf->Output($request_reference.".pdf", 'D');
-			//$pdf->Output($request_reference.".pdf", 'F');
-			//$pdf->Output();
+			//$pdf->Output($request_reference.".pdf", 'D');
+			$pdf->Output($request_reference.".pdf", 'F');
+			$pdf->Output();
 			//force_download($filename.".pdf","./docs/".$filename.".pdf");
-			
 			
 		//}
 	}

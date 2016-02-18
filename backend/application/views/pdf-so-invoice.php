@@ -9,31 +9,22 @@
      <body>
          <table id="collapse" style="border:1px solid #000;border-collapse:collapse;">
             <tr>
-                <td rowspan="4" class="w25" align="left" style="border-right:none;">
+                <td rowspan="2" class="w25" align="left" style="border-right:none;">
                     <center>
                         <img src="<?php $imgae = json_decode($SalesInvoiceCompanyDetail->ir_image);echo $imgae[0]; ?>" width="140" height="40">
                     </center>
                     
                 </td>
-                <td rowspan="2" class="w50" style="border:none;">
-                    <h2>Nama Invoice: <?php echo $SalesInvoiceCompanyDetail->ir_invoice_name ?></h2>
-                    <barcode code="" type="C128A" height="0.66" text="2" />
+                <td class="w50" style="border:none;">
+                    <h3><?php echo $SalesInvoiceCompanyDetail->ir_invoice_name ?></h3>
                 </td>
                 <td class="w25" style="border-right:1px solid #000;border-bottom:none;">Tanggal: <?php echo $DataBank['date_created']; ?></td>
             </tr>
              <tr>
-                
-             </tr>
-             <tr>
-                <td rowspan="2" style="border:none;" valign="top">
-                <?php echo $SalesInvoiceCompanyDetail->ir_header ?>   
+                <td style="border:none;" valign="top">
+                <?php echo $SalesInvoiceCompanyDetail->ir_header ?>
                 </td>
-                 <td>No : </td>
-             </tr>
-             <tr>
-                <td align="center">
-                    
-                </td>
+                 <td>No : <?php echo $DataBank['invoice_reference'] ?></td>
              </tr>
          </table>
          
@@ -42,7 +33,7 @@
                 <tr>
                     <th width="5">No.</th>
                     <th>ArticleID/SKU</th>
-                    <th>Color</th>
+                    <th>Attributes</th>
                     <th>QTY</th>
                     <th>Unit</th>
                     <th>Subtotal</th>
@@ -70,7 +61,7 @@
                 <tr>
                     <td align="center" style="height:20px"><?php echo $i ?></td>
                     <td><?php echo $invo['item_code']; $i+=1 ?></td>
-                    <td><?php echo $invo['item_code'] ?></td>
+                    <td><?php echo $invo['attributes'] ?></td>
                     <td><?php echo $invo['quantity'] ?></td>
                     <td><?php echo number_format($invo['cost']);
 
