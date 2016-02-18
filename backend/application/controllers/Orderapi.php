@@ -1618,7 +1618,7 @@ class Orderapi extends CI_Controller {
 			$array = array(
 				"call_status" => "error",
 				"error_code" => "701",
-				"error_messaage" => "User not logged on"
+				"error_message" => "User not logged on"
 			);
 		}
 		else {
@@ -1638,8 +1638,8 @@ class Orderapi extends CI_Controller {
 		if($invoice->num_rows() > 0 ){
 			$feedback = array(
 				"call_status" => "error",
-				"error_code" => "Perhatian",
-				"error_messages" => "Pembayaran telah diterima/selesai"
+				"error_code" => "409",
+				"error_messages" => "Pembayaran Telah diterima/selesai"
 			);
 		}else{
 			// update bahwa order sudah dibayar/lunas (X = belum lunas, P = lunas)
@@ -1687,4 +1687,54 @@ class Orderapi extends CI_Controller {
 		
 		echo json_encode($feedback);
 	}
+
+public function sales_invoice($order_id){
+
+
+		$SalesInvoiceCompanyDetail = $this->company_db->get_company()->row();
+	
+
+		$this->db->where('order_id', $order_id);
+		$invoice = $this->db->get('sales_invoices')->row_array();
+
+		
+
+		$this->db->where('invoice_id', $invoice['invoice_id']);
+		$query = $this->db->get('sales_invoice_items')->result_array();
+
+		
+
+		$SalesInvoiceCompanyDetail->img = "<img src='".$SalesInvoiceCompanyDetail->delivery_image."'>";
+		
+		
+
+		$data['SalesInvoiceCompanyDetail'] = $SalesInvoiceCompanyDetail;
+		$data['DataList'] = $query;
+		$data['DataBank'] = $invoice;
+
+		$filename = "SALES INVOICE";
+
+		$pdfFilePath = FCPATH."/docs/".$filename.".pdf";
+
+			ini_set('memory_limit', '-1');
+			ini_set('max_execution_time', 600);
+			$html = $this->load->view('pdf-so-invoice', $data);
+
+				$this->load->library('pdf');
+			$pdf = $this->pdf->load('','A4',9,'dejavusans');
+			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
+			$pdf->WriteHTML($html); 
+			ob_clean();
+			$pdf->Output($request_reference.".pdf", 'D');
+			//$pdf->Output($request_reference.".pdf", 'F');
+			//$pdf->Output();
+			//force_download($filename.".pdf","./docs/".$filename.".pdf");
+			
+			
+		//}
+	}
+
+	
+
+
 }
