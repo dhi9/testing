@@ -143,12 +143,13 @@
 				<a ui-sref="app.delivery.active_orders">
 					<span class="title">Sales Order Aktif</span>
 				</a>
-			</li>-->
+			</li>
 			<li ui-sref-active="active">
 				<a ui-sref="app.delivery.document_flow({order_reference: 'cari'})">
 					<span class="title">Alur Dokumen</span>
 				</a>
 			</li>
+			-->
 			<li ui-sref-active="active">
 				<a ui-sref="app.delivery.order_to_deliver">
 					<span class="title">Pengiriman Baru</span>
@@ -191,7 +192,40 @@
 			</li>
 		</ul>
 	</li>
-	
+
+
+	<li ng-class="{'active open':$state.includes('app.report')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-layers-alt"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Report</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.report.document_flow({order_reference: 'cari'})">
+					<span class="title">Alur Dokumen</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.report.stock_report">
+					<span class="title">Laporan Stock</span>
+				</a>
+			</li>
+			<!--
+			<li ui-sref-active="active">
+				<a ui-sref="">
+					<span class="title">Laporan ...</span>
+				</a>
+			</li>
+			-->
+		</ul>
+	</li>
+
 	<li ng-class="{'active open':$state.includes('app.master')}">
 		<a href="javascript:void(0)">
 			<div class="item-content">

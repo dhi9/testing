@@ -377,4 +377,8 @@ this.getDeliveryItemsByDeliveryId = function(delivery_id) {
 	this.payOrder = function(order) {
 		return $http.post(this.hostname+'orderapi/pay_order', order);
 	}
+
+	this.getStockReport = function(search) {
+		return $http.post(this.hostname+'reportapi/get_stock_report', search);
+	}
 });

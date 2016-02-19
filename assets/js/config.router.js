@@ -1075,6 +1075,26 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			}
 		})
 
+		.state('app.report.document_flow', {
+			url:'/alurdokumenorder/:order_reference',
+			templateUrl: "assets/views/document_flow.html",
+			resolve: loadSequence('documentFlowController'),
+			title: "Alur Dokumen",
+			data : { logged_on_only: true, role: '' },
+			ncyBreadcrumb: {
+				label: 'ALUR_DOKUMEN'
+			}
+		})
+		.state('app.report.stock_report', {
+			url:'/stock_report/:order_reference',
+			templateUrl: "assets/js/wave/stock_report/stock_report.html",
+			resolve: loadSequence('stockReportController', 'ngTable', 'itemService', 'siteService'),
+			title: "Laporan Stock",
+			data : { logged_on_only: true, role: '' },
+			ncyBreadcrumb: {
+				label: 'LAPORAN STOCK'
+			}
+		})
 	.state('app.overall', {
 		url:'/overall',
 		templateUrl: "assets/views/overall_view.html",
