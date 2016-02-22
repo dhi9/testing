@@ -309,4 +309,36 @@ class Order_db extends CI_Model {
 			->where('do.draft_id', $draft_id)
 		->get();
 	}
+	
+	public function get_sales_invoice_by_order_id($order_id)
+	{
+		return $this->db
+			->where('order_id', $order_id)
+		->get('sales_invoices');
+	}
+	
+	public function insert_sales_invoice($array)
+	{
+		if ( $this->db->insert('sales_invoices', $array) )
+		{
+			return $this->db->insert_id();
+		} 
+		else
+		{
+			return 0;
+		}
+	}
+	
+	public function insert_sales_invoice_item($array)
+	{
+		if ( $this->db->insert('sales_invoice_items', $array) )
+		{
+			return $this->db->insert_id();
+		} 
+		else
+		{
+			return 0;
+		}
+	}
+	
 }

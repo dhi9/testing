@@ -10,16 +10,14 @@
 <!-- end: PAGE TITLE -->
 
 <!-- start: YOUR CONTENT HERE -->
-
 <div ng-controller="changeServiceRequestDetailController">  
-
 <div class="container-fluid container-fullw">
     
 	<div class="row" ng-show="edit.itemListEdit">
 		<div class="col-lg-12">
 			<form class="form-inline">
 				<div class="form-group">
-					<label for="txtSearchCustomer"><h5>Cari Supplier &nbsp;</h5></label>
+					<label for="txtSearchCustomer"><h5>Cari Supplier&nbsp;</h5></label>
 					<div class="input-group">
 						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" />
 						<span class="input-group-btn">
@@ -330,7 +328,7 @@
 	
 	<div ng-show="edit.submitPurchase">
 		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitPurchaseRequest()">
-			<span>Save Purchase Request</span>
+			<span>Save Service Request</span>
 			<i class="glyph-icon icon-plus"></i>
 		</button>
 	</div>

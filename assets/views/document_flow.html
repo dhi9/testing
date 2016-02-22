@@ -39,7 +39,132 @@
 			<p>Order {{ orderReference }} tidak terdaftar.</p>
 		</div>
 	</div>
-	
+	<style>#DataFlow ul { padding-left:20px; list-style:none;}#DataFlow ul li { margin-bottom:5px;list-style: none; }#DataFlow ul li:before {list-style: none;font-family: 'FontAwesome';content: '\f105';margin:0 5px 0 -15px;font-size: 15px;}#pl1{padding-left: 35px}#pl2{padding-left: 55px}
+	/*
+	#tanggalBuat {position: absolute;right: 40%}
+	#detail {position: absolute;right: 30%}
+	*/
+	</style>
+	<br>
+	<div ng-show="isDataRetrieved" id="DataFlow">
+
+		<span>Document</span>
+		<span id="tanggalBuat">Tanggal Buat</span>
+		<ul >
+			<li>
+				<span>
+					Sales Order {{ order.order_reference }}
+					<span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span>
+				</span>
+				<span id="tanggalBuat">{{ order.date_created }}</span>
+				<span id="detail"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+
+				<ul>
+					<li ng-if="order.payment_status == 'P'">
+						Pembayaran Sales Order {{ order.order_reference }}
+						<span id="tanggalBuat">{{ order.payment_date }}</span>
+						<span id="detail"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+					</li>
+
+					<li ng-if="order.production_start_date">
+						<span> Mulai Produksi Tanggal</span>
+						<span id="tanggalBuat">{{ order.production_start_date }}</span>
+						<span id="detail"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+
+					</li>
+					<li ng-if="order.production_completed_date">
+						<span> Barang Tersedia Tanggal</span>
+						<span id="tanggalBuat">{{ order.production_completed_date }}</span>
+						<span id="detail"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+
+					</li>
+					<li ng-if="order.production_completed_date">Pengiriman
+						<ul ng-if="order.delivery_type == 'A'">
+							<li>
+								Ambil Sendiri
+								<span id="tanggalBuat">{{ order.date_created }}</span>
+								<span id="detail"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+							</li>
+						</ul>
+						<ul ng-if="order.delivery_type == 'D'">
+							<li ng-repeat="deliveryRequest in order.delivery_requests | filter: { 'status': '!X'}">
+								<span> Rencana Pengiriman {{ $index+1 }} [Direncanakan tanggal: {{ deliveryRequest.requested_delivery_date }}] <span class="label {{ UTILgetStatusClass(deliveryRequest.status, 'DELIVERYREQUEST'); }}">{{ UTILgetStatusLabel(deliveryRequest.status, 'DELIVERYREQUEST'); }}</span></span>
+								<span id="detail"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+							</li>
+						</ul>
+					</li>
+					<li ng-if="order.production_completed_date">
+						Goods Issue
+						<span id="tanggalBuat">{{ order.good_issue_date }}</span>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<!--
+
+
+	<div ng-show="isDataRetrieved">
+		<ul id="DataFlow">
+			<li class="row">
+				<span class="col-sm-6" style="padding-left: 30px"><b>Document</b></span>
+				<span class="col-sm-2"><b>Tanggal Buat</b></span>
+				<span class="col-sm-1"></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li>
+				<span class="col-sm-6 fa fa-chevron-right"> Sales Order {{ order.order_reference }} <span class="label {{ UTILgetStatusClass(order.status, 'ORDER'); }}">{{ UTILgetStatusLabel(order.status, 'ORDER'); }}</span></span>
+				<span class="col-sm-2">{{ order.date_created }}</span>
+				<span class="col-sm-1"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li>
+				<span class="col-sm-6  fa fa-chevron-right" id="pl1"> Pembayaran Sales Order {{ order.order_reference }}</span>
+				<span class="col-sm-2">{{ order.date_created }}</span>
+				<span class="col-sm-1"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li ng-if="order.production_start_date">
+				<span class="col-sm-6  fa fa-chevron-right" id="pl1"> Mulai Produksi Tanggal</span>
+				<span class="col-sm-2">{{ order.production_start_date }}</span>
+				<span class="col-sm-1"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li ng-if="order.production_completed_date">
+				<span class="col-sm-6  fa fa-chevron-right" id="pl1"> Barang Tersedia Tanggal</span>
+				<span class="col-sm-2">{{ order.production_completed_date }}</span>
+				<span class="col-sm-1"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li>
+				<span class="col-sm-6  fa fa-chevron-right" id="pl1"> Pengiriman</span>
+				<span class="col-sm-2"></span>
+				<span class="col-sm-1"></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li>
+				<span class="col-sm-6  fa fa-chevron-right" id="pl2"> Ambil Sendiri</span>
+				<span class="col-sm-2">{{ order.date_created }}</span>
+				<span class="col-sm-1"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li ng-repeat="deliveryRequest in order.delivery_requests | filter: { 'status': '!X'}">
+				<span class="col-sm-6  fa fa-chevron-right" id="pl2"> Rencana Pengiriman {{ $index+1 }} [Direncanakan tanggal: {{ deliveryRequest.requested_delivery_date }}] <span class="label {{ UTILgetStatusClass(deliveryRequest.status, 'DELIVERYREQUEST'); }}">{{ UTILgetStatusLabel(deliveryRequest.status, 'DELIVERYREQUEST'); }}</span></span>
+				<span class="col-sm-2"></span>
+				<span class="col-sm-1"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+				<span class="col-sm-3"></span>
+			</li>
+			<li>
+				<span class="col-sm-6  fa fa-chevron-right" id="pl1"> Goods Issue</span>
+				<span class="col-sm-2">{{ order.date_created }}</span>
+				<span class="col-sm-1"><button class="btn btn-o btn-light-azure btn-xs" ui-sref="app.order.order_detail({order_id: order.order_id})">Detail</button></span>
+			</li>
+		</ul>
+	</div>
+
+
+
 	<div class="row" ng-show="isDataRetrieved">
 		<div class="col-md-12">
 			<strong>ORDER {{ order.order_reference }} [ID: {{ order.order_id }}]</strong>
@@ -55,36 +180,55 @@
 	<div class="row" ng-show="isDataRetrieved">
 		<div class="col-md-12">
 			<strong>Pengiriman</strong>
-			
-			<ul ng-repeat="deliveryRequest in order.delivery_requests | filter: { 'status': '!X'}">
-				<li>
-					<span>Rencana Pengiriman {{ $index+1 }} [Direncanakan tanggal: {{ deliveryRequest.requested_delivery_date }}]</span>
-					<span class="label {{ UTILgetStatusClass(deliveryRequest.status, 'DELIVERYREQUEST'); }}">{{ UTILgetStatusLabel(deliveryRequest.status, 'DELIVERYREQUEST'); }}</span>
-					<ul ng-repeat="delivery in deliveryRequest.deliveries | filter: { 'status': '!X'}"  style="margin-bottom:10px ">
-						<li>
-							<span>Pengiriman {{ delivery.delivery_reference }}</span>
-							<span class="label {{ UTILgetStatusClass(delivery.status, 'DELIVERY'); }}">{{ UTILgetStatusLabel(delivery.status, 'DELIVERY'); }}</span>
-							<button class="btn btn-o btn-light-azure" ui-sref="app.delivery.confirm_delivery({delivery_id: '{{ delivery.delivery_id }}'})">Detail</button>
-							<ul>
-								<li>Dibuat tanggal: {{ delivery.date_created }}</li>
-								<li ng-show="delivery.loading_date">Rencana untuk dimuat tanggal: {{ delivery.loading_date }}</li>
-								<li ng-show="delivery.actual_loading_date">Actual pemuatan: {{ delivery.actual_loading_date }}</li>
-                                <li ng-show="delivery.arrival_date">Diterima customer tanggal: {{ delivery.arrival_date }}</li>
-                                <li>Pengiriman mulai/ GI tanggal: {{ delivery.arrival_date }}</li>
-                                <li> Pembatalan GI tanggal: {{ delivery.arrival_date }}
-                                    <button class="btn btn-o btn-light-azure" ng-click="displayCancelModal()">Detail</button>
-                                </li>
-                                <li> Auto Retur dari Pengiriman tanggal: {{ delivery.arrival_date }}
-                                    <button class="btn btn-o btn-light-azure" ng-click="displayAutoReturModal()">Detail</button>
-                                </li>
-								<li ng-show="delivery.confirmation_date">Surat jalan kembali tanggal: {{ delivery.confirmation_date }}</li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-			</ul>
+			<div ng-if="order.delivery_type == 'A' ">
+				<ul style="margin-bottom:10px ">
+					<li>
+						<span>Ambil Sendiri</span>
+						<span class="label {{ UTILgetStatusClass(delivery.status, 'DELIVERY'); }}">{{ UTILgetStatusLabel(delivery.status, 'DELIVERY'); }}</span>
+						<button class="btn btn-o btn-light-azure" ui-sref="app.delivery.confirm_delivery({delivery_id: '{{ delivery.delivery_id }}'})">Detail</button>
+						<ul>
+							<li ng-show="delivery.loading_date"> Goods Issue
+								<button class="btn btn-o btn-light-azure" ng-click="displayDetail()">Detail</button>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+
+			<div ng-if="order.delivery_type == 'D' ">
+				<ul ng-repeat="deliveryRequest in order.delivery_requests | filter: { 'status': '!X'}">
+					<li>
+						<span>Rencana Pengiriman {{ $index+1 }} [Direncanakan tanggal: {{ deliveryRequest.requested_delivery_date }}]</span>
+						<span class="label {{ UTILgetStatusClass(deliveryRequest.status, 'DELIVERYREQUEST'); }}">{{ UTILgetStatusLabel(deliveryRequest.status, 'DELIVERYREQUEST'); }}</span>
+						<ul ng-repeat="delivery in deliveryRequest.deliveries | filter: { 'status': '!X'}"  style="margin-bottom:10px ">
+							<li>
+								<span>Pengiriman {{ delivery.delivery_reference }}</span>
+								<span class="label {{ UTILgetStatusClass(delivery.status, 'DELIVERY'); }}">{{ UTILgetStatusLabel(delivery.status, 'DELIVERY'); }}</span>
+								<button class="btn btn-o btn-light-azure" ui-sref="app.delivery.confirm_delivery({delivery_id: '{{ delivery.delivery_id }}'})">Detail</button>
+								<ul>
+									<li>Dibuat tanggal: {{ delivery.date_created }}</li>
+									<li ng-show="delivery.loading_date">Rencana untuk dimuat tanggal: {{ delivery.loading_date }}</li>
+									<li ng-show="delivery.actual_loading_date">Actual pemuatan: {{ delivery.actual_loading_date }}</li>
+									<li ng-show="delivery.arrival_date">Diterima customer tanggal: {{ delivery.arrival_date }}</li>
+									<li>Pengiriman mulai/ GI tanggal: {{ delivery.arrival_date }}</li>
+									<li> Pembatalan GI tanggal: {{ delivery.arrival_date }}
+										<button class="btn btn-o btn-light-azure" ng-click="displayCancelModal()">Detail</button>
+									</li>
+									<li> Auto Retur dari Pengiriman tanggal: {{ delivery.arrival_date }}
+										<button class="btn btn-o btn-light-azure" ng-click="displayAutoReturModal()">Detail</button>
+									</li>
+									<li ng-show="delivery.confirmation_date">Surat jalan kembali tanggal: {{ delivery.confirmation_date }}</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
+
+
+	-->
     <script type="text/ng-template" id="modal_cancel">
         <div class="modal-header">
             <h3 class="modal-title">Pembatalan Good Issue</h3>

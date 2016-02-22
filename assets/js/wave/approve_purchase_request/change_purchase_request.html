@@ -1,10 +1,8 @@
-<div ng-controller="changePurchaseRequestDetailController">
-
 <!-- start: PAGE TITLE -->
 <section id="page-title" class="padding-top-15 padding-bottom-15" >
 	<div class="row">
 		<div class="col-sm-7">
-			<h1 class="mainTitle">{{ draft.draft_reference }}</h1>
+			<h1 class="mainTitle">Approve Request</h1>
 		</div>
 		<div ncy-breadcrumb></div>
 	</div>
@@ -12,13 +10,14 @@
 <!-- end: PAGE TITLE -->
 
 <!-- start: YOUR CONTENT HERE -->
+<div ng-controller="changePurchaseRequestDetailController">  
 <div class="container-fluid container-fullw">
     
 	<div class="row" ng-show="edit.itemListEdit">
 		<div class="col-lg-12">
 			<form class="form-inline">
 				<div class="form-group">
-					<label for="txtSearchCustomer"><h5>Cari Supplier &nbsp;</h5></label>
+					<label for="txtSearchCustomer"><h5>Cari Supplier&nbsp;</h5></label>
 					<div class="input-group">
 						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" />
 						<span class="input-group-btn">

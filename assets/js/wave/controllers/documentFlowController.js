@@ -27,6 +27,9 @@ app.controller('DocumentFlowController', function($scope, $modal, $stateParams, 
 				success(function(data, status, headers, config) {
 					if (data.call_status === "success" && data.order != null) {
 						$scope.order = data.order;
+						if ($scope.order.good_issue_date != null && $scope.order.good_issue_date != undefined && $scope.order.good_issue_date != "0000-00-00 00:00:00") {
+							$scope.order.good_issue_date = moment($scope.order.good_issue_date).format('DD-MM-YYYY');
+						}
 					}
 					else {
 						$scope.isNotExist = true;
@@ -45,7 +48,6 @@ app.controller('DocumentFlowController', function($scope, $modal, $stateParams, 
 	};
 	
 	$scope.init();
-
 	//Additional
 	$scope.UTILgetStatusLabel = function(status, level) {
 	

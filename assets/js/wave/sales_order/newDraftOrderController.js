@@ -822,12 +822,9 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 		$scope.order.customer_details.phone_number = data.customer_details.phone_number;
 		$scope.order.customer_details.fax_number = data.customer_details.fax_number;
 		$scope.order.customer_details.customer_email = data.customer_details.customer_email;
-		
-		$scope.customerName = data.customer_details.customer_name;
 	}
-	
-	$scope.getCustomerById = function(customerId) {
-		CustomerService.getCustomerById(customerId).
+	$scope.getCustomerById = function() {
+		CustomerService.getCustomerById($scope.customerIdToSearch).
 			success(function(data, status, headers, config) {
 				if (data.call_status === "success") {
 					if ($scope.order.order_details.order_items[0].item_code !== "") {
@@ -963,7 +960,9 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 		/*var pass_data = {
 			index: index
 		};*/
-		
+
+		console.log("open");
+
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_customer_list',
 			controller: 'CustomerListModalCtrl',
@@ -1250,7 +1249,7 @@ app.controller('CustomerListModalCtrl', function ($scope, $modalInstance, ngTabl
 
 			if (data.call_status === "success") {
 				$scope.customerList = data.customer_details_list;
-
+				$scope.customerList = $filter('filter')($scope.customerList, {status: "A"});
 				$scope.customerListTableParams = new ngTableParams(
 					{
 						page: 1, // show first page

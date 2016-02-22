@@ -2,9 +2,15 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 	var draft_id = $stateParams.draft_id;
 	console.log(draft_id);
 	$scope.itemLookupList = [];
-    $scope.attributeList = AttributeFactory.attributeList;
+
+	$scope.attributeList = AttributeFactory.attributeList;
 	AttributeFactory.getAttributeList().then(function(){
 		$scope.attributeList = AttributeFactory.attributeList;
+	});
+
+	$scope.attributeActiveList = AttributeFactory.attributeActiveList;
+	AttributeFactory.getAttributeActiveList().then(function(){
+		$scope.attributeActiveList = AttributeFactory.attributeActiveList;
 	});
 
 	$scope.order = {
@@ -28,45 +34,45 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 					"quantity": "",
 					"cost": 0,
 					"disc_percent": 0,
-                    "disc_value": 0,
+					"disc_value": 0,
 					"remark":""
 				}],
 				"HLPFIELD_items_is_edit_mode": true
 			},
 			"delivery_request_details": [],
-            "payment_type" : 'cash',
+			"payment_type" : 'cash',
 			"payment_detail": {},
-            "order_type" : 'biasa',
+			"order_type" : 'biasa',
 			"product_type": ""
 		};
 
 	$scope.delivery = 'D';
 	 $scope.tabs = [{
-        title: 'cash',
-        content: '/cash.html',
-        active: false
-    }, {
-        title: 'transfer',
-        content: '/transfer.html',
-        active: false
-    }, {
-        title: 'debit',
-        content: '/debit.html',
-        active: false
-    }, {
-        title: 'credit',
-        content: '/credit.html',
-        active: false
-    }, {
-        title: 'term',
-        content: '/term.html',
-        active: false
-    }, {
-        title: 'konsinyasi',
-        content: '/konsinyasi.html',
-        active: false
-    }];
-	
+		title: 'cash',
+		content: '/cash.html',
+		active: false
+	}, {
+		title: 'transfer',
+		content: '/transfer.html',
+		active: false
+	}, {
+		title: 'debit',
+		content: '/debit.html',
+		active: false
+	}, {
+		title: 'credit',
+		content: '/credit.html',
+		active: false
+	}, {
+		title: 'term',
+		content: '/term.html',
+		active: false
+	}, {
+		title: 'konsinyasi',
+		content: '/konsinyasi.html',
+		active: false
+	}];
+
 	$scope.bankList = [{"No":1,"bank_code":"'002'","bank_name":"PT. BANK RAKYAT INDONESIA (PERSERO), Tbk"},
 {"No":2,"bank_code":"'008'","bank_name":"PT. BANK MANDIRI (PERSERO), Tbk"},
 {"No":3,"bank_code":"'009'","bank_name":"PT. BANK NEGARA INDONESIA (PERSERO),Tbk"},
@@ -192,20 +198,20 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 	CustomerFactory.getCustomerCombinedItemList($scope.customerIdToSearch).then(function () {
 		$scope.customerCombinedItemList = CustomerFactory.customerCombinedItemList;
 	});
-	
+
 	*/
-	
+
 	$scope.customerLookupList = [];
 
 	$scope.open = true;
 
 	$scope.customerIdToSearch = "";
-	
+
 	$scope.HLPFIELD_items_is_edit_mode = true;
-	
+
 	$scope.is_order_saved = false;
 	$scope.submitted_order_reference = "";
-	
+
 	$scope.OPTIONS_department_types = [
 		{value: '', label:'--- Pilih Divisi ---'},
 		{value: 'B', label:'Busa'},
@@ -214,7 +220,7 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		{value: 'T', label:'Theraspine'},
 		{value: 'U', label:'Cushion'}
 	];
-	
+
 	$scope.isLengthWidthHeightValid = function(itemChild){
 		var valid = false;
 		if (itemChild.length_width_height !== null || itemChild.length !== null || itemChild.width !== null || itemChild.height !== null) {
@@ -224,58 +230,58 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		}
 		return valid;
 	}
-	
-    $scope.changeOrderType = function(defaultChoosen){
-      $scope.order.payment_type = defaultChoosen;
-      for (var i = 0; i < $scope.tabs.length; i += 1) {
-         if ($scope.tabs[i].title == defaultChoosen) {
-            $scope.tabs[i].active = true;
-         }
-      }
-    }
-    
-    $scope.total = function(){
-      var total = 0;
-      for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
-         total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost)-($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.order.order_details.order_items[i].disc_percent/100);
-      }
-      return total;
-    
-    }
-     $scope.totalWithoutDisc = function(){
-      var total = 0;
-      for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
-         total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost);
-      }
-      return total;
-    
-    }
-    $scope.totalDiscPercent = function(){
-      var total = 0;
-      for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
-         total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.order.order_details.order_items[i].disc_percent/100)
-      }
-      return total;
-    }
-    $scope.totalDiscValue = function(){
-      var total = 0;
-      for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
-         total += $scope.order.order_details.order_items[i].disc_value;
-      }
-      return total;
-    }
-    $scope.totalDisc = function(){
-      var total = 0;
-      total += ($scope.totalDiscPercent() + $scope.totalDiscValue()); 
-      return total;
-    }
-    $scope.totalGrand = function(){
-      var total = 0;
-      total += ($scope.totalWithoutDisc() - $scope.totalDisc()); 
-      return total;
-    }
-    
-    
+
+	$scope.changeOrderType = function(defaultChoosen){
+	  $scope.order.payment_type = defaultChoosen;
+	  for (var i = 0; i < $scope.tabs.length; i += 1) {
+		 if ($scope.tabs[i].title == defaultChoosen) {
+			$scope.tabs[i].active = true;
+		 }
+	  }
+	}
+
+	$scope.total = function(){
+	  var total = 0;
+	  for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+		 total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost)-($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.order.order_details.order_items[i].disc_percent/100);
+	  }
+	  return total;
+
+	}
+	 $scope.totalWithoutDisc = function(){
+	  var total = 0;
+	  for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+		 total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost);
+	  }
+	  return total;
+
+	}
+	$scope.totalDiscPercent = function(){
+	  var total = 0;
+	  for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+		 total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.order.order_details.order_items[i].disc_percent/100)
+	  }
+	  return total;
+	}
+	$scope.totalDiscValue = function(){
+	  var total = 0;
+	  for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+		 total += $scope.order.order_details.order_items[i].disc_value;
+	  }
+	  return total;
+	}
+	$scope.totalDisc = function(){
+	  var total = 0;
+	  total += ($scope.totalDiscPercent() + $scope.totalDiscValue());
+	  return total;
+	}
+	$scope.totalGrand = function(){
+	  var total = 0;
+	  total += ($scope.totalWithoutDisc() - $scope.totalDisc());
+	  return total;
+	}
+
+
 	$scope.setLookupItem = function(itemCode, parentIndex, index) {
 		var itemUnit = $scope.lookupItemUnit(itemCode);
 		var itemName = $scope.lookupItemName(itemCode);
@@ -300,23 +306,23 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		$scope.order.order_details.order_items[parentIndex].children[index].level = 'C';
 		*/
 	}
-	
+
 	$scope.lookupItemLengthWidthHeight = function(itemCode) {
 		return ItemLookupService.getItemLengthWidthHeight(itemCode);
 	}
-	
+
 	$scope.lookupItemUnit = function(itemCode) {
 		return ItemLookupService.getItemUnit(itemCode);
 	}
-	
+
 	$scope.lookupItemName = function(itemCode) {
 		return ItemLookupService.getItemName(itemCode);
 	}
-	
+
 	$scope.lookupItemLWH = function(itemCode, $index) {
-		
+
 		this.itemLookup = JSON.parse(localStorage.getItem('vontisItemList'));
-			
+
 		if (itemCode !== null) {
 			for (var i = 0 ; i < this.itemLookup.length ; i++) {
 				if (this.itemLookup[i].item_code == itemCode) {
@@ -330,7 +336,7 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			}
 		}
 	}
-	
+
 	$scope.createNewCustomer = function() {
 		if ($scope.order.order_details.order_items[0].item_code !== "") {
 			if ($scope.order.order_details.order_items.length > 0 || $scope.order.delivery_request_details.length > 0 ) {
@@ -356,17 +362,17 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 							"fax_number": "",
 							"customer_email": ""
 						};
-						
+
 						$scope.order.customer_id = "";
 						$scope.order.customer_input_type = "N";
 						$scope.customerIdToSearch = "";
-						
+
 						$scope.order.order_details.order_items = [];
 						$scope.addItem();
 						$scope.order.delivery_request_details = [];
 						$scope.HLPFIELD_items_is_edit_mode = true;
 					}else{
-						
+
 					}
 				});
 			}
@@ -381,30 +387,30 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 				"fax_number": "",
 				"customer_email": ""
 			};
-			
+
 			$scope.order.customer_id = "";
 			$scope.order.customer_input_type = "N";
 			$scope.customerIdToSearch = "";
-			
+
 		}
 	}
-	
+
 	$scope.updateCustomer = function() {
 		$scope.order.customer_input_type = "U";
 	}
-	
+
 	$scope.addItem = function() {
 		var newItem = {
-         "item_code": "",
-         "quantity": "",
-         "cost": 0,
-         "disc_percent": 0,
-         "disc_value": 0,
-         "remark":"",
+		 "item_code": "",
+		 "quantity": "",
+		 "cost": 0,
+		 "disc_percent": 0,
+		 "disc_value": 0,
+		 "remark":"",
 		"material_type": "",
 		"level": "S"
 		};
-		
+
 		$scope.order.order_details.order_items.push(newItem);
 	};
 	$scope.addItemChild = function(index){
@@ -419,23 +425,23 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		$scope.order.order_details.order_items[index].children.push(childItem);
 	}
    $scope.combineAttributes = function(orderItems){
-      var newItem = {};
-      for (var j = 0; j<$scope.attributeList.length; j+=1) {
-         if ($scope.attributeList[j].status !== 'X') {
-         var attributeName = $scope.attributeList[j].attribute_name;
-            if ($scope.attributeList[j].status !== 'X') {
-               newItem[$scope.attributeList[j].attribute_name] = orderItems[$scope.attributeList[j].attribute_name];
-            }
-         }
-      }
-      return newItem;
+	  var newItem = {};
+	  for (var j = 0; j<$scope.attributeList.length; j+=1) {
+		 if ($scope.attributeList[j].status !== 'X') {
+		 var attributeName = $scope.attributeList[j].attribute_name;
+			if ($scope.attributeList[j].status !== 'X') {
+			   newItem[$scope.attributeList[j].attribute_name] = orderItems[$scope.attributeList[j].attribute_name];
+			}
+		 }
+	  }
+	  return newItem;
    }
 	$scope.addDeliveryRequest = function() {
 		if ($scope.isNoDeliveryRequestItemRemaining()) {
 			SweetAlert.swal({
 				title: "Tidak Dapat Menambah Rencana Pengiriman",
-				text: "Semua item telah masuk rencana pengiriman.", 
-				type: "warning", 
+				text: "Semua item telah masuk rencana pengiriman.",
+				type: "warning",
 				confirmButtonText: "Ok",
 				closeOnConfirm: true,
 				animation: "slide-from-top"
@@ -444,10 +450,10 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		else {
 			var deliveryRequestsItems = [];
 			var orderItems = $scope.order.order_details.order_items;
-			
+
 			for (var i = 0 ; i < orderItems.length ; i++) {
 				var totalInDelivery = $scope.getTotalInDeliveryRequests(orderItems[i].item_code, orderItems[i].material_type, orderItems[i].remark);
-				
+
 				var newItem = {
 					"item_code": orderItems[i].item_code,
 					"item_name": orderItems[i].item_name || '',
@@ -462,17 +468,17 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 					"level": orderItems[i].level,
 				};
 			   for (var j = 0; j<$scope.attributeList.length; j+=1) {
-                  if ($scope.attributeList[j].status !== 'X') {
-                  var attributeName = $scope.attributeList[j].attribute_name;
-                     if ($scope.attributeList[j].status !== 'X') {
-                        newItem[$scope.attributeList[j].attribute_name] = orderItems[i][$scope.attributeList[j].attribute_name];
-                     }
-                  }
-               }
-               //newItem.attributes = JSON.stringify(newItem.attributes);
+				  if ($scope.attributeList[j].status !== 'X') {
+				  var attributeName = $scope.attributeList[j].attribute_name;
+					 if ($scope.attributeList[j].status !== 'X') {
+						newItem[$scope.attributeList[j].attribute_name] = orderItems[i][$scope.attributeList[j].attribute_name];
+					 }
+				  }
+			   }
+			   //newItem.attributes = JSON.stringify(newItem.attributes);
 			   deliveryRequestsItems.push(newItem);
 			}
-			
+
 			var newDeliveryRequest = {
 				"requested_delivery_date": "",
 				"requested_delivery_address": "",
@@ -480,11 +486,11 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 				"requested_delivery_items": deliveryRequestsItems,
 				"HLPFIELD_is_edit_mode": true
 			}
-			
+
 			$scope.order.delivery_request_details.push(newDeliveryRequest);
 		}
 	};
-	
+
 	$scope.confirmDeliveryRequest = function(deliveryRequest) {
 		if ($scope.isDeliveryRequestValid(deliveryRequest)) {
 			deliveryRequest.HLPFIELD_is_edit_mode = false;
@@ -492,8 +498,8 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		else {
 			SweetAlert.swal({
 				title: "Perhatian!",
-				text: "Tanggal dan Alamat rencana pengiriman tidak boleh kosong. Jumlah Permohonan Pengiriman minimal diisi 1. Jumlah Permohonan tidak boleh lebih dari Jumlah Sisa", 
-				type: "warning", 
+				text: "Tanggal dan Alamat rencana pengiriman tidak boleh kosong. Jumlah Permohonan Pengiriman minimal diisi 1. Jumlah Permohonan tidak boleh lebih dari Jumlah Sisa",
+				type: "warning",
 				//confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Ok",
 				closeOnConfirm: true,
@@ -501,16 +507,16 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			});
 		}
 	}
-	
+
 	$scope.isDeliveryRequestValid = function(deliveryRequest) {
 		var validity = true;
-		
+
 		if (deliveryRequest.requested_delivery_date == "" || deliveryRequest.requested_delivery_date == null || deliveryRequest.requested_delivery_address == "") {
 			validity = false;
 		}
 		else {
 			var quantityNotEmpty = 0;
-			
+
 			angular.forEach(deliveryRequest.requested_delivery_items, function(deliveryRequestItem) {
 				if (deliveryRequestItem.quantity != null && deliveryRequestItem.quantity != "" && deliveryRequestItem.quantity != 0){
 					if (deliveryRequestItem.quantity > deliveryRequestItem.remains) {
@@ -519,19 +525,19 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 					quantityNotEmpty = quantityNotEmpty + 1;
 				}
 			});
-			
+
 			if (quantityNotEmpty == 0) {
 				validity = false;
 			}
 		}
-		
+
 		return validity;
 	}
-	
+
 	$scope.removeDeliveryRequest = function(deliveryRequest) {
 		$scope.order.delivery_request_details.splice($scope.order.delivery_request_details.indexOf(deliveryRequest), 1);
 	};
-	
+
 	$scope.filterNullAndZero = function() {
 		return function(item) {
 			if (item.quantity === null) return false;
@@ -547,18 +553,18 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		var indexParent = $scope.order.order_details.order_items.indexOf(item);
 		$scope.order.order_details.order_items[indexParent].children.splice( $scope.order.order_details.order_items[indexParent].children.indexOf(item), 1);
 	};
-	
+
 	$scope.activateItemsEditMode = function() {
 		SweetAlert.swal({
 			title: "Perhatian!",
-			text: "Semua rencana pengiriman dalam order ini akan terhapus!", 
-			type: "warning", 
-			showCancelButton: true, 
+			text: "Semua rencana pengiriman dalam order ini akan terhapus!",
+			type: "warning",
+			showCancelButton: true,
 			confirmButtonColor: "#DD6B55",
 			confirmButtonText: "Ya, Teruskan!",
 			closeOnConfirm: true,
 			animation: "slide-from-top"
-		}, 
+		},
 		function(isConfirm) {
 			if (isConfirm) {
 				console.log("teruskan");
@@ -567,26 +573,26 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 				$scope.order.delivery_request_details = [];
 			}
 			else {
-				console.log("batal");   
+				console.log("batal");
 			}
 		});
 	}
-	
+
 	$scope.isAnyInEditMode = function() {
-		
+
 		if ($scope.HLPFIELD_items_is_edit_mode) {
 			return true;
 		}
-		
-		for ( var i = 0 ; i < $scope.order.delivery_request_details.length ; i++ ) {  
+
+		for ( var i = 0 ; i < $scope.order.delivery_request_details.length ; i++ ) {
 			if ($scope.order.delivery_request_details[i].HLPFIELD_is_edit_mode) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	$scope.isDuplicateItems = function() {
 		for (var i = 0 ; i < $scope.order.order_details.order_items.length - 1 ; i++) {
 			for (var j = i+1 ; j < $scope.order.order_details.order_items.length ; j++) {
@@ -598,17 +604,17 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
 	$scope.confirmItemsEdit = function() {
-		
+
 		if ($scope.isDuplicateItems()) {
 			SweetAlert.swal({
 				title: "Perhatian!",
-				text: "Ada barang duplikat.", 
-				type: "warning", 
+				text: "Ada barang duplikat.",
+				type: "warning",
 				//confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Ok",
 				closeOnConfirm: true,
@@ -622,8 +628,8 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			else {
 				SweetAlert.swal({
 					title: "Perhatian!",
-					text: "Kode Barang tidak boleh kosong dan Jumlah Order tidak boleh kosong atau bernilai 0.", 
-					type: "warning", 
+					text: "Kode Barang tidak boleh kosong dan Jumlah Order tidak boleh kosong atau bernilai 0.",
+					type: "warning",
 					//confirmButtonColor: "#DD6B55",
 					confirmButtonText: "Ok",
 					closeOnConfirm: true,
@@ -632,39 +638,39 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			}
 		}
 	}
-	
+
 	$scope.isDeliveryRequestsValid = function(deliveryRequests) {
 		var validity;
-		
+
 		if (! deliveryRequests.length) {
 			validity = false;
 		}
 		else{
 			validity = true;
-			
+
 			angular.forEach(deliveryRequests, function(deliveryRequest) {
 				if (! $scope.isDeliveryRequestValid(deliveryRequest)) {
 					validity = false;
 				}
 			});
 		}
-		
+
 		return validity;
 	}
-	
+
 	$scope.isCustomerValid = function() {
 		var customer = $scope.order.customer_details;
-		
+
 		if(customer.customer_name != null && customer.customer_name != ""){
 			validity = true;
 		}
 		else {
 			validity = false;
 		}
-		
+
 		return validity;
 	}
-	
+
 	$scope.isOrderItemsValid = function() {
 		var orderItems = $scope.order.order_details.order_items;
 
@@ -676,26 +682,26 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 				validity = false;
 			}
 		});
-		
+
 		return validity;
 	}
 	$test = false;
 	$scope.insertDraftOrder = function() {
 		$scope.submitButtonLoading = true;
 		var deliveryRequests = $scope.order.delivery_request_details;
-		
+
 		//if (!($scope.isCustomerValid() && $scope.isOrderItemsValid() && $scope.isDeliveryRequestsValid(deliveryRequests))) {
 		if ($test == true) {
 			SweetAlert.swal({
 				title: "Perhatian!",
-				text: "Customer, Order Barang, atau Pengiriman tidak boleh kosong", 
-				type: "warning", 
+				text: "Customer, Order Barang, atau Pengiriman tidak boleh kosong",
+				type: "warning",
 				//confirmButtonColor: "#DD6B55",
 				confirmButtonText: "Ok",
 				closeOnConfirm: true,
 				animation: "slide-from-top"
 			});
-			
+
 			$scope.submitButtonLoading = false;
 		}
 		else {
@@ -703,38 +709,41 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			if ($test == true) {
 				SweetAlert.swal({
 					title: "Perhatian!",
-					text: "Divisi harus dipilih.", 
-					type: "warning", 
+					text: "Divisi harus dipilih.",
+					type: "warning",
 					//confirmButtonColor: "#DD6B55",
 					confirmButtonText: "Ok",
 					closeOnConfirm: true,
 					animation: "slide-from-top"
 				});
-				
+
 				$scope.submitButtonLoading = false;
 			}
 			else {
 				var inputOrder = {};
+
 				for(var i = 0; i < $scope.order.order_details.order_items.length; i++){
-                     $scope.order.order_details.order_items[i].attributes = {};
-                     for(var j = 0; j < $scope.attributeList.length; j+=1){
-                         var attribValue = $scope.order.order_details.order_items[i][$scope.attributeList[j].attribute_name];
-                         $scope.order.order_details.order_items[i].attributes[$scope.attributeList[j].attribute_name] = attribValue;
-                     }
-                     $scope.order.order_details.order_items[i].attributes = JSON.stringify($scope.order.order_details.order_items[i].attributes);
-                 }
-				 
+					 $scope.order.order_details.order_items[i].attributes = {};
+					 for(var j = 0; j < $scope.attributeList.length; j+=1){
+						 var attribValue = $scope.order.order_details.order_items[i][$scope.attributeList[j].attribute_name];
+						 $scope.order.order_details.order_items[i].attributes[$scope.attributeList[j].attribute_name] = attribValue;
+					 }
+					/*
+					 $scope.order.order_details.order_items[i].attributes = JSON.stringify($scope.order.order_details.order_items[i].attributes);
+					*/
+				 }
+
 				angular.copy($scope.order, inputOrder);
 				inputOrder.delivery_request_details.forEach(function(deliveryRequestDetail) {
 					deliveryRequestDetail.requested_delivery_items.forEach(function(item) {
 						if(item.quantity === null || item.quantity == 0) {
 							deliveryRequestDetail.requested_delivery_items.splice(deliveryRequestDetail.requested_delivery_items.indexOf(item), 1);
 						}
-					}); 
-					
+					});
+
 					deliveryRequestDetail.requested_delivery_date = moment(deliveryRequestDetail.requested_delivery_date).format('YYYY-MM-DD');
 				});
-                
+
 
 		ApiCallService.insertDraftOrder(inputOrder).
 					success(function(data, status, headers, config) {
@@ -742,7 +751,7 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 							SweetAlert.swal("Draft order "+ data.order_reference + " sudah tersimpan dengan sukses.");
 							$scope.submitted_order_reference = data.order_reference;
 							$scope.is_order_saved = true;
-							
+
 							var inputOrder = {};
 							angular.copy($scope.order, inputOrder);
 							inputOrder.delivery_request_details.forEach(function(deliveryRequestDetail) {
@@ -750,32 +759,32 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 									if(item.quantity === null || item.quantity == 0) {
 										deliveryRequestDetail.requested_delivery_items.splice(deliveryRequestDetail.requested_delivery_items.indexOf(item), 1);
 									}
-								}); 
-								
+								});
+
 								deliveryRequestDetail.requested_delivery_date = moment(deliveryRequestDetail.requested_delivery_date).format('YYYY-MM-DD');
 							});
-					         inputOrder['order_type'] = $scope.order.order_type;
+							 inputOrder['order_type'] = $scope.order.order_type;
 
-					         var updateInputOrder = {};
-					         angular.copy($scope.draft, updateInputOrder);
-					         updateInputOrder['draft_data'] = JSON.stringify(inputOrder);
-					         ApiCallService.finishCart(updateInputOrder).success(function(){
-					         	console.log('SUCC')
-					         });
-					         $state.go("app.order.draft_order_cart_list");
+							 var updateInputOrder = {};
+							 angular.copy($scope.draft, updateInputOrder);
+							 updateInputOrder['draft_data'] = JSON.stringify(inputOrder);
+							 ApiCallService.finishCart(updateInputOrder).success(function(){
+								console.log('SUCC')
+							 });
+							 $state.go("app.order.draft_order_cart_list");
 
 						}
 						else {
 							SweetAlert.swal({
 								title: "Submit Order Gagal",
-								text: data.error_message, 
-								type: "error", 
+								text: data.error_message,
+								type: "error",
 								confirmButtonText: "Ok",
 								closeOnConfirm: true,
 								animation: "slide-from-top"
 							});
 						}
-						
+
 						$scope.submitButtonLoading = false;
 					}).
 					error(function(data, status, headers, config) {
@@ -783,50 +792,49 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 						console.log(status);
 						console.log(header);
 						console.log(config);
-						
+
 						$scope.submitButtonLoading = false;
 				});
 			}
 		}
 	};
-    $scope.saveCart = function(){
-      if (!$scope.isCustomerValid()) {
-         //code
-      }else{
-      	var inputOrder = {};
+	$scope.saveCart = function(){
+	  if (!$scope.isCustomerValid()) {
+		 //code
+	  }else{
+		var inputOrder = {};
 				angular.copy($scope.order, inputOrder);
 				inputOrder.delivery_request_details.forEach(function(deliveryRequestDetail) {
 					deliveryRequestDetail.requested_delivery_items.forEach(function(item) {
 						if(item.quantity === null || item.quantity == 0) {
 							deliveryRequestDetail.requested_delivery_items.splice(deliveryRequestDetail.requested_delivery_items.indexOf(item), 1);
 						}
-					}); 
-					
+					});
+
 					deliveryRequestDetail.requested_delivery_date = moment(deliveryRequestDetail.requested_delivery_date).format('YYYY-MM-DD');
 				});
-         inputOrder['order_type'] = $scope.order.order_type;
+		 inputOrder['order_type'] = $scope.order.order_type;
 
-         var updateInputOrder = {};
-         angular.copy($scope.draft, updateInputOrder);
-         updateInputOrder['draft_data'] = JSON.stringify(inputOrder);
-         ApiCallService.updateDraftOrderCart(updateInputOrder).
+		 var updateInputOrder = {};
+		 angular.copy($scope.draft, updateInputOrder);
+		 updateInputOrder['draft_data'] = JSON.stringify(inputOrder);
+		 ApiCallService.updateDraftOrderCart(updateInputOrder).
 					success(function(data, status, headers, config) {
 						if (data.call_status === "success") {
 							SweetAlert.swal("Draft order "+ data.draft_reference + " sudah tersimpan dengan sukses.");
 							$scope.submitted_order_reference = data.order_reference;
-							$scope.is_order_saved = true;
 						}
 						else {
 							SweetAlert.swal({
-								title: "Submit Order Gagal",
-								text: data.error_message, 
-								type: "error", 
+								title: "Simpan Draft Gagal",
+								text: data.error_message,
+								type: "error",
 								confirmButtonText: "Ok",
 								closeOnConfirm: true,
 								animation: "slide-from-top"
 							});
 						}
-						
+
 						$scope.submitButtonLoading = false;
 					}).
 					error(function(data, status, headers, config) {
@@ -834,11 +842,11 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 						console.log(status);
 						console.log(header);
 						console.log(config);
-						
+
 						$scope.submitButtonLoading = false;
 				});
-      }
-    }
+	  }
+	}
 	$scope.formatSearchCustomerText = function(model) {
 		for (var i=0; i< $scope.customerLookupList.length; i++) {
 			if (model === $scope.customerLookupList[i].customer_id) {
@@ -883,17 +891,17 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 									$scope.HLPFIELD_items_is_edit_mode = true;
 									$scope.inputCustomer(data);
 								}else{
-									
+
 								}
 							});
 						}
 					}else{
 						$scope.inputCustomer(data);
 					}
-					
-					
-					
-					
+
+
+
+
 				}
 			}).
 			error(function(data, status, headers, config) {
@@ -906,45 +914,45 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 		$scope.customerCombinedItemList = CustomerFactory.customerCombinedItemList;
 	});
 	}
-	
+
 	$scope.getTotalInDeliveryRequests = function(itemCode, materialType, remark) {
-	
+
 		var deliveryRequests = $scope.order.delivery_request_details;
 		var total = 0;
-		
+
 		angular.forEach(deliveryRequests, function(deliveryRequest) {
 			var deliveryRequestItems = deliveryRequest.requested_delivery_items;
-			
+
 			angular.forEach(deliveryRequestItems, function(deliveryRequestItem) {
 				if (deliveryRequestItem.item_code == itemCode
 					&& deliveryRequestItem.material_type == materialType
 					&& deliveryRequestItem.remark == remark
 				) {
 					quantity = parseInt(deliveryRequestItem.quantity) || 0;
-					total = total + quantity;							
+					total = total + quantity;
 				}
 			});
 		});
-		
+
 		return total;
 	}
-	
+
 	$scope.isNoDeliveryRequestItemRemaining = function() {
 		orderItems = $scope.order.order_details.order_items;
 		noItemRemaining = true;
-		
+
 		orderItems.forEach(function(orderItem) {
 			total = $scope.getTotalInDeliveryRequests(orderItem.item_code, orderItem.material_type, orderItem.remark);
 			itemRemaining = orderItem.quantity - total;
-			
+
 			if (itemRemaining > 0) {
 				noItemRemaining = false;
 			}
 		});
-		
+
 		return noItemRemaining;
 	}
-	
+
 	$scope.getCurrentDateString = function() {
 		return moment(Date.now()).format('YYYY-MM-DD');
 	}
@@ -956,7 +964,7 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 	else {
 		var customer = false;
 	}
-	
+
 	var pass_data = {
 			index: index,
 	  customer: customer
@@ -995,14 +1003,14 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			scope: $scope
 		});
 	}
-	
+
 	$scope.displayCustomerListModal = function() {
 		/*var pass_data = {
 			index: index
 		};*/
-		
+
 		console.log("open");
-		
+
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_customer_list',
 			controller: 'CustomerListModalCtrl',
@@ -1015,12 +1023,12 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			scope: $scope
 		});
 	}
-    
-    $scope.displayPaymentReceiptModal = function() {
+
+	$scope.displayPaymentReceiptModal = function() {
 		/*var pass_data = {
 			index: index
 		};*/
-		
+
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_payment_receipt',
 			controller: 'PaymentReceiptModalCtrl',
@@ -1033,9 +1041,9 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			scope: $scope
 		});
 	}
-	
+
 	$scope.init = function() {
-		
+
 		ApiCallService.getDraftOrderCartByDraftId(draft_id).success(function(data){
 			if (data.call_status === "success") {
 				$scope.draft = data.draft_order;
@@ -1049,12 +1057,12 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 			};
 			console.log($scope);
 		});
-		
+
 		AuthService.isLoggedOn();
-		
+
 		//clear all fields
 		$scope.itemLookupList = [];
-	
+
 		$scope.customerLookupList = [];
 
 		$scope.customerIdToSearch = "";
@@ -1064,10 +1072,10 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 
 		$scope.is_order_saved = false;
 		$scope.submitted_order_reference = "";
-		
+
 		//ItemLookupService.retrieveItemLookup();
 		$scope.itemLookupList = ItemLookupService.getAllItems();
-		
+
 		ApiCallService.getCustomerLookup().
 			success(function(data, status, headers, config) {
 				if (data.call_status === "success") {
@@ -1083,7 +1091,7 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 				console.log(header);
 				console.log(config);
 			});
-		
+
 		ApiCallService.checkUserHasAccessForSpecialRequest().
 			success(function(data, status, headers, config) {
 				if (data.call_status === "success") {
@@ -1102,11 +1110,11 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 				console.log(config);
 			});
 	};
-	
+
 	$scope.clearPage = function() {
 		$scope.init();
 	};
-	
+
 	$scope.init();
 });
 
@@ -1114,15 +1122,15 @@ app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_d
 
 	$scope.filter = {};
 	$scope.filter.$ = '';
-  
+
 	var index = passed_data.index;
 	var parentIndex = passed_data.parent_index;
 	$scope.customer = passed_data.customer;
 	/*
 	CustomerFactory.getCustomerCombinedItemList($scope.customerIdToSearch).then(function () {
 		$scope.customerCombinedItemList = CustomerFactory.customerCombinedItemList;
-    
-    $scope.tableParamsCustom.total($scope.customerCombinedItemList.length);
+
+	$scope.tableParamsCustom.total($scope.customerCombinedItemList.length);
   $scope.tableParamsCustom.reload();
 	});
 	*/
@@ -1172,14 +1180,14 @@ app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_d
 		$scope.order.order_details.order_items[index].children = [];
 		$modalInstance.dismiss('close');
 	}*/
-	
+
 	$scope.setItemCode = function(item) {
 		$scope.order.order_details.order_items[index].item_code = item.item_code;
 		$scope.order.order_details.order_items[index].item_name = item.item_name;
 		$scope.order.order_details.order_items[index].item_unit = item.item_unit;
 		$scope.order.order_details.order_items[index].level = 'S';
 		$scope.order.order_details.order_items[index].children = [];
-		
+
 		if (item.length !== null || item.width !== null || item.height !== null) {
 			$scope.order.order_details.order_items[index].length_width_height = item.length + ' x ' + item.width + ' x ' + item.height;
 		}
@@ -1192,27 +1200,27 @@ app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_d
 		$scope.order.order_details.order_items[index].item_unit = custom.item_unit;
 		$scope.order.order_details.order_items[index].level = 'E';
 		$scope.order.order_details.order_items[index].children = custom.children;
-		
+
 		var total_height = 0;
 		for(var i = 0; i < custom.children.length; i++){
 			var child = custom.children[i];
-			
+
 			total_height += parseInt(child.height);
 		}
-		
+
 		$scope.order.order_details.order_items[index].length_width_height = custom.children[0].length + ' x ' + custom.children[0].width + ' x ' + total_height;
-		
+
 		$modalInstance.dismiss('close');
 	}
 
 	$scope.setChildItemCode = function(newItem) {
 		var item = angular.copy(newItem);
-		
+
 		$scope.order.order_details.order_items[parentIndex].children[index] = item;
-		
+
 		if (item.length !== null || item.width !== null || item.height !== null) {
 			$scope.order.order_details.order_items[parentIndex].children[index].length_width_height = item.length +" x "+ item.width +" x "+ item.height;
-			
+
 			if ($scope.order.order_details.order_items[parentIndex].length_width_height == null) {
 				$scope.order.order_details.order_items[parentIndex].length_width_height = item.length +" x "+ item.width +" x "+ item.height;
 			}
@@ -1262,21 +1270,21 @@ app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_d
 });
 
 app.controller('CustomerListModalCtrl', function ($scope, $modalInstance, ngTableParams, $filter, ApiCallService) {
-	
+
 	//var index = passed_data.index;
 	$scope.customerList = [];
-	
+
 	ApiCallService.getAllCustomers().
 		success(function(data, status, headers, config) {
-		
+
 			if (data.call_status === "success") {
 				$scope.customerList = data.customer_details_list;
-				
+
 				$scope.customerListTableParams = new ngTableParams(
 					{
 						page: 1, // show first page
 						count: 10 // count per page
-					}, 
+					},
 					{
 						total: $scope.customerList.length, // length of data
 						getData: function ($defer, params) {
@@ -1289,7 +1297,7 @@ app.controller('CustomerListModalCtrl', function ($scope, $modalInstance, ngTabl
 			else {
 				console.log(data);
 			}
-		
+
 		}).
 		error(function(data, status, headers, config) {
 			console.log(data);
@@ -1297,14 +1305,14 @@ app.controller('CustomerListModalCtrl', function ($scope, $modalInstance, ngTabl
 			console.log(header);
 			console.log(config);
 		});
-	
+
 	$scope.setCustomerIdToSearch = function(customerId) {
 		$scope.customerIdToSearch = customerId;
 		console.log(customerId);
 		console.log($scope.customerIdToSearch);
 		$modalInstance.dismiss('close');
 	}
-	
+
 	$scope.closeModal = function () {
 		$modalInstance.dismiss('close');
 	};
@@ -1312,7 +1320,7 @@ app.controller('CustomerListModalCtrl', function ($scope, $modalInstance, ngTabl
 });
 
 app.controller('PaymentReceiptModalCtrl', function ($scope, $modalInstance, ngTableParams, $filter, ApiCallService) {
-		
+
 	$scope.closeModal = function () {
 		$modalInstance.dismiss('close');
 	};

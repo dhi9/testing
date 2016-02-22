@@ -181,6 +181,7 @@ app.controller('PurchaseDeliveryRequestDetailController', function($scope, $moda
 					}
 					for(var k = 0; k<newDeliveredItemList.length; k += 1){
 					}
+					$scope.newDeliveredItemList=[];
 				}
 			});
 		}
@@ -273,8 +274,10 @@ app.controller('PurchaseDeliveryRequestDetailController', function($scope, $moda
                     $scope.displayAfterGRModal();
                     $scope.updateCompletedDeliveryRequest();
                     $scope.deliveryRequests.status = "C";
+					
                     var data = $scope.newDeliveredItemList ;
                     $scope.insertDeliveredItems(data);
+					
                     PurchaseService.getBatchList().success(function(data){
                         if(data.call_status == "success"){
                             $scope.batchList = data.batch_list;
@@ -284,6 +287,7 @@ app.controller('PurchaseDeliveryRequestDetailController', function($scope, $moda
             }else{
                 var data = $scope.newDeliveredItemList ;
                 $scope.insertDeliveredItems(data);
+			
             }
         }else{
             SweetAlert.swal({

@@ -16,12 +16,26 @@ app.controller('StockMasterListController', function($filter, $scope, $http, Ite
 			}
 		}
 	}
+
+	$scope.statusLabel = function(status){
+		switch(status) {
+			case 'A':
+				return 'Aktif';
+				break;
+			case 'X':
+				return 'Non Aktif';
+				break;
+			default:
+				return 'Aktif';
+		}
+	}
+
 	ItemService.getItemList().success(function(data){
 		$scope.itemList = data.item_details_list;
 
 		for (var i = 0; i < $scope.itemList.length; i++) {
 			$scope.itemList[i].date_created = moment($scope.itemList[i].date_created).format('DD/MM/YYYY');
-
+			$scope.itemList[i].statusLabel = $scope.statusLabel($scope.itemList[i].status);
 			if ($scope.itemList[i].date_updated != null && $scope.itemList[i].date_updated != undefined && $scope.itemList[i].date_updated != "0000-00-00 00:00:00") {
 				$scope.itemList[i].date_updated = moment($scope.itemList[i].date_updated).format('DD/MM/YYYY');
 			}else{

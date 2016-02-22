@@ -28,6 +28,7 @@
 						<td data-title="'UOM Dasar'" sortable="'item_unit'">{{ item.item_unit }}</td>
 						<td data-title="'Tanggal Dibuat'" sortable="'date_created'">{{ item.date_created }}</td>
 						<td data-title="'Terakhir Update'" sortable="'date_updated'">{{ item.date_updated }}</td>
+						<td data-title="'Status'" sortable="'statusLabel'">{{ item.statusLabel }}</td>
 						<td>
 							<button class="btn btn-primary" ui-sref="app.master.stock_edit({item_code: '{{ item.item_code }}'})">
 								<span>Ubah</span>

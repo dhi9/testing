@@ -583,7 +583,8 @@
 								<tbody ng:repeat="item in goodIssue.items" ng-if="item.status == 'A'" ng-init="itemIndex = $index" >
 									<tr>
 										<td>
-											<select class="form-control" ng-model="item.selected" ng-options="i as i.item_code for i in order.order_detail.order_items" ng-change="setAttributesGoodIssue($index, item.selected)" ng-disabled="order.order_detail.good_issue_status == 'A'" ></select>
+											<select class="form-control" ng-model="item.selected" ng-options="i as i.item_code for i in order.order_detail.order_items track by i.item_code" ng-change="setAttributesGoodIssue($index, item.selected)" ng-disabled="order.order_detail.good_issue_status == 'A'" ng-if="item.is == 'N'" ></select>
+											<span ng-if="item.is != 'N'">{{item.item_code}}</span>
 										</td>
 										<td ng-repeat="attrib in attributeList" ng-if="attrib.status !== 'X'">
 											{{ item.attributes[attrib.attribute_name] }}
@@ -595,7 +596,7 @@
 										<td>{{ lookupItemName(item.item_code) }}</td>
 										<td><input type="number" class="form-control" placeholder="0" ng-model="item.quantity" min="0" ng-disabled="order.order_detail.good_issue_status == 'A'" /></td>
 										<td>
-											<select ng-model="item.item_unit" ng-options="uom.alternative_uom as uom.alternative_uom for uom in item.uom_list" required></select>
+											<select ng-model="item.item_unit" ng-options="uom.alternative_uom as uom.alternative_uom for uom in item.uom_list" required ng-disabled="order.order_detail.good_issue_status == 'A'"></select>
 										</td>
 										<td>
 											<div class="input-group">
@@ -606,7 +607,7 @@
 												</span>
 											</div>
 										</td>
-										<td ng-if="!goodIssue.good_issue" >
+										<td ng-if="order.order_detail.good_issue_status != 'A'">
 											<a ng-hide="goodIssue.items.length <= 1" ng-click="removeGoodIssueItem(item)" class="text-danger">
 												<i class="fa fa-times"></i>
 											</a>
@@ -762,7 +763,7 @@
 	</script>
 	
 	<script type="text/ng-template" id="/cash.html">
-		<div class="row">mod
+		<div class="row">
 			<div class="col-md-10">
 				<form role="form" class="form-horizontal">
 					<div class="form-group">
@@ -775,7 +776,7 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
 					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
@@ -810,7 +811,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -844,7 +846,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -878,7 +881,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -904,7 +908,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit">Bayar</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -1006,42 +1011,66 @@
 			<p>Mohon konfirmasi untuk Good Issue</p>
 			<table class="table table-responsive">
 				<thead>
-					<tr>
-						<th>ArticleID (SKU)</th>
-						<th>Jumlah Order</th>
-						<th>Unit</th>
-						<th>Nama Barang</th>
-						<th>Actual</th>
-						<th>Unit</th>
-						<th>PieceID/SiteID/Storage Location/Bin</th>
-						<th>VAR</th>
-					</tr>
+				<tr>
+					<th>ArticleID (SKU)</th>
+					<th>Jumlah Order</th>
+					<th>Unit</th>
+					<th>Nama Barang</th>
+					<th>Actual</th>
+					<th>Unit</th>
+					<th>PieceID/SiteID/Storage Location/Bin</th>
+					<th>VAR</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="i in items">
-						<td>{{i}}</td>
-						<td>{{getBatchName(i.batch_id)}}</td>
-						<td>{{getSiteName(i.site_id)}}</td>
-						<td>{{getStorageName(i.storage_id)}}</td>
-						<td>{{getBinName(i.bin_id)}}</td>
-						<td>{{i.quantity || 0 | number:0}}</td>
-						<td>{{}}</td>
-						<td>
-							<input type="number">
-						</td>
-					</tr>
+				<tr ng-repeat="i in items" ng-if="i.status != 'X'">
+					<td>{{i.item_code}}</td>
+					<td>{{i.requested_quantity}}</td>
+					<td>{{i.requested_unit}}</td>
+					<td>{{i.item_name}}</td>
+					<td>{{i.aktual_quantity}}</td>
+					<td>{{i.item_unit}}</td>
+					<td>{{i.location}}</td>
+					<td>
+
+					</td>
+				</tr>
 				</tbody>
 			</table>
-			<form role="form" class="form-horizontal" ng-submit="saveLocation(locations)">
-				<div class="form-group">
-					<label class="col-sm-1 control-label">PieceID</label>
-					<div class="col-sm-11">
+			<form role="form" class="form-horizontal" ng-submit="confirmGoodsIssue()">
+				<div class="checkbox clip-check check-primary">
+					<input type="checkbox" id="checkbox6" value="1">
+					<label for="checkbox6">
 						Potong stock sesuai dengan aktual pengeluaran barang
-					</div>
+					</label>
 				</div>
+				<br>
 				<button type="submit" class="btn btn-primary">Lakukan Goods Issue</button>
 				<button type="button" class="btn btn-danger" ng-click="closeModal()">Kembali</button>
 			</form>
+		</div>
+	</script>
+
+
+	<script type="text/ng-template" id="modal_payment_receipt">
+		<div class="modal-header">
+			<h3 class="modal-title">Cetak Kwitansi Pembayaran</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<p>Apakah anda mau mencetak kwitansi pembayaran</p>
+			<table class="table table-responsive no-border">
+				<tr>
+					<td class="col-md-4" align="center">
+						<button type="submit" class="btn btn-primary">Cetak</button>
+					</td>
+					<td class="col-md-4" align="center">
+						<button type="submit" class="btn btn-primary">Download PDF</button>
+					</td>
+					<td class="col-md-4" align="center">
+						<button type="submit" class="btn btn-danger" ng-click="closeModal()">Tidak Cetak</button>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</script>
 </div><!-- End of Customer Row -->

@@ -1,7 +1,9 @@
 app.controller('changeServiceRequestDetailController', function($filter, $scope, $http, $modal, $stateParams, $rootScope, PurchaseService, VendorService, ItemService, WarehouseService, SweetAlert, SiteService) {
 	var draftReference = $stateParams.reference;
 	//$scope.username = $rootScope.username;
-	
+    
+    console.log($scope);
+    
 	$scope.edit = {};
 	$scope.edit.itemList = true;
 	$scope.edit.sendEmail = false;
