@@ -681,4 +681,11 @@ class Purchase_db extends CI_Model {
 			->where('batch_reference', $batch_reference)
 		->get('batchs');
 	}
+	
+	public function get_purchase_discussion_list()
+	{
+		return $this->db
+			->where('status', 'D')
+		->get('draft_requests');
+	}
 }

@@ -1284,4 +1284,14 @@ class Purchaseapi extends CI_Controller {
 		}
 		//$this->inventory_bl->add_stock_quantity($insert_good_recieved, $quantity);
 	}
+	
+	public function get_purchase_discussion_list()
+	{
+		$feedback = array(
+			"call_status" => "success",
+			'purchase_list' => $this->purchase_bl->get_purchase_discussion_list(),
+		);
+		
+		echo json_encode($feedback);
+	}
 }

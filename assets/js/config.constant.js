@@ -148,6 +148,8 @@ app.constant('JS_REQUIRES', {
 				'newDeliveryListController': 'assets/js/wave/delivery/newDeliveryListController.js',
 				'newDeliveryController': 'assets/js/wave/delivery/newDeliveryController.js',
 				'stockReportController': 'assets/js/wave/stock_report/stockReportController.js',
+				'purchaseDiscussionListController': 'assets/js/wave/purchase_request/purchaseDiscussionListController.js',
+				'purchaseDiscussionDetailController': 'assets/js/wave/purchase_request/purchaseDiscussionDetailController.js',
 				
 				//*** Wave Test Area
 				'qrCodeScannerController': 'assets/js/wave/tools/qrCodeScannerController.js',

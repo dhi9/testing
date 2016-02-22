@@ -299,6 +299,52 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 		}
 	};
 	
+	$scope.submitDraftPurchase = function(supplier){
+		var valid = PurchaseFactory.isPurchaseValid(supplier);
+		if(valid){
+			for (var i = 0; i < $scope.itemRequestList.length; i++) {
+				delete $scope.itemRequestList[i].uom_list;
+				$scope.itemRequestList[i].attributes = JSON.stringify($scope.itemRequestList[i].attributes);
+			}
+			for (var j = 0; j < $scope.deliveryRequestList.length; j++) {
+				for (var k = 0; k < $scope.deliveryRequestList[j].item_delivery_request_list.length; k++) {
+					$scope.deliveryRequestList[j].item_delivery_request_list[k].attributes = JSON.stringify($scope.deliveryRequestList[j].item_delivery_request_list[k].attributes);
+				}
+			}
+			var data = {
+				supplier_id: $scope.supplier.vendor_id,
+				currency: $scope.currency,
+				send_email: $scope.edit.sendEmail,
+				supplier_email: $scope.data.supplier_email,
+				delivery_request_list: $scope.deliveryRequestList,
+				item_request_list: $scope.itemRequestList,
+				approver_name: $scope.approve.name,
+				approver_email: $scope.approve.email,
+				approver_id: $scope.approve.user_id,
+				notes: $scope.notes,
+				need_approval: true,
+				status: 'D',
+			};
+			PurchaseService.insertDraftPurchase(data).success(function(data){
+				if (data.call_status == 'success') {
+					SweetAlert.swal({
+						title: "Draft Purchase Request Berhasil Disimpan",
+						text: "Draft disimpan dengan reference " + data.draft_reference,
+						type: "success",
+						animation: "slide-from-top"
+					});
+				}
+			});
+		}else{
+			SweetAlert.swal({
+				title: "Perhatian",
+				text: "Supplier atau Detail Sales tidak boleh kosong",
+				type: "warning",
+				animation: "slide-from-top"
+			});
+		}
+	};
+	
 	$scope.sumTotal = function(){
 		var sum = 0;
 		for(var i = 0; i < $scope.itemRequestList.length; i++){

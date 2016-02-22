@@ -181,7 +181,12 @@ app.service('PurchaseService', function($http, apiUrl, $window) {
     this.getCompletedServiceByDeliveryRequestId = function(deliveryRequestId){
         return $http.get(url + 'get_completed_service_by_requests_delivery_request_id/' + deliveryRequestId);
     }
+		
     this.isPurchaseRequestsComplete = function(requestId){
         return $http.get(url + 'is_purchase_requests_complete/' + requestId);
     }
+		
+	this.getPurchaseDiscussionList = function(){
+		return $http.get(url + 'get_purchase_discussion_list');
+	}
 });

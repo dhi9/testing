@@ -197,6 +197,27 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 				label: 'PURCHASE'
 			}
 		})
+		.state('app.purchase.purchase_discussion', {
+			url:'/purchasediscussion',
+			templateUrl: "assets/js/wave/purchase_request/purchase_discussion_list.html",
+			resolve: loadSequence('ngTable', 'purchaseDiscussionListController', 'purchaseService'),
+			title: "Purchase Discussion",
+			data : { logged_on_only: true, role: '' },
+			ncyBreadcrumb: {
+				label: 'BARU'
+			}
+		})
+		.state('app.purchase.purchase_discussion_detail', {
+			url:'/purchasediscussiondetail/:reference',
+			templateUrl: "assets/js/wave/purchase_request/purchase_discussion_detail.html",
+			resolve: loadSequence('ngTable', 'purchaseDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory',
+            'itemFactory', 'attributeFactory', 'siteService'),
+			title: "Purchase Discussion",
+			data : { logged_on_only: true, role: '' },
+			ncyBreadcrumb: {
+				label: 'BARU'
+			}
+		})
 		.state('app.purchase.new_purchase_request', {
 			url:'/buatpurchaserequest',
 			templateUrl: "assets/js/wave/purchase_request/new_purchase_request.html",
