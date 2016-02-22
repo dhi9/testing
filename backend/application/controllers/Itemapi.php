@@ -926,36 +926,45 @@ class Itemapi extends CI_Controller {
 			
 			$this->auditlog_model->insert_audit_log("itemapi","insert_tag",$input);
 			
-			$data = json_decode($input,true);
+			$feedback = array(
+				'call_status' => 'success',
+			);
 			
-			if($data['exist'] == 'N'){
-				
-				$tag = array(
-					'tag_name' => $data['tag_name'],
-					);
-				
-				$tag_id = $this->item_db->insert_tag($tag);
-				
-				$item_tag = array(
-							 'tag_id' => $tag_id,
-							 'item_code' => $data['item_code']
-							 );
-				$this->item_db->insert_item_tag($item_tag);
+			$data = json_decode($input, true);
+			$tag = $this->item_db->get_tag($data['tag_name']);
+			if($tag->num_rows() > 0){
+				$item = $this->item_db->get_item_tags($tag->row()->tag_id, $data['item_code']);
+				if($item->num_rows() > 0){
+					if($item->row()->status == "A" ){
+						$feedback['call_status'] = 'warning';
+					}else{
+						$update_item_tag = array(
+							'item_tag_id' => $item->row()->item_tag_id,
+							'status' => "A"
+						);
+						$this->item_db->update_item_tag($update_item_tag);
+					}
+				}else{
+					$insert_item_tag = array(
+						'tag_id' => $tag->row()->tag_id,
+						'item_code' => $data['item_code']
+					 );
+					$this->item_db->insert_item_tag($insert_item_tag);
+				}
 			}else{
+				$insert_tag = array(
+					'tag_name' => $data['tag_name']
+				);
+				$tag_id = $this->item_db->insert_tag($insert_tag);
 				$item_tag = array(
-							 'tag_id' => $data['tag_id'],
-							 'item_code' => $data['item_code']
-							 );
+					'tag_id' => $tag_id,
+					'item_code' => $data['item_code']
+				);
 				$this->item_db->insert_item_tag($item_tag);
 			}
-			
-			// feedback API
-			$array = array(
-				'call_status' => 'success'
-			);
 		}
 		
-		echo json_encode($array);
+		echo json_encode($feedback);
 	}
 	public function insert_tag()
 	{
