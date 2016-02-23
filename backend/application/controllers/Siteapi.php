@@ -75,6 +75,15 @@ class Siteapi extends CI_Controller {
 	
 		echo json_encode($feedback);
 	}
+    
+    public function get_site_non_consignment_list(){
+		$feedback = array(
+				'call_status' => 'success',
+				'site_list' => $this->site_db->get_site_non_consignment_list()->result_array()
+		);
+	
+		echo json_encode($feedback);
+	}
 	
 	public function get_site_consignment_list_by_customer_id($customerId){
 		$feedback = array(
