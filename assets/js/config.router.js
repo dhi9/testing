@@ -207,10 +207,10 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 				label: 'BARU'
 			}
 		})
-		.state('app.purchase.purchase_discussion_detail', {
-			url:'/purchasediscussiondetail/:reference',
-			templateUrl: "assets/js/wave/purchase_request/purchase_discussion_detail.html",
-			resolve: loadSequence('ngTable', 'purchaseDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory',
+		.state('app.purchase.purchase_item_discussion_detail', {
+			url:'/purchaseitemdiscussiondetail/:reference',
+			templateUrl: "assets/js/wave/purchase_request/purchase_item_discussion_detail.html",
+			resolve: loadSequence('ngTable', 'purchaseItemDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory',
             'itemFactory', 'attributeFactory', 'siteService'),
 			title: "Purchase Discussion",
 			data : { logged_on_only: true, role: '' },

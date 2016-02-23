@@ -34,6 +34,13 @@ class Vendor_db extends CI_Model {
 		->get();
 	}
 	
+	public function get_active_vendor_list()
+	{
+		$this->db->where('status', "A");
+		
+		return $this->get_vendor_list();
+	}
+	
 	public function get_vendor_list()
 	{
 		return $this->db->get('vendors');

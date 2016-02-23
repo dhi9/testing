@@ -2,7 +2,7 @@
 <section id="page-title" class="padding-top-15 padding-bottom-15" >
 	<div class="row">
 		<div class="col-sm-7">
-			<h1 class="mainTitle">Buat Purchase Request</h1>
+			<h1 class="mainTitle">Purchase Item Discussion Detail</h1>
 		</div>
 		<div ncy-breadcrumb></div>
 	</div>
@@ -11,7 +11,7 @@
 
 <!-- start: YOUR CONTENT HERE -->
 
-<div ng-controller="NewPurchaseRequestController">  
+<div ng-controller="PurchaseItemDiscussionDetailController">  
 
 <div class="container-fluid container-fullw">
     
@@ -154,13 +154,13 @@
 						</div>
 						<br/>
 						<tabset class="tabbable">
-							<tab heading="Umum">	
+							<tab heading="Umum">
 								<table class="table" ng-show="edit.itemList">
 									<thead>
 										<tr>
 											<th class="col-md-3">Kode Barang (SKU) <span class="symbol required"></span></th>
 											<th class="col-md-3">Nama Barang</th>
-											<th ng-repeat="attribute in attributeList">{{attribute.attribute_name}}</th>
+											<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
 											<th class="col-md-1">Jumlah <span class="symbol required"></span></th>
 											<th class="col-md-1">Unit <span class="symbol required"></span></th>
 											<th>Catatan</th>
@@ -214,7 +214,7 @@
 											<td>{{ itemRequest.item_code }}</td>
 											<td>{{ lookupItemName(itemRequest.item_code); }}</td>
 											<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemRequest.attributes[attribute.attribute_name]}}</td>
-											<td>{{ itemRequest.quantity | number }}</td>
+											<td>{{ itemRequest.quantity | number:2 }}</td>
 											<td>{{ itemRequest.item_unit }}</td>
 											<td>{{ itemRequest.remark }}</td>
 										</tr>
@@ -230,6 +230,7 @@
 										<i class="ti-plus"></i> <span> Tambah Barang</span>
 									</button>
 								</div>
+								
 								<div ng-show="!edit.itemList">
 									<button class="btn btn-alt btn-hover btn-primary" ng-click="edit.itemList = true">
 										<span>Edit</span>
@@ -253,7 +254,7 @@
 									<tbody>
 										<tr ng-repeat="itemRequest in itemRequestList">
 											<td>{{ lookupItemName(itemRequest.item_code); }}</td>
-											<td>{{ itemRequest.quantity | number }}</td>
+											<td>{{ itemRequest.quantity | number:2 }}</td>
 											<td>{{ itemRequest.item_unit }}</td>
 											<td>{{ currency | uppercase}}</td>
 											<td><input type="number" class="form-control" placeholder="0" ng-model="itemRequest.cost" min="1" maxlength="15" ng-disabled="edit.itemList"/></td>
@@ -263,12 +264,18 @@
 									<tfoot>
 										<tr>
 											<td colspan="4"></td>
+											<td>PPN {{hack.tax}}%</td>
+											<td>{{ hack.totalTax() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="4"></td>
 											<td>Total</td>
-											<td>{{ sumTotal() || 0 | number:2 }}</td>
+											<td>{{ priceAfterTax() || 0 | number:2 }}</td>
 										</tr>
 									</tfoot>
 								</table>
 							</tab>
+							
 							<tab heading="Pengiriman" ng-click="getApprover()">
 								<div class="panel panel-white" id="panel1" ng-repeat="deliveryRequest in deliveryRequestList">
 									<div class="panel-heading">
@@ -288,7 +295,7 @@
 																<input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" ng-model="deliveryRequest.date" ng-disabled="!deliveryRequest.editMode" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" required/>
 															</div>
 														</div>
-														
+															
 														<div class="form-group">
 															<label for="txtCustomerName" class="col-sm-4 control-label">Alamat <span class="symbol required"></label>
 															<div class="col-sm-8">
@@ -331,8 +338,8 @@
 														<tr ng-repeat="itemDeliveryRequest in deliveryRequest.item_delivery_request_list">
 															<td>{{ itemDeliveryRequest.item_name }}</td>
 															<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
-															<td>{{ itemDeliveryRequest.requested_quantity | number }}</td>
-															<td>{{ itemDeliveryRequest.remaining | number }}</td>
+															<td>{{ itemDeliveryRequest.requested_quantity | number:2 }}</td>
+															<td>{{ itemDeliveryRequest.remaining | number:2 }}</td>
 															<td><input type="number" class="form-control" placeholder="0" ng-model="itemDeliveryRequest.quantity" min="0"/></td>
 															<td>{{ itemDeliveryRequest.item_unit }}</td>
 														</tr>
@@ -354,9 +361,9 @@
 														<tr ng-repeat="itemDeliveryRequest in deliveryRequest.item_delivery_request_list">
 															<td>{{ itemDeliveryRequest.item_name }}</td>
 															<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
-															<td>{{ itemDeliveryRequest.requested_quantity | number }}</td>
-															<td>{{ itemDeliveryRequest.remaining | number }}</td>
-															<td>{{ itemDeliveryRequest.quantity | number }}</td>
+															<td>{{ itemDeliveryRequest.requested_quantity | number:2 }}</td>
+															<td>{{ itemDeliveryRequest.remaining | number:2 }}</td>
+															<td>{{ itemDeliveryRequest.quantity | number:2 }}</td>
 															<td>{{ itemDeliveryRequest.item_unit }}</td>
 														</tr>
 													</tbody>
@@ -465,6 +472,7 @@
 						<td data-title="'Nama PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
 						<td data-title="'No Telp'" sortable="'phone_number'">{{ customer.phone_number }}</td>
 						<td data-title="'Email'" sortable="'customer_email'">{{ customer.customer_email }}</td>
+						
 						<td>
 							<button class="btn btn-alt btn-hover btn-primary" ng-click="setCustomerIdToSearch(customer.customer_id)">Pilih</button>
 						</td>
@@ -474,7 +482,7 @@
 			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
 		</div>
 	</script>
-	
+
 	<script type="text/ng-template" id="modal_order_notes">
 		<div class="modal-header">
 			<h3 class="modal-title">Order Notes</h3>

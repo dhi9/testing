@@ -1294,4 +1294,52 @@ class Purchaseapi extends CI_Controller {
 		
 		echo json_encode($feedback);
 	}
+	
+	public function update_draft_purchase()
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$feedback = array(
+				"call_status" => "error",
+				"error_code" => "701",
+				"error_message" => "User not logged on"
+			);
+		}
+		else {
+			$json = file_get_contents('php://input');
+			
+			$this->db->trans_start();
+			
+			$this->auditlog_model->insert_audit_log("purchaseapi", "update_draft_purchase", $json);
+			
+			$data = json_decode($json, true);
+			
+			$this->db->update(
+				'draft_requests',
+				array(
+					'draft_data' => $json,
+					'status' => $data['status']
+				),
+				array('draft_reference' => $data['draft_reference'])
+			);
+			
+			$this->db->trans_complete();
+			
+			if ($this->db->trans_status() === FALSE)
+			{
+				$feedback = array(
+					"call_status" => "error",
+					//"error_code" => "701",
+					"error_message" => "Terjadi kesalahan dengan database."
+				);
+			}
+			else
+			{
+				$feedback = array(
+					"call_status" => "success",
+				);
+			}
+		}
+		
+		echo json_encode($feedback);
+	}
 }

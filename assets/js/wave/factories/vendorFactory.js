@@ -18,6 +18,31 @@ app.factory('VendorFactory', function ($http, apiUrl, SweetAlert) {
 			});
 	}
 	
+	self.getActiveVendorList = function(){
+		return $http.get(url + 'get_active_vendor_list')
+			.success(function(data){
+				if(data.call_status == "success"){
+					self.activeVendorList = data.vendor_list;
+				}
+			})
+			.error(function () {
+				//NotificationFactory.showError();
+			});
+	}
+	
+	self.getVendorById = function(id){
+		return $http.get(url + 'get_vendor_by_id/' + id)
+			.success(function(data){
+				if(data.call_status == "success"){
+					self.vendor = data.vendor;
+					
+					self.vendor.payment_term_value = parseFloat(self.vendor.payment_term_value);
+					self.vendor.penalty_percent = parseFloat(self.vendor.penalty_percent);
+				}
+			})
+		;
+	}
+	
 	self.getVendorByReference = function(reference){
 		return $http.get(url + 'get_vendor_by_reference/' + reference)
 			.success(function(data){

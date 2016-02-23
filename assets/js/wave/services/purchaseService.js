@@ -142,7 +142,7 @@ app.service('PurchaseService', function($http, apiUrl, $window) {
 	}
 	
 	this.updateDraftPurchase = function(data) {
-		return $http.post(url + 'update_draft_order', data);
+		return $http.post(url + 'update_draft_purchase', data);
 	}
 
 	this.updateCompletedDeliveryRequest = function(data) {
