@@ -1,8 +1,5 @@
 app.controller('NewServiceRequestController', function($filter, $scope, $http, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService) {
-    
-    console.log($scope);
-    
-	$scope.edit = {};
+  $scope.edit = {};
 	$scope.edit.itemList = true;
 	$scope.edit.sendEmail = false;
 	
@@ -331,19 +328,21 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 				supplier_id: $scope.supplier.vendor_id,
 				currency: $scope.currency,
 				send_email: $scope.edit.sendEmail,
-                supplier_email: $scope.data.supplier_email,
+				supplier_email: $scope.data.supplier_email,
 				delivery_request_list: $scope.deliveryRequestList,
 				item_request_list: $scope.itemRequestList,
 				approver_name: $scope.approve.name,
 				approver_email: $scope.approve.email,
 				approver_id: $scope.approve.user_id,
+				notes: $scope.notes,
+				status: 'A',
 			};
 			
 			PurchaseService.insertDraftService(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
 						title: "Service Request Berhasil Disimpan",
-                        text: "Draft disimpan dengan reference " + data.draft_reference,
+						text: "Draft disimpan dengan reference " + data.draft_reference,
 						animation: "slide-from-top",
 					});
 				}
@@ -351,15 +350,60 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 			.error(function(data){
 				console.log(data);
 			});
-		}else{
-			SweetAlert.swal({
-                title: "Perhatian",
-                text: "Supplier atau Detail Service tidak boleh kosong",
-                type: "warning",
-                animation: "slide-from-top"
-            });
 		}
-		
+		else{
+			SweetAlert.swal({
+				title: "Perhatian",
+				text: "Supplier atau Detail Service tidak boleh kosong",
+				type: "warning",
+				animation: "slide-from-top"
+			});
+		}
+	}
+	
+	$scope.submitDraft = function(){
+		if ($scope.isItemRequestListValid() && $scope.isDeliveryRequestValid($scope.deliveryRequest) && $scope.isSupplierValid() && $scope.edit.itemList == false && $scope.approve.user_id !== undefined && $scope.approve.user_id !== ""  ) {
+			for (var i = 0; i < $scope.itemRequestList.length; i++) {
+				delete $scope.itemRequestList[i].uom_list;
+			}
+			
+			$scope.deliveryRequestList.push($scope.deliveryRequest);
+			
+			var data = {
+				supplier_id: $scope.supplier.vendor_id,
+				currency: $scope.currency,
+				send_email: $scope.edit.sendEmail,
+				supplier_email: $scope.data.supplier_email,
+				delivery_request_list: $scope.deliveryRequestList,
+				item_request_list: $scope.itemRequestList,
+				approver_name: $scope.approve.name,
+				approver_email: $scope.approve.email,
+				approver_id: $scope.approve.user_id,
+				notes: $scope.notes,
+				status: 'D',
+			};
+			
+			PurchaseService.insertDraftService(data).success(function(data){
+				if (data.call_status == 'success') {
+					SweetAlert.swal({
+						title: "Service Request Berhasil Disimpan",
+						text: "Draft disimpan dengan reference " + data.draft_reference,
+						animation: "slide-from-top",
+					});
+				}
+			})
+			.error(function(data){
+				console.log(data);
+			});
+		}
+		else{
+			SweetAlert.swal({
+				title: "Perhatian",
+				text: "Supplier atau Detail Service tidak boleh kosong",
+				type: "warning",
+				animation: "slide-from-top"
+			});
+		}
 	}
 	
 	$scope.sumTotal = function(){
@@ -389,4 +433,37 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 		
 		return total;
 	}
+	
+	$scope.setNotes = function(notes){
+		$scope.notes = notes;
+	}
+	
+	$scope.displayOrderNotes = function() {
+		var pass_data = {
+			note: $scope.notes,
+		};
+		
+		var modalInstance = $modal.open({
+			templateUrl: 'modal_order_notes',
+			controller: 'OrderNotesModalCtrl',
+			size: 'lg',
+			scope: $scope,
+			resolve: {
+				passed_data: function () {
+					return pass_data;
+				}
+			}
+		});
+	}
+});
+
+app.controller('OrderNotesModalCtrl', function ($scope, $modalInstance, $state) {
+	$scope.saveOrderNotes = function () {
+		$scope.setNotes($scope.notes);
+		$modalInstance.dismiss('close');
+	};
+	
+	$scope.closeModal = function () {
+		$modalInstance.dismiss('close');
+	};
 });

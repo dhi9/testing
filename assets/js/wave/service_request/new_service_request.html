@@ -16,12 +16,12 @@
 <div class="container-fluid container-fullw">
     
 	<div class="row">
-		<div class="col-lg-12">
+		<div class="col-lg-6">
 			<form class="form-inline">
 				<div class="form-group">
 					<label for="txtSearchCustomer"><h5>Cari Supplier &nbsp;</h5></label>
 					<div class="input-group">
-						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" />
+						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" autocomplete="off"/>
 						<span class="input-group-btn">
 							<button type="button" class="btn btn-primary" ng-click="searchSupplier(supplierName)">
 									<i class="fa fa-search"></i>
@@ -30,6 +30,14 @@
 					</div>
 				</div>
 			</form>
+		</div>
+		<div class="col-lg-6">
+			<form class="form-inline pull-right">
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="displayOrderNotes()">
+					<span>Order Notes</span>
+				</button>
+			</form>
+			<br/>
 		</div>
 	</div>
   
@@ -318,6 +326,10 @@
 			<span>Submit Service Request</span>
 			<i class="glyph-icon icon-plus"></i>
 		</button>
+		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitDraft()">
+			<span>Simpan Draft</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>
 	</div>
     
 	<div ng-show="is_order_saved">
@@ -372,6 +384,28 @@
 				</table>
 			</div>
 			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
+		</div>
+	</script>
+	
+	<script type="text/ng-template" id="modal_order_notes">
+		<div class="modal-header">
+			<h3 class="modal-title">Order Notes</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<form class="form-horizontal">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<div class="col-sm-12">
+								<textarea class="form-control" rows="3" ng-model="notes"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			
+			<button class="btn btn-primary" ng-click="saveOrderNotes(notes)">Simpan Order Notes</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
 		</div>
 	</script>
                                 

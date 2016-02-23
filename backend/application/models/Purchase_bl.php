@@ -136,7 +136,8 @@ class Purchase_bl extends CI_Model {
 			'draft_creator' => $this->session->userdata('user_id'),
 			'draft_data' => $json,
 			'draft_approver' =>$data['approver_id'],
-			'type' => 'S'
+			'type' => 'S',
+			'status' => $data['status'],
 		);
 		$draft_id = $this->purchase_model->insert_draft_requests($insert);
 		
