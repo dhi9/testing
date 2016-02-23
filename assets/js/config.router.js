@@ -1095,6 +1095,17 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 				label: 'LAPORAN STOCK'
 			}
 		})
+		.state('app.report.inventory_report', {
+			url:'/inventory_report/:order_reference',
+			templateUrl: "assets/js/wave/inventory_report/inventory_report.html",
+			resolve: loadSequence('inventoryReportController', 'ngTable', 'itemService', 'siteService', 'inventoryService', 'categoryFactory', 'itemFactory'),
+			title: "Laporan Stock",
+			data : { logged_on_only: true, role: '' },
+			ncyBreadcrumb: {
+				label: 'LAPORAN INVENTORY'
+			}
+		})
+
 	.state('app.overall', {
 		url:'/overall',
 		templateUrl: "assets/views/overall_view.html",

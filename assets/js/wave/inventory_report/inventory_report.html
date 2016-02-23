@@ -1,0 +1,103 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Laporan Inventory</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="InventoryReportController">  
+
+	<div class="container-fluid container-fullw">
+        <div class="row">
+            <div class="form-group">
+                <label for="text" class="col-sm-1 control-label">Site ID</label>
+                <div class="input-group">
+                    <select class="form-control" ng-model="search.site_id"
+                            ng-options="site.site_id as site.site_name for site in siteList"></select>
+                            
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-alt btn-hover btn-primary" ng-click="displayCustomerListModal()">
+                                <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="form-group">
+                <label for="text" class="col-sm-1 control-label">Lokasi</label>
+                <div class="input-group">
+                    <select class="form-control" ng-model="search.location_id"
+                        ng-options="storage.storage_id as storage.storage_name for storage in storageList"></select>
+
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-alt btn-hover btn-primary" ng-click="displayCustomerListModal()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                
+                    <!--    <input type="text" class="form-control" ng-model="tag_input"
+                                typeahead="tag.tag_name as tag.tag_name for tag in tagList | filter:$viewValue | limitTo:20">
+                    -->
+                </div>
+               
+
+                
+            </div>
+        </div>
+        <br>
+        
+        <div class="col-md-3 pull-right" p>
+                    <button class="btn btn-primary" ng-click="applyFilter()">Cari</button>
+                    <button class="btn btn-primary pull-right" ng-click="exportToCSV()">Export to CSV</button>
+                </div>
+        <br>
+
+       
+
+		<br/>
+		<div class="table-responsive">
+			<table class="table" ng-table="stockTableParams">
+				<tr ng:repeat="stock in $data | filter: search.$">
+					<td data-title="'SiteID'" sortable="'site_name'">{{ stock.site_id}}</td>
+
+                <!--
+                    <td data-title="'Site'" sortable="'site_name'">{{ stock.site_name}}</td>
+					<td data-title="'Tipe'" sortable="'tipe'">{{ stock.item_tipe}}</td>
+                -->
+					<td data-title="'Kategori'" sortable="'kategori'">{{ stock.item_name}}</td>
+					
+                    <td data-title="'Kode Barang (SKU)'" sortable="'kode_barang'">{{ stock.item_code }}</td>
+					
+                    <td data-title="'Nama Barang'" sortable="'item_name'">{{ stock.item_code }}</td>
+                    <td data-title="'Batch'" sortable="'batch'">{{ stock.bin_name }}</td>
+                    <td data-title="'Lokasi'" sortable="'lokasi'">{{ stock.storage_name }}</td>
+
+                    <td data-title="'UOM Dasar'" sortable="'item_unit'">{{ stock.item_unit}}</td>
+					<td data-title="'Tersedia'" sortable="'quantity'">{{ stock.quantity}}</td>
+					<td data-title="'Quality'" sortable="'quality'">{{ stock.quality}}</td>
+					<td data-title="'Block'" sortable="''">{{ stock.block_status }}</td>
+					<td data-title="'Konsinyasi'" sortable="'consignment'">{{ stock.consignment}}</td>
+					<td data-title="'Proses Pengadaan'" sortable="''">{{  }}</td>
+					<td data-title="'Sales Order'" sortable="''">{{  }}</td>
+			<!--		<td class="col-sm-1">
+                        <button class="btn btn-primary" ui-sref="app.inventory.stock_status_detail ({item_code : '{{stock.item_code}}', attributes : '{{stock.attributes.link}}', site_reference : '{{stock.site_reference}}'})">Details</button>
+                    </td>       -->
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- End of Customer Row -->
+
+
+
+<!-- end: YOUR CONTENT HERE -->
