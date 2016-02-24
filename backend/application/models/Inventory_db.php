@@ -323,34 +323,30 @@ class Inventory_db extends CI_Model {
 	}
 	public function get_stock_display_by_filter($data)
 	{
-		/*
-		return $this->db
-			// ->select('is.*, u.username as opname_creator, s.site_name,')
-			 ->from('inventory_stocks is')
-			 ->join('sites s', 's.site_id = is.site_id')
-			 ->join('items i', 'i.item_code = is.item_code')
-		->get();
-		*/
-		return $this->db->query("
-					SELECT	*, COUNT(tag_id) as tags, COLUMN_JSON(attributes) as attributes
-					FROM inventory_stocks
-					LEFT JOIN
-						sites ON sites.site_id=inventory_stocks.site_id
-					LEFT JOIN
-						storage_locations ON storage_locations.storage_id=inventory_stocks.storage_id
-					LEFT JOIN
-						bin_locations ON bin_locations.bin_id=inventory_stocks.bin_id	
-					LEFT JOIN
-						item_tags ON item_tags.item_code=inventory_stocks.item_code
-					WHERE 
-						item_tags.status = 'A'
-					AND 
-						inventory_stocks.site_id = '".$data['site_id']."'
-					AND 
-						item_tags.tag_id IN (".implode(',', $data['tags']).")
-					GROUP BY inventory_stocks.inventory_stock_id
-					HAVING tags >= ".$data['count_tags']."	 
-				");
+		//$this->db->select("*, COUNT(it.tag_id) as tags, COLUMN_JSON(inven.attributes) as attributes");
+		if($data['count_tags'] > 0){
+			$this->db->select("*, COUNT(it.tag_id) as tags, COLUMN_JSON(inven.attributes) as attributes");
+		}else{
+			$this->db->select("*, COLUMN_JSON(inven.attributes) as attributes");
+		}
+		$this->db->from("inventory_stocks inven");
+		$this->db->join("sites s", "s.site_id = inven.site_id", "left");
+		$this->db->join("storage_locations sl", "sl.storage_id = inven.storage_id", "left");
+		$this->db->join("bin_locations b", "b.bin_id = inven.bin_id", "left");
+		if($data['count_tags'] > 0){
+			$this->db->join("item_tags it", "it.item_code = inven.item_code", "left");
+			$this->db->where("it.status", "A");
+			$this->db->where_in("it.tag_id", array(implode(',', $data['tags'])));
+		}
+		if($data['site_id'] != 0){
+			$this->db->where("inven.site_id", $data['site_id']);
+		}
+		
+		$this->db->group_by("inven.inventory_stock_id");
+		if($data['count_tags'] > 0){
+			$this->db->having("tags >= ".$data['count_tags']."");
+		}
+		return $this->db->get();
 	}
 	
 	public function get_stock_movements($site_id, $start_date, $end_date)
