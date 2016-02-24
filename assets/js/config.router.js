@@ -1086,7 +1086,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			}
 		})
 		.state('app.report.stock_report', {
-			url:'/stock_report/:order_reference',
+			url:'/stock_report',
 			templateUrl: "assets/js/wave/stock_report/stock_report.html",
 			resolve: loadSequence('stockReportController', 'ngTable', 'itemService', 'siteService'),
 			title: "Laporan Stock",
@@ -1103,6 +1103,26 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			data : { logged_on_only: true, role: '' },
 			ncyBreadcrumb: {
 				label: 'LAPORAN INVENTORY'
+			}
+		})
+		.state('app.report.stock_report_detail', {
+			url:'/stock_report_detail/:site_id',
+			params: {
+				date_from: null,
+				date_to: null,
+				items: null
+			},
+			templateUrl: "assets/js/wave/stock_report/stock_report_detail.html",
+			controller: function($scope, $stateParams) {
+				$scope.date_from = $stateParams.date_from;
+				$scope.date_to = $stateParams.date_to;
+				$scope.items = $stateParams.items;
+			},
+			resolve: loadSequence('stockReportDetailController', 'ngTable', 'itemService', 'siteService'),
+			title: "Laporan Stock",
+			data : { logged_on_only: true, role: '' },
+			ncyBreadcrumb: {
+				label: 'LAPORAN STOCK'
 			}
 		})
 
