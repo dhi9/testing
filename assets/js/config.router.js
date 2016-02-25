@@ -199,7 +199,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		})
 		.state('app.purchase.purchase_discussion', {
 			url:'/purchasediscussion',
-			templateUrl: "assets/js/wave/purchase_request/purchase_discussion_list.html",
+			templateUrl: "assets/js/wave/purchase_discussion/purchase_discussion_list.html",
 			resolve: loadSequence('ngTable', 'purchaseDiscussionListController', 'purchaseService'),
 			title: "Purchase Discussion",
 			data : { logged_on_only: true, role: '' },
@@ -209,7 +209,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		})
 		.state('app.purchase.purchase_item_discussion_detail', {
 			url:'/purchaseitemdiscussiondetail/:reference',
-			templateUrl: "assets/js/wave/purchase_request/purchase_item_discussion_detail.html",
+			templateUrl: "assets/js/wave/purchase_discussion/purchase_item_discussion_detail.html",
 			resolve: loadSequence('ngTable', 'purchaseItemDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory',
             'itemFactory', 'attributeFactory', 'siteService'),
 			title: "Purchase Discussion",
@@ -220,7 +220,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		})
 		.state('app.purchase.purchase_service_discussion_detail', {
 			url:'/purchaseservicediscussiondetail/:reference',
-			templateUrl: "assets/js/wave/purchase_request/purchase_service_discussion_detail.html",
+			templateUrl: "assets/js/wave/purchase_discussion/purchase_service_discussion_detail.html",
 			resolve: loadSequence('ngTable', 'purchaseServiceDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory', 'itemFactory', 'attributeFactory', 'siteService'),
 			title: "Purchase Discussion",
 			data : { logged_on_only: true, role: '' },
