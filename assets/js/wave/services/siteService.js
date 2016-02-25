@@ -20,6 +20,11 @@ app.service('SiteService', function($http, apiUrl, $window) {
 	this.getSiteConsignmentList = function(){
 		return $http.get(url + 'siteapi/get_site_consignment_list');
 	}
+    
+    this.getSiteNonConsignmentList = function(){
+		return $http.get(url + 'siteapi/get_site_non_consignment_list');
+	}
+    
 	this.getSiteConsignmentListByCustomerId = function(customerId){
 		return $http.get(url + 'siteapi/get_site_consignment_list_by_customer_id/' + customerId);
 	}

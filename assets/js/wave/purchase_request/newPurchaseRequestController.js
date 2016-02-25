@@ -25,7 +25,25 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 			$scope.siteList = data.site_list;
 		}
 	});
-	
+    
+    
+    $scope.siteConsignmentList = [];
+	SiteService.getSiteConsignmentList().success(function(data){
+		if (data.call_status == "success") {
+			$scope.siteConsignmentList = data.site_list;
+		}
+	});
+    
+    $scope.siteNonConsignmentList = [];
+    SiteService.getSiteNonConsignmentList().success(function(data){
+        if (data.call_status == "success") {
+            $scope.siteNonConsignmentList = data.site_list;
+        }
+    })
+    
+    console.log($scope.siteConsignmentList);
+    
+    
 	$scope.attributeList = AttributeFactory.attributeActiveList;
 	AttributeFactory.getAttributeActiveList().then(function(){
 		$scope.attributeList = AttributeFactory.attributeActiveList;

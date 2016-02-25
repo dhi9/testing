@@ -46,6 +46,15 @@ class Site_db extends CI_Model {
 			->where('customer_id', NULL)
 			->get();
 	}
+    
+    public function get_site_non_consignment_list()
+	{
+		return $this->db->from('sites')
+			->where('consignment', '0')
+			->where('customer_id', NULL)
+			->get();
+	}
+    
 	public function get_site_consignment_list_by_customer_id($customerId)
 	{
 		return $this->db->from('sites')
