@@ -379,7 +379,7 @@ app.controller('PurchaseItemDiscussionDetailController', function($filter, $scop
 			PurchaseService.updateDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
-						title: "Draft Purchase Request Berhasil Disimpan",
+						title: "Purchase Request Berhasil Diupdate",
 						//text: "Draft disimpan dengan reference " + data.draft_reference,
 						type: "success",
 						animation: "slide-from-top"

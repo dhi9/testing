@@ -343,6 +343,7 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 					SweetAlert.swal({
 						title: "Service Request Berhasil Disimpan",
 						text: "Draft disimpan dengan reference " + data.draft_reference,
+						type: "success",
 						animation: "slide-from-top",
 					});
 				}
@@ -386,8 +387,9 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 			PurchaseService.insertDraftService(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
-						title: "Service Request Berhasil Disimpan",
-						text: "Draft disimpan dengan reference " + data.draft_reference,
+						title: "Service Request Berhasil Disimpan ke Purchase Discussion",
+						//text: "Draft disimpan dengan reference " + data.draft_reference,
+						type: "success",
 						animation: "slide-from-top",
 					});
 				}

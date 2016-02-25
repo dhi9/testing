@@ -1,6 +1,5 @@
 app.controller('PurchaseServiceDiscussionDetailController', function($filter, $scope, $http, $modal, $stateParams, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService, VendorFactory) {
 	var draftReference = $stateParams.reference;
-	$scope.draftReference = draftReference;
 	
 	PurchaseService.getDraftByDraftReference(draftReference).success(function(data){
 		if (data.call_status == "success") {
@@ -370,6 +369,7 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 					SweetAlert.swal({
 						title: "Service Request Berhasil Disimpan",
 						text: "Draft disimpan dengan reference " + data.draft_reference,
+						type: "success",
 						animation: "slide-from-top",
 					});
 				}
@@ -414,8 +414,9 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 			PurchaseService.updateDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
-						title: "Service Request Berhasil Disimpan",
-						text: "Draft disimpan dengan reference " + data.draft_reference,
+						title: "Service Request Berhasil Diupdate",
+						//text: "Draft disimpan dengan reference " + data.draft_reference,
+						type: "success",
 						animation: "slide-from-top",
 					});
 				}

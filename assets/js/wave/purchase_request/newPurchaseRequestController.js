@@ -317,11 +317,12 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 				notes: $scope.notes,
 				status: 'D',
 			};
+			
 			PurchaseService.insertDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
-						title: "Draft Purchase Request Berhasil Disimpan",
-						text: "Draft disimpan dengan reference " + data.draft_reference,
+						title: "Purchase Request Berhasil Disimpan ke Purchase Discussion",
+						//text: "Draft disimpan dengan reference " + data.draft_reference,
 						type: "success",
 						animation: "slide-from-top"
 					});
