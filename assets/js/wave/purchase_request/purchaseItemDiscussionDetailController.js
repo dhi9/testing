@@ -8,6 +8,7 @@ app.controller('PurchaseItemDiscussionDetailController', function($filter, $scop
 			VendorFactory.getVendorById(draft.supplier_id).then(function(){
 				$scope.supplier = VendorFactory.vendor;
 			});
+			
 			$scope.itemRequestList = draft.item_request_list;
 			
 			for (var i = 0; i < draft.delivery_request_list.length; i++) {

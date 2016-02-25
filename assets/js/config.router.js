@@ -218,6 +218,16 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 				label: 'BARU'
 			}
 		})
+		.state('app.purchase.purchase_service_discussion_detail', {
+			url:'/purchaseservicediscussiondetail/:reference',
+			templateUrl: "assets/js/wave/purchase_request/purchase_service_discussion_detail.html",
+			resolve: loadSequence('ngTable', 'purchaseServiceDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory', 'itemFactory', 'attributeFactory', 'siteService'),
+			title: "Purchase Discussion",
+			data : { logged_on_only: true, role: '' },
+			ncyBreadcrumb: {
+				label: 'BARU'
+			}
+		})
 		.state('app.purchase.new_purchase_request', {
 			url:'/buatpurchaserequest',
 			templateUrl: "assets/js/wave/purchase_request/new_purchase_request.html",
