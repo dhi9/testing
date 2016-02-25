@@ -355,19 +355,21 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 				supplier_id: $scope.supplier.vendor_id,
 				currency: $scope.currency,
 				send_email: $scope.edit.sendEmail,
-        supplier_email: $scope.data.supplier_email,
+				supplier_email: $scope.data.supplier_email,
 				delivery_request_list: $scope.deliveryRequestList,
 				item_request_list: $scope.itemRequestList,
 				approver_name: $scope.approve.name,
 				approver_email: $scope.approve.email,
 				approver_id: $scope.approve.user_id,
+				notes: $scope.notes,
+				status: 'A',
 			};
 			
 			PurchaseService.insertDraftService(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
 						title: "Service Request Berhasil Disimpan",
-                        text: "Draft disimpan dengan reference " + data.draft_reference,
+						text: "Draft disimpan dengan reference " + data.draft_reference,
 						animation: "slide-from-top",
 					});
 				}
@@ -375,15 +377,61 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 			.error(function(data){
 				console.log(data);
 			});
-		}else{
-			SweetAlert.swal({
-                title: "Perhatian",
-                text: "Supplier atau Detail Service tidak boleh kosong",
-                type: "warning",
-                animation: "slide-from-top"
-            });
 		}
-		
+		else{
+			SweetAlert.swal({
+				title: "Perhatian",
+				text: "Supplier atau Detail Service tidak boleh kosong",
+				type: "warning",
+				animation: "slide-from-top"
+			});
+		}
+	}
+	
+	$scope.submitDraft = function(){
+		if ($scope.isItemRequestListValid() && $scope.isDeliveryRequestValid($scope.deliveryRequest) && $scope.isSupplierValid() && $scope.edit.itemList == false && $scope.approve.user_id !== undefined && $scope.approve.user_id !== ""  ) {
+			for (var i = 0; i < $scope.itemRequestList.length; i++) {
+				delete $scope.itemRequestList[i].uom_list;
+			}
+			
+			$scope.deliveryRequestList.push($scope.deliveryRequest);
+			
+			var data = {
+				supplier_id: $scope.supplier.vendor_id,
+				currency: $scope.currency,
+				send_email: $scope.edit.sendEmail,
+				supplier_email: $scope.data.supplier_email,
+				delivery_request_list: $scope.deliveryRequestList,
+				item_request_list: $scope.itemRequestList,
+				approver_name: $scope.approve.name,
+				approver_email: $scope.approve.email,
+				approver_id: $scope.approve.user_id,
+				notes: $scope.notes,
+				status: 'D',
+				draft_reference: draftReference,
+			};
+			
+			PurchaseService.updateDraftPurchase(data).success(function(data){
+				if (data.call_status == 'success') {
+					SweetAlert.swal({
+						title: "Service Request Berhasil Disimpan",
+						text: "Draft disimpan dengan reference " + data.draft_reference,
+						animation: "slide-from-top",
+					});
+				}
+			})
+			.error(function(data){
+				console.log(data);
+			});
+		}
+		else{
+			SweetAlert.swal({
+				title: "Perhatian",
+				text: "Supplier atau Detail Service tidak boleh kosong",
+				type: "warning",
+				animation: "slide-from-top"
+			});
+		}
 	}
 	
 	$scope.sumTotal = function(){
