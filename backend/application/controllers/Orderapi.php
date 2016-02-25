@@ -1733,6 +1733,48 @@ public function sales_invoice($order_id){
 		//}
 	}
 
+	public function payment_term($customer_id){
+		$PaymentTermCompanyDetail = $this->company_db->get_company()->row();
+
+		$this->db->where('customer_id', $customer_id);
+		$query = $this->db->get('sales_invoices')->result_array();
+		
+		$this->db->where('order_id', $query['order_id']);
+		$amount = $this->db->get('order_items')->result_array();
+
+
+
+		$PaymentTermCompanyDetail->img = "<img src='".$PaymentTermCompanyDetail->delivery_image."'>";
+
+
+		$data['PaymentTermCompanyDetail'] = $PaymentTermCompanyDetail;
+		$data['DataPaymentTermReceipt'] = $query;
+		$data['DataAmountPaymentTermReceipt'] = $amount;
+		
+
+		$filename = "CONSIGNMENT ORDER";
+	
+		$pdfFilePath = FCPATH."/docs/".$filename.".pdf";
+		//if (file_exists($pdfFilePath) == FALSE) {
+			ini_set('memory_limit','-1');
+			ini_set('max_execution_time', 600);
+			$html = $this->load->view('pdf-payment-term-receipt', $data, true);
+			 
+			$this->load->library('pdf');
+			$pdf = $this->pdf->load('','A4',9,'dejavusans');
+			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
+			$pdf->WriteHTML($html); 
+			ob_clean();
+		//	$pdf->Output($request_reference.".pdf", 'D');
+			$pdf->Output($request_reference.".pdf", 'F');
+			$pdf->Output();
+			//force_download($filename.".pdf","./docs/".$filename.".pdf");
+			
+			
+		//}
+
+	}
+
 	
 
 

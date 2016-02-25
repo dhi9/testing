@@ -33,4 +33,11 @@ class Stock_movement_bl extends CI_Model {
 			$this->stock_movement_db->insert_stock_movement($insert_stock_movement);
 		}
 	}
+	
+	public function get_stock_report($data){
+		if(!empty($data['searchItem'])){
+			$data['searchItem'] = explode("-", $data['searchItem']);
+		}
+		return $this->stock_movement_db->get_stock_movement_list_by_search($data)->result_array();
+	}
 }

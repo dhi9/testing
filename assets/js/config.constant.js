@@ -148,6 +148,8 @@ app.constant('JS_REQUIRES', {
 				'newDeliveryListController': 'assets/js/wave/delivery/newDeliveryListController.js',
 				'newDeliveryController': 'assets/js/wave/delivery/newDeliveryController.js',
 				'stockReportController': 'assets/js/wave/stock_report/stockReportController.js',
+				'stockReportDetailController': 'assets/js/wave/stock_report/stockReportDetailController.js',
+				'inventoryReportController': 'assets/js/wave/inventory_report/inventoryReportController.js',
 				'purchaseDiscussionListController': 'assets/js/wave/purchase_request/purchaseDiscussionListController.js',
 				'purchaseItemDiscussionDetailController': 'assets/js/wave/purchase_request/purchaseItemDiscussionDetailController.js',
 				'purchaseServiceDiscussionDetailController': 'assets/js/wave/purchase_request/purchaseServiceDiscussionDetailController.js',

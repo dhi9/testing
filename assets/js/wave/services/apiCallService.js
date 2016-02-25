@@ -1,4 +1,4 @@
-app.service('ApiCallService', function ($http, apiUrl) {
+app.service('ApiCallService', function ($http, apiUrl, $window) {
 
 		this.hostname = apiUrl;
 		
@@ -380,5 +380,30 @@ this.getDeliveryItemsByDeliveryId = function(delivery_id) {
 
 	this.getStockReport = function(search) {
 		return $http.post(this.hostname+'reportapi/get_stock_report', search);
+	}
+
+
+	this.exportStockReport = function(json){
+		//return $http.post(url + 'create_pdf' , requestReference);
+
+		var reportForm = document.createElement("form");
+		reportForm.target = "Map";
+		reportForm.method = "POST"; // or "post" if appropriate
+		reportForm.action = this.hostname + "reportapi/export_stock_report";
+
+		var reportInput = document.createElement("input");
+		reportInput.type = "text";
+		reportInput.name = "json";
+		var string_json = JSON.stringify(json);
+		reportInput.value = string_json;
+		reportForm.appendChild(reportInput);
+
+		document.body.appendChild(reportForm);
+
+		reportForm.submit();
+
+		//var download = $window.open(this.hostname + 'export_stock_report/',"location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes");
+		//download.history.pushState("blank", "blank", "blank");
+		//							( STRING, TITLE, URL)
 	}
 });

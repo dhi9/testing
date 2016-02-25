@@ -1,0 +1,128 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Laporan Stock</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="StockReportDetailController">
+
+	<div class="container-fluid container-fullw bg-white">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3" align="center">
+				<h3>Laporan Stock Untuk : {{report.site.site_reference}}</h3>
+				<span> Tanggal :  {{report.date_from}}</span>
+				<span> Ke : {{report.date_to}}</span>
+			</div>
+			<div class="col-md-3">
+				<form class="form-horizontal" ng-submit="submitSearch()">
+					<button class="btn btn-primary pull-right" ng-click="exportStockReport()">Export CVS</button>
+				</form>
+			</div>
+		</div>
+		<style>
+			table thead tr {background: #eee}
+		</style>
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-responsive table-bordered " ng-repeat="s in stockReport">
+					<thead class="thead-inverse">
+						<tr>
+							<th colspan="4">
+								{{s.item_code}} -  {{s.attributes}}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<th colspan="3">Stock Awal</th>
+						<th>{{s.quantity_start | number:0}} - {{s.uom}}</th>
+					</tr>
+					</tbody>
+					<tbody>
+						<tr>
+							<th colspan="4">Transaksi Stock</th>
+						</tr>
+					</tbody>
+					<tbody ng-repeat="i in s.items">
+						<tr>
+							<td>{{i.document_reference}}</td>
+							<td>{{i.type}}</td>
+							<td>{{i.type_name}}</td>
+							<td>{{i.base_uom_quantity}} - {{i.uom}}</td>
+						</tr>
+					</tbody>
+					<tbody>
+						<tr>
+							<th colspan="3">Stock Akhir</th>
+							<th>{{s.quantity_end | number:0}} - {{s.uom}}</th>
+						</tr>
+					</tbody>
+					<br>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/ng-template" id="modal_site_list">
+		<div class="modal-header">
+			<h3 class="modal-title">Site Detail</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="site in $data | filter: filter" ng-class="{ 'info': site.selected }">
+						<td data-title="'Kode Barang'" sortable="'site_reference'">{{ site.site_reference }}</td>
+						<td data-title="'Nama Barang'" sortable="'site_name'">{{ site.site_name }}</td>
+						<td class="col-md-2">
+							<button class="btn btn-alt btn-hover btn-primary" ng-if="!site.selected" ng-click="site.selected=true">Pilih</button>
+							<button class="btn btn-alt btn-hover btn-danger" ng-if="site.selected" ng-click="site.selected=false">Batal</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+
+
+	<script type="text/ng-template" id="modal_item_list">
+		<div class="modal-header">
+			<h3 class="modal-title">Item Detail</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="item in $data | filter: filter" ng-class="{ 'info': item.selected }">
+						<td data-title="'Kode Barang'" sortable="'item_code'">{{ item.item_code }}</td>
+						<td data-title="'Nama Barang'" sortable="'item_name'">{{ item.item_name }}</td>
+						<td data-title="'Tipe Barang'" sortable="'item_unit'">{{ item.item_unit }}</td>
+						<td data-title="'Tipe Persediaan'" sortable="'item_type'">{{ item.item_type }}</td>
+						<td data-title="'Grup'" sortable="'item_subtype'">{{ item.item_subtype }}</td>
+						<td>
+							<button class="btn btn-alt btn-hover btn-primary" ng-click="setItemCode(item.item_code)">Pilih</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button
+		</div>
+	</script>
+
+
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->
+
+

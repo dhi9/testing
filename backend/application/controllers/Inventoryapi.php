@@ -292,9 +292,11 @@ class Inventoryapi extends CI_Controller {
 		$json = file_get_contents('php://input');
 		$data = json_decode($json, true);
 		$array_tag = array();
-		foreach($data['tag'] as $tag){
-			$tag_id = $this->item_db->get_tag($tag['tag_name'])->row()->tag_id;
-			array_push($array_tag, $tag_id);
+		if(!empty($data['tag'])){
+			foreach($data['tag'] as $tag){
+				$tag_id = $this->item_db->get_tag($tag['tag_name'])->row()->tag_id;
+				array_push($array_tag, $tag_id);
+			}
 		}
 		$array_get = array (
 			'site_id' => $data['site_id'],
@@ -304,6 +306,7 @@ class Inventoryapi extends CI_Controller {
 		$feedback= array(
 				'call_status' => 'success',
 				'stock_display_list' => $this->inventory_db->get_stock_display_by_filter($array_get)->result_array(),
+				'tags' => $array_tag,
 		);
 		echo json_encode($feedback);
 	}
@@ -434,16 +437,24 @@ class Inventoryapi extends CI_Controller {
 			//Discount
 			$start = DateTime::createFromFormat('d/m/Y', $item['discount_start_date']);
 			$end = DateTime::createFromFormat('d/m/Y', $item['discount_end_date']);
-			$item['discount_start_date'] = $start->format('d/m/Y');
-			$item['discount_end_date'] = $end->format('d/m/Y');
+			if(!empty($start) && !empty($end)){
+				$item['discount_start_date'] = $start->format('d/m/Y');
+				$item['discount_end_date'] = $end->format('d/m/Y');
+			}else{
+				$item['discount_start_date'] = null;
+				$item['discount_end_date'] = null;
+			}
 			switch ($item['discount_type']){
 				case "Normal":
+				case "N":
 					break;
 				case "Persen":
+				case "P":
 					$item['discount_perc_start_date'] = date_create($item['discount_start_date']);
 					$item['discount_perc_end_date'] = date_create($item['discount_end_date']);
 					break;
 				case "Tetap":
+				case "T":
 					$item['discount_special_price_start_date'] = date_create($item['discount_start_date']);
 					$item['discount_special_price_end_date'] = date_create($item['discount_end_date']);
 					break;
@@ -522,5 +533,4 @@ class Inventoryapi extends CI_Controller {
 		
 		echo json_encode($feedback);
 	}
-	
 }

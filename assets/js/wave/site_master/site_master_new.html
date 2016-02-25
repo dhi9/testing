@@ -20,7 +20,7 @@
 					<div class="form-group">
 						<label for="txtAddress" class="col-sm-1 control-label">Site ID</label>
 						<div class="col-sm-11">
-							<input type="text" class="form-control" id="txtAddress" ng-model="site.site_reference" />
+							<input type="text" class="form-control" id="txtAddress" ng-model="site.site_reference" ng-change="site.site_reference = site.site_reference.split(' ').join('')" />
 						</div>
 					</div>
 					<div class="form-group">
