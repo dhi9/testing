@@ -2,7 +2,7 @@
 <section id="page-title" class="padding-top-15 padding-bottom-15" >
 	<div class="row">
 		<div class="col-sm-7">
-			<h1 class="mainTitle">Buat Service Request</h1>
+			<h1 class="mainTitle">Purchase Discussion Detail</h1>
 		</div>
 		<div ncy-breadcrumb></div>
 	</div>
@@ -11,7 +11,7 @@
 
 <!-- start: YOUR CONTENT HERE -->
 
-<div ng-controller="NewServiceRequestController">  
+<div ng-controller="PurchaseItemDiscussionDetailController">  
 
 <div class="container-fluid container-fullw">
     
@@ -71,7 +71,7 @@
 									</div>
 								</div>
 							</div>
-								
+							
 							<div class="row">
 								<div class="col-md-8">
 									<div class="form-group">
@@ -90,7 +90,7 @@
 									</div>
 								</div>
 							</div>
-								
+							
 							<div class="row">
 								<div class="col-md-8">
 									<div class="form-group">
@@ -109,7 +109,7 @@
 									</div>
 								</div>
 							</div>
-								
+							
 							<div class="row">
 								<div class="col-md-8">
 									<div class="form-group">
@@ -134,19 +134,19 @@
 			</div>
 		</div>
 	</div>
-    
+	
 	<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-white" id="pnlItems">
 				<div class="panel-heading border-light">
-					<h4 class="panel-title text-primary">Detail Service Request</h4>
+					<h4 class="panel-title text-primary">Detail Purchase Request</h4>
 					<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
 				</div>
 				<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
 					<div class="panel-body">
 						<div>
 							<label for="currency">Mata Uang <span class="symbol required"></span></label>
-							<select class="cs-skin-slide" id="currency" ng-model="currency">
+							<select class="cs-skin-slide" id="currency" ng-model="currency" >
 								<option value="idr">IDR</option>
 								<option value="usd">USD</option>
 								<option value="eur">EUR</option>
@@ -154,20 +154,38 @@
 						</div>
 						<br/>
 						<tabset class="tabbable">
-							<tab heading="Umum">	
+							<tab heading="Umum">
 								<table class="table" ng-show="edit.itemList">
 									<thead>
 										<tr>
-											<th class="col-md-6">Nama Jasa <span class="symbol required"></span></th>
+											<th class="col-md-3">Kode Barang (SKU) <span class="symbol required"></span></th>
+											<th class="col-md-3">Nama Barang</th>
+											<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
 											<th class="col-md-1">Jumlah <span class="symbol required"></span></th>
+											<th class="col-md-1">Unit <span class="symbol required"></span></th>
 											<th>Catatan</th>
 											<th></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr ng-repeat="itemRequest in itemRequestList">
-											<td><input type="text" class="form-control" ng-model="itemRequest.item_name" /></td>
+											<td>
+												<div class="input-group">
+													<input type="text" class="form-control" ng-model="itemRequest.item_code" typeahead="itemLU.item_code as itemLU.item_code + ' - ' + itemLU.item_name for itemLU in itemList | filter:$viewValue | limitTo:30" typeahead-on-select="setItemCodeRequest($index, itemRequest.item_code)">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-primary" ng-click="displayItemDetailModal($index)"><i class="fa fa-search"></i>
+														</button>
+													</span>
+												</div>
+											</td>
+											<td>{{ itemRequest.item_name }}</td>
+											<td ng-repeat="attribute in attributeList">
+												<select ng-model="itemRequest.attributes[attribute.attribute_name]" ng-options="attrib.attribute_item as attrib.attribute_item for attrib in attribute.attribute_items"></select>
+											</td>
 											<td><input type="number" class="form-control" placeholder="0" ng-model="itemRequest.quantity" min="1" /></td>
+											<td>
+												<select ng-model="itemRequest.item_unit" ng-options="uom.alternative_uom as uom.alternative_uom for uom in itemRequest.uom_list"></select>
+											</td>
 											<td><input type="text" class="form-control" id="" placeholder="" ng-model="itemRequest.remark" /></td>
 											<td>
 												<a ng-hide="itemRequestList.length <= 1" ng-click="removeItemRequest(itemRequest)" class="text-danger">
@@ -183,15 +201,21 @@
 								<table class="table" ng-show="!edit.itemList">
 									<thead>
 										<tr>
-											<th class="col-md-6">Nama Jasa <span class="symbol required"></span></th>
+											<th class="col-md-3">Kode Barang (SKU) <span class="symbol required"></span></th>
+											<th class="col-md-3">Nama Barang</th>
+											<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
 											<th class="col-md-1">Jumlah <span class="symbol required"></span></th>
+											<th class="col-md-1">Unit <span class="symbol required"></span></th>
 											<th>Catatan</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr ng-repeat="itemRequest in itemRequestList">
-											<td>{{ itemRequest.item_name }}</td>
-											<td>{{ itemRequest.quantity | number }}</td>
+											<td>{{ itemRequest.item_code }}</td>
+											<td>{{ lookupItemName(itemRequest.item_code); }}</td>
+											<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemRequest.attributes[attribute.attribute_name]}}</td>
+											<td>{{ itemRequest.quantity | number:2 }}</td>
+											<td>{{ itemRequest.item_unit }}</td>
 											<td>{{ itemRequest.remark }}</td>
 										</tr>
 									</tbody>
@@ -203,7 +227,7 @@
 										<i class="glyph-icon icon-plus"></i>
 									</button>
 									<button class="btn btn-alt btn-hover btn-primary" ng-click="addItemRequest()" ng-disabled="!isItemRequestListValid()">
-										<i class="ti-plus"></i> <span> Tambah Jasa</span>
+										<i class="ti-plus"></i> <span> Tambah Barang</span>
 									</button>
 								</div>
 								
@@ -215,12 +239,13 @@
 								</div>
 							</tab>
 							
-							<tab heading="Harga">	
+							<tab heading="Harga">
 								<table class="table">
 									<thead>
 										<tr>
-											<th>Nama jasa</th>
+											<th>Nama Barang</th>
 											<th class="col-md-1">Jumlah</th>
+											<th class="col-md-1">Unit</th>
 											<th class="col-md-2">Mata Uang</th>
 											<th class="col-md-2">Cost/Unit <span class="symbol required"></span></th>
 											<th class="col-md-1">Total</th>
@@ -228,55 +253,61 @@
 									</thead>
 									<tbody>
 										<tr ng-repeat="itemRequest in itemRequestList">
-											<td>{{ itemRequest.item_name }}</td>
-											<td>{{ itemRequest.quantity | number }}</td>
+											<td>{{ lookupItemName(itemRequest.item_code); }}</td>
+											<td>{{ itemRequest.quantity | number:2 }}</td>
+											<td>{{ itemRequest.item_unit }}</td>
 											<td>{{ currency | uppercase}}</td>
-											<td><input type="number" class="form-control" placeholder="0" ng-model="itemRequest.cost" min="1" ng-disabled="edit.itemList" maxlength="15"/></td>
+											<td><input type="number" class="form-control" placeholder="0" ng-model="itemRequest.cost" min="1" maxlength="15" ng-disabled="edit.itemList"/></td>
 											<td>{{ itemRequest.quantity*itemRequest.cost || 0 | number:2}}</td>
 										</tr>
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="3"></td>
+											<td colspan="4"></td>
+											<td>PPN {{hack.tax}}%</td>
+											<td>{{ hack.totalTax() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="4"></td>
 											<td>Total</td>
-											<td>{{ sumTotal() || 0 | number:2 }}</td>
+											<td>{{ priceAfterTax() || 0 | number:2 }}</td>
 										</tr>
 									</tfoot>
 								</table>
 							</tab>
 							
 							<tab heading="Pengiriman" ng-click="getApprover()">
-								<div class="panel panel-white" id="panel1" >
+								<div class="panel panel-white" id="panel1" ng-repeat="deliveryRequest in deliveryRequestList">
 									<div class="panel-heading">
 										<h4 class="panel-title text-primary">
-												Permintaan Pengerjaan
+											Permintaan Pengiriman {{ $index+1 }}
 										</h4>
 										<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
 									</div>
-									<div collapse="panel1" class="panel-wrapper">
+									<div collapse="panel1" ng-init="panel1=(delivery.status=='X')" class="panel-wrapper">
 										<div class="panel-body">
 											<form class="form-horizontal">
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label for="txtDeliveryDate" class="col-sm-4 control-label">Tanggal Pengerjaan <span class="symbol required"></label>
+															<label for="txtDeliveryDate{{ $index + 1 }}" class="col-sm-4 control-label">Tanggal Pengiriman <span class="symbol required"></label>
 															<div class="col-sm-8">
-																<input type="date" id="txtDeliveryDate" name="input" ng-model="deliveryRequest.date" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" ng-disabled="deliveryRequest.editMode" required/>
+																<input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" ng-model="deliveryRequest.date" ng-disabled="!deliveryRequest.editMode" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" required/>
 															</div>
 														</div>
 															
 														<div class="form-group">
 															<label for="txtCustomerName" class="col-sm-4 control-label">Alamat <span class="symbol required"></label>
 															<div class="col-sm-8">
-																<select class="cs-skin-slide" ng-model="deliveryRequest.site_id" ng-options="a.site_id as a.site_reference for a in siteList" ng-disabled="deliveryRequest.editMode" ></select>
+																<select class="cs-skin-slide" ng-model="deliveryRequest.site_id" ng-options="a.site_id as a.site_reference for a in siteList" ng-disabled="!deliveryRequest.editMode"></select>
 															</div>
 														</div>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label for="txtCustomerName" class="col-sm-2 control-label">Catatan Pengerjaan</label>
+															<label for="txtCustomerName" class="col-sm-2 control-label">Catatan Pengiriman</label>
 															<div class="col-sm-10">
-																<textarea class="form-control autosize msd-elastic: \n;" ng-model="deliveryRequest.remark" ng-disabled="deliveryRequest.editMode"></textarea>
+																<textarea class="form-control autosize msd-elastic: \n;" ng-model="deliveryRequest.remark"  ng-disabled="!deliveryRequest.editMode"></textarea>
 															</div>
 														</div>
 													</div>
@@ -290,21 +321,85 @@
 												-->
 											</form>
 											<br/><br/>
-                                            <button class="btn btn-alt btn-hover btn-primary" ng-show="!deliveryRequest.editMode" ng-click="deliveryRequest.editMode = true" ng-disabled="!isDeliveryRequestValid(deliveryRequest)">
-                                                <span>Ok</span>
-                                                <i class="glyph-icon icon-plus"></i>
-                                            </button>
-
-                                            <button class="btn btn-alt btn-hover btn-primary" ng-show="deliveryRequest.editMode" ng-click="deliveryRequest.editMode = false">
-                                                <span>Edit</span>
-                                                <i class="glyph-icon icon-plus"></i>
-                                            </button>	
+											<!-- TABLE if edit mode -->
+											<div class="table-responsive">
+												<table class="table table-bordered" ng-show="deliveryRequest.editMode">
+													<thead>
+														<tr>
+															<th>Nama Barang</th>
+															<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
+															<th>Jumlah Order</th>
+															<th>Jumlah Belum Direncanakan</th>
+															<th>Jumlah Permohonan Pengiriman <span class="symbol required"></th>
+															<th class="col-md-1">Unit</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="itemDeliveryRequest in deliveryRequest.item_delivery_request_list">
+															<td>{{ itemDeliveryRequest.item_name }}</td>
+															<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
+															<td>{{ itemDeliveryRequest.requested_quantity | number:2 }}</td>
+															<td>{{ itemDeliveryRequest.remaining | number:2 }}</td>
+															<td><input type="number" class="form-control" placeholder="0" ng-model="itemDeliveryRequest.quantity" min="0"/></td>
+															<td>{{ itemDeliveryRequest.item_unit }}</td>
+														</tr>
+													</tbody>
+												</table>
+												
+												<table class="table table-bordered" ng-show="!deliveryRequest.editMode">
+													<thead>
+														<tr>
+															<th>Nama Barang</th>
+															<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
+															<th>Jumlah Order</th>
+															<th>Jumlah Belum Direncanakan</th>
+															<th>Jumlah Permohonan Pengiriman <span class="symbol required"></th>
+															<th class="col-md-1">Unit</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="itemDeliveryRequest in deliveryRequest.item_delivery_request_list">
+															<td>{{ itemDeliveryRequest.item_name }}</td>
+															<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
+															<td>{{ itemDeliveryRequest.requested_quantity | number:2 }}</td>
+															<td>{{ itemDeliveryRequest.remaining | number:2 }}</td>
+															<td>{{ itemDeliveryRequest.quantity | number:2 }}</td>
+															<td>{{ itemDeliveryRequest.item_unit }}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											
+											<button class="btn btn-alt btn-hover btn-primary" ng-show="deliveryRequest.editMode" ng-disabled = '!isDeliveryRequestValid(deliveryRequest)' ng-click="checkDeliveryRequest(deliveryRequest)">
+												<span>Ok</span>
+												<i class="glyph-icon icon-plus"></i>
+											</button>
+											<button class="btn btn-alt btn-hover btn-primary" ng-show="!deliveryRequest.editMode" ng-click="deliveryRequest.editMode = true">
+												<span>Edit</span>
+												<i class="glyph-icon icon-plus"></i>
+											</button>
+											<button class="btn btn-alt btn-hover btn-danger" ng-click="removeDeliveryRequest($index)" >
+												<span>Hapus</span>
+												<i class="glyph-icon icon-plus"></i>
+											</button>
+											
+											<div ng-show="delivery.HLPFIELD_is_edit_mode && delivery.status != 'X'">
+												<button class="btn btn-alt btn-hover btn-danger" ng-click="cancelDeliveryRequest(delivery)" >
+													<span>Batalkan Rencana Pengiriman</span>
+													<i class="glyph-icon icon-plus"></i>
+												</button>
+											</div>
 										</div>
 									</div>
 								</div>
+								
+								<button type="button" class="btn btn-alt btn-hover btn-primary" ng-disabled="!isAllowedToAddNewDeliveryRequest()" ng-click="addDeliveryRequest()">
+									<i class="ti-plus"></i> <span>Tambah Permintaan Pengiriman</span>
+								</button>
 							</tab>
-							<tab heading="Lainnya">	
-								<p>SR ini akan membutuhkan persetujuan dari: <input type="text" class="form-control" value="{{ sumTotal() }}" ng-model="approve.name"  disabled  /></p>
+							
+							<tab heading="Lainnya">
+								<p>PR ini akan membutuhkan persetujuan dari: <input type="text" class="form-control" disabled value="{{ sumTotal() }}" ng-model="approve.name" /></p>
 								<input type="text" class="form-control" style="display: none" ng-model="approve.email" />
 								<input type="text" class="form-control" style="display: none" ng-model="approve.user_id" />
 								<div class="checkbox clip-check check-primary">
@@ -323,23 +418,23 @@
 	</div>
 	
 	<div ng-show="!is_order_saved">
-		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitServiceRequest()">
-			<span>Submit Service Request</span>
+		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitPurchaseRequest(supplier)">
+			<span>Submit Purchase Request</span>
 			<i class="glyph-icon icon-plus"></i>
 		</button>
-		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitDraft()">
+		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitDraftPurchase(supplier)">
 			<span>Simpan Draft</span>
 			<i class="glyph-icon icon-plus"></i>
 		</button>
 	</div>
-    
+	
 	<div ng-show="is_order_saved">
 		<button class="btn btn-alt btn-hover btn-primary" ng-click="clearPage()"  >
 			<span>Buat Baru</span>
 			<i class="glyph-icon icon-plus"></i>
 		</button>
 	</div>
-		
+	
 	<script type="text/ng-template" id="modal_item_detail">
 		<div class="modal-header">
 			<h3 class="modal-title">Item Detail</h3>
@@ -387,7 +482,7 @@
 			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
 		</div>
 	</script>
-	
+
 	<script type="text/ng-template" id="modal_order_notes">
 		<div class="modal-header">
 			<h3 class="modal-title">Order Notes</h3>
@@ -409,7 +504,7 @@
 			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
 		</div>
 	</script>
-                                
+
 </div><!-- End of Customer Row -->
 
 </div>

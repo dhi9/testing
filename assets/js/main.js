@@ -69,4 +69,4 @@ function (cfpLoadingBarProvider) {
 
 //app.value('apiUrl', 'http://localhost/vontis-rt/backend/index.php/');
 
-app.value('apiUrl', 'http://localhost:8080/vontis-rt/backend/index.php/');
+app.value('apiUrl', 'http://localhost/vontis-rt/backend/index.php/');

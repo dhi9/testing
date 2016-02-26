@@ -1,0 +1,43 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Purchase Discussion</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="PurchaseDiscussionListController">  
+
+<div class="container-fluid container-fullw">
+	<div class="row">
+		<div class="col-lg-12">
+			<div ng-show="!table_loading">
+				<input type="text" class="form-control" ng-model="search.$" placeholder="Filter"/>
+				<br/>
+				<div class="table-responsive">
+					<table class="table" ng-table="purchaseTableParams">
+						<tr ng:repeat="purchaseRequest in $data | filter: search">
+							<td data-title="'Tipe'" sortable="'typeLabel'">{{ purchaseRequest.typeLabel }}</td>
+							<td data-title="'Nama Vendor'" sortable="'vendor_name'">{{ purchaseRequest.vendor.vendor_name }}</td>
+							<td data-title="'Update Terakhir'" sortable="'date_updated'">{{ purchaseRequest.date_updated | date:'dd-MM-yyyy'}}</td>
+							<td class="col-md-1">
+								<button class="btn btn-primary" ng-if="purchaseRequest.type == 'P'" ui-sref="app.purchase.purchase_item_discussion_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+								<button class="btn btn-primary" ng-if="purchaseRequest.type == 'S'" ui-sref="app.purchase.purchase_service_discussion_detail({reference: '{{ purchaseRequest.draft_reference }}'})">Detail</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div ng-show="table_loading">Loading...</div>
+		</div>
+	</div>
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

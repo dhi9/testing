@@ -1,10 +1,39 @@
-app.controller('NewPurchaseRequestController', function($filter, $scope, $http, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, PurchaseFactory, ItemFactory, VendorFactory, AttributeFactory, SiteService) {
+app.controller('PurchaseItemDiscussionDetailController', function($filter, $scope, $http, $modal, $stateParams, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, PurchaseFactory, ItemFactory, VendorFactory, AttributeFactory, SiteService) {
+	var draftReference = $stateParams.reference;
+	
+	PurchaseService.getDraftByDraftReference(draftReference).success(function(data){
+		if (data.call_status == "success") {
+			var draft = JSON.parse(data.draft_purchase.draft_data);
+			
+			VendorFactory.getVendorById(draft.supplier_id).then(function(){
+				$scope.supplier = VendorFactory.vendor;
+			});
+			
+			$scope.itemRequestList = draft.item_request_list;
+			
+			for (var i = 0; i < draft.delivery_request_list.length; i++) {
+				draft.delivery_request_list[i].date = new Date(draft.delivery_request_list[i].date);
+			}
+			$scope.deliveryRequestList = draft.delivery_request_list;
+			
+			$scope.supplier.vendor_id = draft.supplier_id;
+			$scope.currency = draft.currency;
+			$scope.hack.tax = draft.tax;
+			$scope.edit.sendEmail = draft.send_email;
+			$scope.data.supplier_email = draft.supplier_email;
+			$scope.approve.name = draft.approver_name;
+			$scope.approve.email = draft.approver_email;
+			$scope.approve.user_id = draft.approver_id;
+			$scope.notes = draft.notes;
+			
+			PurchaseFactory.itemRequestList = draft.item_request_list;
+			PurchaseFactory.deliveryRequestList = draft.delivery_request_list;
+		}
+	});
 	
 	$scope.edit = {};
 	$scope.edit.itemList = true;
 	$scope.edit.sendEmail = false;
-	
-	PurchaseFactory.clearData();
 	$scope.notes = "";
 	$scope.supplier = [];
 	$scope.data = [];
@@ -17,7 +46,32 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 	$scope.itemRequestList = PurchaseFactory.itemRequestList;
 	ItemFactory.itemRequestList = $scope.itemRequestList;
 	
+	$scope.supplierList = VendorFactory.activeVendorList;
+	
+	$scope.userList = PurchaseFactory.userList;
 	$scope.approve = PurchaseFactory.approve;
+	
+	$scope.hack = {};
+	$scope.hack.tax = 0;
+	
+	$scope.predicatBy = function (prop){
+		return function(a,b){
+			if( a[prop] > b[prop]){
+				return 1;
+			}else if( a[prop] < b[prop] ){
+				return -1;
+			}
+			return 0;
+		}
+	}
+	
+	PurchaseFactory.getUsersList().then(function(){
+		$scope.userList = PurchaseFactory.userList;
+		$scope.userList.sort( $scope.predicatBy("po_max_eur") );
+		$scope.approverIDR =  $scope.userList.sort($scope.predicatBy("po_max_idr"));//$filter('orderBy')($scope.userList, 'po_max_idr', false);
+		$scope.approverUSD =  $scope.userList.sort($scope.predicatBy("po_max_usd"));//$filter('orderBy')($scope.userList, 'po_max_usd', false);
+		$scope.approverEUR =  $scope.userList.sort($scope.predicatBy("po_max_eur"));//$filter('orderBy')($scope.userList, 'po_max_eur', false);
+	});
 	
 	$scope.siteList = [];
 	SiteService.getSiteList().success(function(data){
@@ -25,25 +79,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 			$scope.siteList = data.site_list;
 		}
 	});
-    
-    
-    $scope.siteConsignmentList = [];
-	SiteService.getSiteConsignmentList().success(function(data){
-		if (data.call_status == "success") {
-			$scope.siteConsignmentList = data.site_list;
-		}
-	});
-    
-    $scope.siteNonConsignmentList = [];
-    SiteService.getSiteNonConsignmentList().success(function(data){
-        if (data.call_status == "success") {
-            $scope.siteNonConsignmentList = data.site_list;
-        }
-    })
-    
-    console.log($scope.siteConsignmentList);
-    
-    
+	
 	$scope.attributeList = AttributeFactory.attributeActiveList;
 	AttributeFactory.getAttributeActiveList().then(function(){
 		$scope.attributeList = AttributeFactory.attributeActiveList;
@@ -66,8 +102,8 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 		$scope.itemList = ItemFactory.itemList;
 	});
 	
-	VendorFactory.getVendorList().then(function(){
-		$scope.supplierList = VendorFactory.vendorList;
+	VendorFactory.getActiveVendorList().then(function(){
+		$scope.supplierList = VendorFactory.activeVendorList;
 	});
 	
 	WarehouseService.getAddressList().success(function(data){
@@ -87,8 +123,8 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 	$scope.addItemRequest();
 	
 	$scope.checkDeliveryRequest = function(deliveryRequest){
-        //PurchaseFactory.checkDeliveryRequest(deliveryRequest);
-
+		//PurchaseFactory.checkDeliveryRequest(deliveryRequest);
+		
 		var itemDeliveryRequest = deliveryRequest.item_delivery_request_list;
 		var valid = true;
 		
@@ -104,7 +140,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 		else {
 			SweetAlert.swal({
 				title: "Jumlah Permohonan Pengiriman Tidak Boleh Lebih Besar Dari Jumlah Belum Direncanakan",
-				type: "error", 
+				type: "error",
 				animation: "slide-from-top"
 			});
 		}
@@ -158,19 +194,19 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 		var valid = $scope.isItemRequestListValid();
 		var isDuplicate = $scope.isDuplicateItems ();
 		if(valid){
-				if(!isDuplicate){
-					$scope.edit.itemList = false;
-				}else{
-					SweetAlert.swal({
-						title: "Perhatian!",
-						text: "Ada barang duplikat.",
-						type: "warning",
-						//confirmButtonColor: "#DD6B55",
-						confirmButtonText: "Ok",
-						closeOnConfirm: true,
-						animation: "slide-from-top"
-					});
-				}
+			if(!isDuplicate){
+				$scope.edit.itemList = false;
+			}else{
+				SweetAlert.swal({
+					title: "Perhatian!",
+					text: "Ada barang duplikat.",
+					type: "warning",
+					//confirmButtonColor: "#DD6B55",
+					confirmButtonText: "Ok",
+					closeOnConfirm: true,
+					animation: "slide-from-top"
+				});
+			}
 		}else{
 			SweetAlert.swal({
 				title: "Perhatian!",
@@ -280,6 +316,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 		if(valid){
 			for (var i = 0; i < $scope.itemRequestList.length; i++) {
 				delete $scope.itemRequestList[i].uom_list;
+				$scope.itemRequestList[i].attributes = JSON.stringify($scope.itemRequestList[i].attributes);
 			}
 			for (var j = 0; j < $scope.deliveryRequestList.length; j++) {
 				for (var k = 0; k < $scope.deliveryRequestList[j].item_delivery_request_list.length; k++) {
@@ -298,12 +335,14 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 				approver_id: $scope.approve.user_id,
 				notes: $scope.notes,
 				status: 'A',
+				draft_reference: draftReference,
 			};
-			PurchaseService.insertDraftPurchase(data).success(function(data){
+			
+			PurchaseService.updateDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
 						title: "Draft Purchase Request Berhasil Disimpan",
-						text: "Draft disimpan dengan reference " + data.draft_reference,
+						//text: "Draft disimpan dengan reference " + data.draft_reference,
 						type: "success",
 						animation: "slide-from-top"
 					});
@@ -334,12 +373,13 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 				approver_id: $scope.approve.user_id,
 				notes: $scope.notes,
 				status: 'D',
+				draft_reference: draftReference,
 			};
 			
-			PurchaseService.insertDraftPurchase(data).success(function(data){
+			PurchaseService.updateDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
-						title: "Purchase Request Berhasil Disimpan ke Purchase Discussion",
+						title: "Purchase Request Berhasil Diupdate",
 						//text: "Draft disimpan dengan reference " + data.draft_reference,
 						type: "success",
 						animation: "slide-from-top"
@@ -388,20 +428,11 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 	};
 	
 	$scope.displayOrderNotes = function() {
-		var pass_data = {
-			note: $scope.notes,
-		};
-		
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_order_notes',
 			controller: 'OrderNotesModalCtrl',
 			size: 'lg',
 			scope: $scope,
-			resolve: {
-				passed_data: function () {
-					return pass_data;
-				}
-			}
 		});
 	}
 });
@@ -416,11 +447,11 @@ app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_d
 		{
 			page: 1, // show first page
 			count: 10 // count per page
-		}, 
+		},
 		{
 			total: $scope.itemList.length, // length of data
 			getData: function ($defer, params) {
-				var filteredData = $filter('filter') ($scope.itemList, $scope.filter); 
+				var filteredData = $filter('filter') ($scope.itemList, $scope.filter);
 				var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData;
 				params.total(orderedData.length);
 				$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -450,7 +481,6 @@ app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_d
 	
 	$scope.setItemCode = function(item) {
 		$scope.setItemRequest(index, item);
-		
 		$modalInstance.dismiss('close');
 	};
 	
@@ -459,7 +489,7 @@ app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_d
 	};
 });
 
-app.controller('OrderNotesModalCtrl', function ($scope, $modalInstance, $state) {
+app.controller('OrderNotesModalCtrl', function ($scope, $modalInstance, $state, SweetAlert) {
 	$scope.saveOrderNotes = function () {
 		$scope.setNotes($scope.notes);
 		$modalInstance.dismiss('close');

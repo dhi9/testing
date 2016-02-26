@@ -1,4 +1,30 @@
-app.controller('NewServiceRequestController', function($filter, $scope, $http, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService) {
+app.controller('PurchaseServiceDiscussionDetailController', function($filter, $scope, $http, $modal, $stateParams, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService, VendorFactory) {
+	var draftReference = $stateParams.reference;
+	
+	PurchaseService.getDraftByDraftReference(draftReference).success(function(data){
+		if (data.call_status == "success") {
+			var draft = JSON.parse(data.draft_purchase.draft_data);
+			
+			VendorFactory.getVendorById(draft.supplier_id).then(function(){
+				$scope.supplier = VendorFactory.vendor;
+			});
+			
+			for (var i = 0; i < draft.delivery_request_list.length; i++) {
+				draft.delivery_request_list[i].date = new Date(draft.delivery_request_list[i].date);
+			}
+			$scope.deliveryRequest = draft.delivery_request_list[0];
+			
+			$scope.currency = draft.currency;
+			$scope.edit.sendEmail = draft.send_email;
+			$scope.data.supplier_email = draft.supplier_email;
+			$scope.itemRequestList = draft.item_request_list;
+			$scope.approve.name = draft.approver_name;
+			$scope.approve.email = draft.approver_email;
+			$scope.approve.user_id = draft.approver_id;
+			$scope.notes = draft.notes;
+		}
+	});
+	
   $scope.edit = {};
 	$scope.edit.itemList = true;
 	$scope.edit.sendEmail = false;
@@ -382,12 +408,13 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 				approver_id: $scope.approve.user_id,
 				notes: $scope.notes,
 				status: 'D',
+				draft_reference: draftReference,
 			};
 			
-			PurchaseService.insertDraftService(data).success(function(data){
+			PurchaseService.updateDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
-						title: "Service Request Berhasil Disimpan ke Purchase Discussion",
+						title: "Service Request Berhasil Diupdate",
 						//text: "Draft disimpan dengan reference " + data.draft_reference,
 						type: "success",
 						animation: "slide-from-top",

@@ -31,14 +31,14 @@
 				</div>
 			</form>
 		</div>
-        <div class="col-lg-6">
-            <form class="form-inline pull-right">
-                <button class="btn btn-alt btn-hover btn-primary" ng-click="displayOrderNotes()">
-                    <span>Order Notes</span>
-                </button>
-            </form>
-            <br/>
-        </div>
+		<div class="col-lg-6">
+			<form class="form-inline pull-right">
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="displayOrderNotes()">
+					<span>Order Notes</span>
+				</button>
+			</form>
+			<br/>
+		</div>
 	</div>
   
 	<br/>
@@ -71,7 +71,7 @@
 									</div>
 								</div>
 							</div>
-								
+							
 							<div class="row">
 								<div class="col-md-8">
 									<div class="form-group">
@@ -90,7 +90,7 @@
 									</div>
 								</div>
 							</div>
-								
+							
 							<div class="row">
 								<div class="col-md-8">
 									<div class="form-group">
@@ -109,7 +109,7 @@
 									</div>
 								</div>
 							</div>
-								
+							
 							<div class="row">
 								<div class="col-md-8">
 									<div class="form-group">
@@ -134,7 +134,7 @@
 			</div>
 		</div>
 	</div>
-    
+	
 	<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-white" id="pnlItems">
@@ -203,7 +203,7 @@
 										<tr>
 											<th class="col-md-3">Kode Barang (SKU) <span class="symbol required"></span></th>
 											<th class="col-md-3">Nama Barang</th>
-                                            <th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
+											<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
 											<th class="col-md-1">Jumlah <span class="symbol required"></span></th>
 											<th class="col-md-1">Unit <span class="symbol required"></span></th>
 											<th>Catatan</th>
@@ -230,7 +230,6 @@
 										<i class="ti-plus"></i> <span> Tambah Barang</span>
 									</button>
 								</div>
-								
 								<div ng-show="!edit.itemList">
 									<button class="btn btn-alt btn-hover btn-primary" ng-click="edit.itemList = true">
 										<span>Edit</span>
@@ -274,7 +273,7 @@
 								<div class="panel panel-white" id="panel1" ng-repeat="deliveryRequest in deliveryRequestList">
 									<div class="panel-heading">
 										<h4 class="panel-title text-primary">
-												Permintaan Pengiriman {{ $index+1 }}
+											Permintaan Pengiriman {{ $index+1 }}
 										</h4>
 										<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
 									</div>
@@ -289,7 +288,7 @@
 																<input type="date" id="txtDeliveryDate{{ $index + 1 }}" name="input" ng-model="deliveryRequest.date" ng-disabled="!deliveryRequest.editMode" placeholder="yyyy-MM-dd" min="{{ getCurrentDateString(); }}" required/>
 															</div>
 														</div>
-															
+														
 														<div class="form-group">
 															<label for="txtCustomerName" class="col-sm-4 control-label">Alamat <span class="symbol required"></label>
 															<div class="col-sm-8">
@@ -321,8 +320,8 @@
 													<thead>
 														<tr>
 															<th>Nama Barang</th>
-                                                            <th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
-                                                            <th>Jumlah Order</th>
+															<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
+															<th>Jumlah Order</th>
 															<th>Jumlah Belum Direncanakan</th>
 															<th>Jumlah Permohonan Pengiriman <span class="symbol required"></th>
 															<th class="col-md-1">Unit</th>
@@ -331,8 +330,8 @@
 													<tbody>
 														<tr ng-repeat="itemDeliveryRequest in deliveryRequest.item_delivery_request_list">
 															<td>{{ itemDeliveryRequest.item_name }}</td>
-                                                            <td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
-                                                            <td>{{ itemDeliveryRequest.requested_quantity | number }}</td>
+															<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
+															<td>{{ itemDeliveryRequest.requested_quantity | number }}</td>
 															<td>{{ itemDeliveryRequest.remaining | number }}</td>
 															<td><input type="number" class="form-control" placeholder="0" ng-model="itemDeliveryRequest.quantity" min="0"/></td>
 															<td>{{ itemDeliveryRequest.item_unit }}</td>
@@ -344,8 +343,8 @@
 													<thead>
 														<tr>
 															<th>Nama Barang</th>
-                                                            <th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
-                                                            <th>Jumlah Order</th>
+															<th ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{attribute.attribute_name}}</th>
+															<th>Jumlah Order</th>
 															<th>Jumlah Belum Direncanakan</th>
 															<th>Jumlah Permohonan Pengiriman <span class="symbol required"></th>
 															<th class="col-md-1">Unit</th>
@@ -354,8 +353,8 @@
 													<tbody>
 														<tr ng-repeat="itemDeliveryRequest in deliveryRequest.item_delivery_request_list">
 															<td>{{ itemDeliveryRequest.item_name }}</td>
-                                                            <td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
-                                                            <td>{{ itemDeliveryRequest.requested_quantity | number }}</td>
+															<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">{{itemDeliveryRequest.attributes[attribute.attribute_name]}}</td>
+															<td>{{ itemDeliveryRequest.requested_quantity | number }}</td>
 															<td>{{ itemDeliveryRequest.remaining | number }}</td>
 															<td>{{ itemDeliveryRequest.quantity | number }}</td>
 															<td>{{ itemDeliveryRequest.item_unit }}</td>
@@ -392,7 +391,7 @@
 								</button>
 							</tab>
 							
-							<tab heading="Lainnya">	
+							<tab heading="Lainnya">
 								<p>PR ini akan membutuhkan persetujuan dari: <input type="text" class="form-control" disabled value="{{ sumTotal() }}" ng-model="approve.name" /></p>
 								<input type="text" class="form-control" style="display: none" ng-model="approve.email" />
 								<input type="text" class="form-control" style="display: none" ng-model="approve.user_id" />
@@ -414,6 +413,10 @@
 	<div ng-show="!is_order_saved">
 		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitPurchaseRequest(supplier)">
 			<span>Submit Purchase Request</span>
+			<i class="glyph-icon icon-plus"></i>
+		</button>
+		<button class="btn btn-alt btn-hover btn-primary" ng-click="submitDraftPurchase(supplier)">
+			<span>Simpan Draft</span>
 			<i class="glyph-icon icon-plus"></i>
 		</button>
 	</div>
@@ -462,7 +465,6 @@
 						<td data-title="'Nama PIC'" sortable="'pic_name'">{{ customer.pic_name }}</td>
 						<td data-title="'No Telp'" sortable="'phone_number'">{{ customer.phone_number }}</td>
 						<td data-title="'Email'" sortable="'customer_email'">{{ customer.customer_email }}</td>
-						
 						<td>
 							<button class="btn btn-alt btn-hover btn-primary" ng-click="setCustomerIdToSearch(customer.customer_id)">Pilih</button>
 						</td>
@@ -472,28 +474,28 @@
 			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
 		</div>
 	</script>
-
-    <script type="text/ng-template" id="modal_order_notes">
-        <div class="modal-header">
-            <h3 class="modal-title">Order Notes</h3>
-        </div>
-        <div class="modal-body bg-white">
-            <form class="form-horizontal">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <textarea class="form-control" rows="3" ng-model="note"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-            <button class="btn btn-primary" ng-click="saveOrderNotes(notes)">Simpan Order Notes</button>
-            <button class="btn btn-danger" ng-click="closeModal()">Batal</button>
-        </div>
-    </script>
+	
+	<script type="text/ng-template" id="modal_order_notes">
+		<div class="modal-header">
+			<h3 class="modal-title">Order Notes</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<form class="form-horizontal">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<div class="col-sm-12">
+								<textarea class="form-control" rows="3" ng-model="notes"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			
+			<button class="btn btn-primary" ng-click="saveOrderNotes(notes)">Simpan Order Notes</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
 
 </div><!-- End of Customer Row -->
 

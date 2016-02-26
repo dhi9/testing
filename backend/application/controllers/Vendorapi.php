@@ -59,6 +59,16 @@ class Vendorapi extends CI_Controller {
 		echo json_encode($feedback);
 	}
 	
+	public function get_active_vendor_list()
+	{
+		$feedback = array(
+			'call_status' => 'success',
+			'vendor_list' => $this->vendor_db->get_active_vendor_list()->result_array()
+		);
+		
+		echo json_encode($feedback);
+	}
+	
 	public function insert_vendor()
 	{
 		if (! $this->user_model->is_user_logged_in()) {

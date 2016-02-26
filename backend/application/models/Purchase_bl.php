@@ -8,7 +8,7 @@ class Purchase_bl extends CI_Model {
 		// Call the CI_Model constructor
 		parent::__construct();
 		
-		$this->load->model(array('purchase_db', 'inventory_bl'));
+		$this->load->model(array('purchase_db', 'inventory_bl', 'vendor_db'));
 	}
 	
 	public function approve_draft_purchase_item($data)
@@ -114,7 +114,8 @@ class Purchase_bl extends CI_Model {
 			'draft_creator' => $this->session->userdata('user_id'),
 			'draft_data' => $json,
 			'draft_approver' =>$data['approver_id'],
-			'type' => 'P'
+			'type' => 'P',
+			'status' => $data['status'],
 		);
 		$draft_id = $this->purchase_db->insert_draft_requests($insert);
 		
@@ -135,7 +136,8 @@ class Purchase_bl extends CI_Model {
 			'draft_creator' => $this->session->userdata('user_id'),
 			'draft_data' => $json,
 			'draft_approver' =>$data['approver_id'],
-			'type' => 'S'
+			'type' => 'S',
+			'status' => $data['status'],
 		);
 		$draft_id = $this->purchase_model->insert_draft_requests($insert);
 		
@@ -383,5 +385,18 @@ class Purchase_bl extends CI_Model {
 		}
 		
 		return "'".implode("','", $test)."'";
+	}
+	
+	public function get_purchase_discussion_list()
+	{
+		$purchase_list = $this->purchase_db->get_purchase_discussion_list()->result_array();
+		
+		foreach($purchase_list as &$purchase){
+			$draft = json_decode($purchase['draft_data'], true);
+			
+			$purchase['vendor'] = $this->vendor_db->get_vendor_by_id($draft['supplier_id'])->row_array();
+		}
+		
+		return $purchase_list;
 	}
 }
