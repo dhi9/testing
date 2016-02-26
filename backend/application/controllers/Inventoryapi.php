@@ -208,7 +208,7 @@ class Inventoryapi extends CI_Controller {
 					'site_id' => $site_id,
 					'batch_id' => $l['batch_id'],
 					'base_uom' => $l['uom'],
-					'system_quantity' => $l['uom_quantity'],
+					'system_quantity' => $l['base_uom_quantity'],
 					//'remark' => $l['item_code'],
 				);
 				$stock_opname_item = $this->inventory_db->insert_stock_opname_item($insert_stock_opname_item);
