@@ -105,12 +105,10 @@ app.controller('StockMasterListController', function($filter, $scope, $http, Ite
 			//SSN: "A37830"
 		}]
 		var workbook = XlsxExport.exportExpenseReport(sheets);
-		console.log(workbook);
 		var xlsx = wijmo.xlsx.XlsxConverter.exportToFile(workbook, 'VONTIS-STOCK-DATA-EXPORT.xlsx');
 	}
 	$scope.downloadTemplate = function () {
 		var workbook = XlsxExport.downloadTemplate();
-		console.log(workbook);
 		var xlsx = wijmo.xlsx.XlsxConverter.exportToFile(workbook, 'VONTIS-STOCK-TEMPLATE.xlsx');
 	}
 });

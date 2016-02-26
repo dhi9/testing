@@ -71,7 +71,7 @@
 						<tr ng-repeat="dataError in invalidData track by $index"">
 							<td>{{dataError.no}}</td>
 							<td>{{dataError.item_code}}</td>
-							<td>{{dataError.error_messages}}</td>
+							<td>{{dataError.error_messages.join(", ")}}</td>
 						</tr>
 					</tbody>
 				</table>

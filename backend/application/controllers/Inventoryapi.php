@@ -381,11 +381,92 @@ class Inventoryapi extends CI_Controller {
 		echo json_encode($feedback);
 	}
 	public function check_is_data_for_import_stock_valid($data){
+		function validateDate($date)
+		{
+			$d = DateTime::createFromFormat('d/m/Y', $date);
+			return $d && $d->format('d/m/Y') == $date;
+		}
 		// check if item_code is exist
 		$item_insert_valid = array();
 		$item_update_valid = array();
 		$item_invalid = array();
 		foreach($data as $dt){
+			$error_messages = array();
+			
+			if($dt['item_code'] != NULL){
+				$item = $this->item_db->get_item_by_item_code($dt['item_code']);
+				if($dt['action'] == "Baru"){
+					if($item->num_rows() > 0){
+						array_push($error_messages, "Duplicate ArticleID/SKU");
+					}
+				}elseif($dt['action'] == "Ubah"){
+					if($item->num_rows() == 0){
+						array_push($error_messages, "There is no matching ArticleID/SKU's");
+					}
+				}else{
+					array_push($error_messages, "Please define baru/ubah for this item");
+				}
+			}else{
+				array_push($error_messages, "ArticleID/SKU can't be empty");
+			}
+			
+			
+			if($dt['item_name']!= NULL){
+				
+			}else{
+				array_push($error_messages, "Nama can't be empty");
+			}
+			
+			if($dt['sell_price_type']!= NULL){
+				if($dt['sell_price_type'] == "Persen" || $dt['sell_price_type'] == "P"){
+					
+				}elseif($dt['sell_price_type'] == "Tambah"){
+					
+				}elseif($dt['sell_price_type'] == "Tetap"){
+					
+				}else{
+					array_push($error_messages, "Harga Jual must between (Persen/Tambah/Tetap)");
+				}
+			}else{
+				array_push($error_messages, "Nama can't be empty");
+			}
+			
+			if($dt['discount_type'] != NULL){
+				if($dt['discount_type'] == "Normal" || $dt['discount_type'] == "N"){
+					
+				}elseif($dt['discount_type'] == "Persen" || $dt['discount_type'] == "P"){
+
+					if(!validateDate($dt['discount_start_date'])){
+						array_push($error_messages, "Invalid Tgl Diskon Mulai");
+					}
+					if(!validateDate($dt['discount_end_date'])){
+						array_push($error_messages, "Invalid Tgl Diskon Selesai");
+					}
+				}elseif($dt['discount_type'] == "Tetap" || $dt['discount_type'] == "T"){
+					if(!validateDate($dt['discount_start_date'])){
+						array_push($error_messages, "Invalid Tgl Diskon Mulai");
+					}
+					if(!validateDate($dt['discount_end_date'])){
+						array_push($error_messages, "Invalid Tgl Diskon Selesai");
+					}
+				}else{
+					array_push($error_messages, "Diskon must between (Normal/Persen/Tetap)");
+				}
+			}
+			
+			
+			$count_error = count($error_messages);
+			if($count_error > 0){
+				$dt['error_messages'] = $error_messages;
+				array_push($item_invalid, $dt);
+			}else{
+				if($dt['action'] == "Baru"){
+					array_push($item_insert_valid, $dt);
+				}else{
+					array_push($item_update_valid, $dt);
+				}
+			}
+			/*
 			if($dt['item_code'] != NULL){
 				$item = $this->item_db->get_item_by_item_code($dt['item_code']);
 				if($dt['action'] == "Baru"){
@@ -410,6 +491,7 @@ class Inventoryapi extends CI_Controller {
 				$dt['error_messages'] = "ArticleID/SKU can't be empty";
 				array_push($item_invalid, $dt);
 			}
+			*/
 		}
 		$return= array(
 			'insert_valid' => $item_insert_valid,
@@ -459,6 +541,7 @@ class Inventoryapi extends CI_Controller {
 					$item['discount_special_price_end_date'] = date_create($item['discount_end_date']);
 					break;
 				default:
+					$item['discount_type'] = "N";
 					break;
 			}
 			unset($item['discount_start_date']);
