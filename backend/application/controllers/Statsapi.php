@@ -8,7 +8,7 @@ class Statsapi extends CI_Controller {
 		// Call the CI_Model constructor
 		parent::__construct();
 		
-		$this->load->model('stats_model');
+		$this->load->model(array('stats_model', 'purchase_db', 'order_db'));
 	}
 	
 	public function get_monthly_stats()
@@ -80,6 +80,19 @@ class Statsapi extends CI_Controller {
 		$feedback = array(
 			"call_status" => "success",
 			'accuracy_data' => $this->delivery_model->count_delivery_requests_accuracy()
+		);
+		
+		echo json_encode($feedback);
+	}
+	
+	public function count_not_completed_data()
+	{
+		$feedback = array(
+			"call_status" => "success",
+			'not_approved_purchase_item' => $this->purchase_db->count_not_approved_purchase_item(),
+			'not_approved_purchase_service' => $this->purchase_db->count_not_approved_purchase_service(),
+			'not_completed_purchase' => $this->purchase_db->count_not_completed_purchase(),
+			'not_completed_order' => $this->order_db->count_not_completed_order(),
 		);
 		
 		echo json_encode($feedback);

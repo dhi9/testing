@@ -1342,4 +1342,14 @@ class Purchaseapi extends CI_Controller {
 		
 		echo json_encode($feedback);
 	}
+	
+	public function get_this_year_purchase_total_price()
+	{
+		$feedback = array(
+			"call_status" => "success",
+			"purchase_total_price" => $this->purchase_bl->get_this_year_purchase_total_price(),
+		);
+		
+		echo json_encode($feedback);
+	}
 }

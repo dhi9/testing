@@ -74,4 +74,8 @@ app.service('InventoryService', function($http, apiUrl) {
 	this.getAttributeValueListByAttributeName = function(data){
 		return $http.get(url + 'get_attribute_value_list_by_attribute_name/' + data);
 	}
+	
+	this.totalTodayStockValue = function(){
+		return $http.get(url + 'total_today_stock_value/');
+	}
 });

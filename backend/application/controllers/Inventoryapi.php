@@ -616,4 +616,15 @@ class Inventoryapi extends CI_Controller {
 		
 		echo json_encode($feedback);
 	}
+	
+	public function total_today_stock_value()
+	{
+		$feedback = array(
+			'call_status' => 'success',
+			'available_stock_value' => $this->inventory_bl->total_today_available_stock_value(),
+			'consignment_stock_value' => $this->inventory_bl->total_today_consignment_stock_value(),
+		);
+		
+		echo json_encode($feedback);
+	}
 }

@@ -52,7 +52,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 	.state('app.dashboard', {
 		url: "/dashboard",
 		templateUrl: "assets/views/dashboard.html",
-		resolve: loadSequence('jquery-sparkline', 'sparkline', 'dashboardCtrl'),
+		resolve: loadSequence('jquery-sparkline', 'sparkline', 'dashboardCtrl', 'purchaseService', 'statsService', 'orderService', 'inventoryService'),
 		title: 'Dashboard',
 		data : { logged_on_only: true, role: 'DASHBOARD' },
 		ncyBreadcrumb: {

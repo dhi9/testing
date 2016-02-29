@@ -337,4 +337,15 @@ class Order_bl extends CI_Model {
 		return $invoice_reference;
 	}
 	
+	public function total_sales_by_order_id($order_id)
+	{
+		$order_item_list = $this->order_db->get_order_item_list_by_order_id($order_id)->result_array();
+		
+		$sum = 0;
+		foreach($order_item_list as $item){
+			$sum += $item['quantity'];
+		}
+		
+		return $sum;
+	}
 }

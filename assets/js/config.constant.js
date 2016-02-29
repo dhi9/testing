@@ -177,6 +177,9 @@ app.constant('JS_REQUIRES', {
 				'vehicleService': 'assets/js/wave/services/vehicleService.js',
 				'userService': 'assets/js/wave/services/userService.js',
 				'dataService': 'vendor/wijmo/scripts/services/dataService.js',
+				'orderService': 'assets/js/wave/services/orderService.js',
+				'statsService': 'assets/js/wave/services/statsService.js',
+				
 
 				//*** Wave Modals
 				'customerModalDirective': 'assets/js/wave/customer_master/customerModalDirective.js',

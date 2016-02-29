@@ -47,51 +47,12 @@
 	</div>
 </section>
 <!-- end: DASHBOARD TITLE -->
-<!-- start: FEATURED BOX LINKS -->
-<div class="container-fluid container-fullw bg-white">
-	<div class="row">
-		<div class="col-sm-4">
-			<div class="panel panel-white no-radius text-center">
-				<div class="panel-body">
-					<span class="fa-stack fa-2x"><a ui-sref="app.order.new_draft_order"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-money fa-stack-1x fa-inverse"></i> </a></span>
-					<h2 class="StepTitle"><a ui-sref="app.order.new_draft_order">Buat Draft Order</a></h2>
-					<p class="text-small">
-						Untuk membuat Draft Order baru.
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="panel panel-white no-radius text-center">
-				<div class="panel-body">
-					<span class="fa-stack fa-2x"><a ui-sref="app.delivery.order_to_deliver"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-truck fa-stack-1x fa-inverse"></i> </a></span>
-					<h2 class="StepTitle"><a ui-sref="app.delivery.order_to_deliver">Atur Pengiriman</a></h2>
-					<p class="text-small">
-						Untuk membuat Surat Jalan dan mengatur pengiriman.
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="panel panel-white no-radius text-center">
-				<div class="panel-body">
-					<span class="fa-stack fa-2x"><a ui-sref="app.delivery.active_delivery"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-road fa-stack-1x fa-inverse"></i> </a></span>
-					<h2 class="StepTitle"><a ui-sref="app.delivery.active_delivery">Update Status</a></h2>
-					<p class="text-small">
-						Untuk menambahkan perkembangan dari pengiriman.
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- end: FEATURED BOX LINKS -->
 <!-- start: FIRST SECTION -->
 <div class="container-fluid container-fullw padding-bottom-10">
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="row">
-				<div class="col-md-7 col-lg-8">
+				<div class="col-md-7 col-lg-7">
 					<div class="panel panel-white no-radius" id="visits">
 						<div class="panel-heading border-light">
 							<h4 class="panel-title"> Statistik </h4>
@@ -113,124 +74,89 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-5 col-lg-4">
+				<div class="col-md-5 col-lg-5">
 					<div class="panel panel-white no-radius">
 						<div class="panel-heading border-light">
-							<h4 class="panel-title"> Status Pengiriman Hari Ini </h4>
+							<h4 class="panel-title"> Total Purchase Order/Service Order dalam Rupiah </h4>
 						</div>
-						<div class="panel-body" ng-controller="DeliveryStatusCtrl">
-							<div>
-								<h3 class="inline-block no-margin">{{ total.a || 0 }}</h3>
-								Dibuat
-								<progressbar value="total.a || 0" class="progress-xs no-radius" type="default"></progressbar>
-							</div>
-							<br/>
-							<div>
-								<h3 class="inline-block no-margin">{{ total.l || 0 }}</h3>
-								Pemuatan
-								<progressbar value="total.l || 0" class="progress-xs no-radius" type="warning"></progressbar>
-							</div>
-							<br/>
-							<div>
-								<h3 class="inline-block no-margin">{{ total.s || 0 }}</h3>
-								Tiba
-								<progressbar value="total.s || 0" class="progress-xs no-radius" type="info"></progressbar>
-							</div>
-							<br/>
-							<div>
-								<h3 class="inline-block no-margin">{{ total.c || 0 }}</h3>
-								Selesai
-								<progressbar value="total.c || 0" class="progress-xs no-radius" type="success"></progressbar>
+						<div class="panel-body" ng-controller="SalesCtrl">
+							<canvas class="tc-chart" tc-chartjs-bar chart-options="options" chart-data="data" chart-legend="chart2"></canvas>
+							<div tc-chartjs-legend chart-legend="chart2" class="inline pull-left legend-xs"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-7 col-lg-7">
+					<div class="panel panel-white no-radius" id="visits">
+						<div class="panel-heading border-light">
+							<h4 class="panel-title"> Penjualan Berdasarkan Barang (10 minggu terakhir) dalam % </h4>
+							<ul class="panel-heading-tabs border-light">
+								<li class="panel-tools">
+									<ct-paneltool tool-refresh="load1"></ct-paneltool>
+								</li>
+							</ul>
+						</div>
+						<div collapse="visits" ng-init="visits=false" class="panel-wrapper" >
+							<div class="panel-body" ng-controller="StockSalesCtrl">
+								<div google-chart chart="chartObject" style="height:250px; width:100%;"></div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div class="col-md-5 col-lg-5">
+					<div class="panel panel-white no-radius">
+						<div class="panel-heading border-light">
+							<h4 class="panel-title">  </h4>
+						</div>
+						<div class="panel-body text-right" ng-controller="NotCompletedCtrl">
+							Jumlah Purchase Request belum disetujui <h3 class="inline-block no-margin"><a ui-sref="app.purchase.approve_purchase_request">{{notApprovedPurchaseItem}}</a></h3>
+							<br/><br/>
+							Jumlah Service Request belum disetujui <h3 class="inline-block no-margin"><a ui-sref="app.purchase.approve_purchase_request">{{notApprovedPurchaseService}}</a></h3>
+							<br/><br/>
+							Jumlah Sales Order belum Goods Issue <h3 class="inline-block no-margin"><a ui-sref="app.order.active_order">{{notCompletedPurchase}}</a></h3>
+							<br/><br/>
+							Jumlah Purchase Order belum Goods Received <h3 class="inline-block no-margin"><a ui-sref="app.purchase.purchase_order_active">{{notCompletedOrder}}</a></h3>
+							<br/><br/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<div class="panel panel-white no-radius" id="visits">
+						<div class="panel-heading border-light">
+							<h4 class="panel-title"> Nilai Stok Barang/Jasa per Hari Ini dalam Rupiah </h4>
+							<ul class="panel-heading-tabs border-light">
+								<li class="panel-tools">
+									<ct-paneltool tool-refresh="load1"></ct-paneltool>
+								</li>
+							</ul>
+						</div>
+						<div collapse="visits" ng-init="visits=false" class="panel-wrapper" >
+							<div class="panel-body" ng-controller="StockTypeCtrl">
+								<div google-chart chart="chartObject" style="height:250px; width:100%;"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="col-md-6 col-lg-6">
+					<div class="panel panel-white no-radius">
+						<div class="panel-heading border-light">
+							<h4 class="panel-title"> Tingkat Akurasi Stock (10 stock take terakhir) dalam % </h4>
+						</div>
+						<div class="panel-body">
+							<div ng-controller="VisitsCtrl" class="height-200">
+								<canvas class="tc-chart" tc-chartjs-line chart-options="options" chart-data="data" chart-legend="chart1" width="100%"></canvas>
+								<div class="margin-top-20">
+									<div tc-chartjs-legend chart-legend="chart1" class="inline pull-left"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>-->
 			</div>
 		</div>
 	</div>
 </div>
 <!-- end: FIRST SECTION -->
-<!-- start: THIRD SECTION -->
-<div class="container-fluid container-fullw padding-bottom-10">
-	<div class="row" >
-		<div class="col-sm-12">
-			<div class="panel panel-white no-radius">
-				<div class="panel-heading border-light">
-					<h4 class="panel-title">Pengiriman</h4>
-				</div>
-				<div class="panel-body no-padding" ng-controller="DisplayDeliveryCtrl">
-					<tabset class="tabbable no-padding no-margin">
-						<tab heading="Pengiriman Hari Ini" class="padding-top-5 padding-left-5">
-							<div class="panel-scroll height-200" perfect-scrollbar wheel-propagation="false" suppress-scroll-x="true">
-								<table class="table no-margin">
-									<thead>
-										<th>Order Reference</th>
-										<th>Delivery Reference</th>
-										<th>Customer Name</th>
-									</thead>
-									<tbody>
-										<tr ng-repeat="delivery in todayDeliveries">
-											<td>{{ delivery.order_reference }}</td>
-											<td>{{ delivery.delivery_reference }}</td>
-											<td>{{ delivery.customer_name }}</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</tab>
-						<tab heading="Jadwal Pengiriman" class="padding-top-5">
-							<div class="panel-scroll height-200" perfect-scrollbar wheel-propagation="false" suppress-scroll-x="true">
-								<table class="table no-margin">
-									<thead>
-										<th>Tanggal Pemuatan</th>
-										<th>Order Reference</th>
-										<th>Delivery Reference</th>
-										<th>Customer Name</th>
-									</thead>
-									<tbody>
-										<tr ng-repeat="delivery in activeDeliveries">
-											<td>{{ delivery.loading_date }}</td>
-											<td>{{ delivery.order_reference }}</td>
-											<td>{{ delivery.delivery_reference }}</td>
-											<td>{{ delivery.customer_name }}</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</tab>
-					</tabset>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- end: THIRD SECTION -->
-<!-- start: SECOND SECTION -->
-<div class="container-fluid container-fullw bg-white">
-	<div class="row">
-		<div class="col-sm-12">
-			<div class="panel panel-white no-radius">
-				<div class="panel-body" ng-controller="NotReturnedDeliveriesCtrl">
-					<div class="partition-light-grey padding-15 text-center margin-bottom-20">
-						<h4 class="no-margin">Surat Jalan Belum Kembali</h4>
-					</div>
-					<table class="table no-margin">
-						<thead>
-							<th>Delivery Reference</th>
-							<th>No.Truk</th>
-							<th>Supir</th>
-						</thead>
-						<tbody>
-							<tr ng-repeat="delivery in deliveries">
-								<td>{{ delivery.delivery_reference }}</td>
-								<td>{{ delivery.truck_code }}</td>
-								<td>{{ delivery.driver_name }}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- end: SECOND SECTION -->

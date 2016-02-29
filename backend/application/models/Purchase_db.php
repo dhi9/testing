@@ -688,4 +688,27 @@ class Purchase_db extends CI_Model {
 			->where('status', 'D')
 		->get('draft_requests');
 	}
+	
+	public function get_this_year_purchase_list()
+	{
+		return $this->db
+			->where("YEAR(date_created) = YEAR(CURDATE())")
+			->where('status', 'C')
+		->get('requests');
+	}
+	
+	public function count_not_approved_purchase_item()
+	{
+		return $this->db->where('type', 'P')->where('status', 'A')->count_all_results('draft_requests');
+	}
+	
+	public function count_not_approved_purchase_service()
+	{
+		return $this->db->where('type', 'S')->where('status', 'A')->count_all_results('draft_requests');
+	}
+	
+	public function count_not_completed_purchase()
+	{
+		return $this->db->where('status !=', 'C')->count_all_results('requests');
+	}
 }

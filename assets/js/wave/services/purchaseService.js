@@ -189,4 +189,8 @@ app.service('PurchaseService', function($http, apiUrl, $window) {
 	this.getPurchaseDiscussionList = function(){
 		return $http.get(url + 'get_purchase_discussion_list');
 	}
+	
+	this.getThisYearPurchaseTotalPrice = function(){
+		return $http.get(url + 'get_this_year_purchase_total_price');
+	}
 });

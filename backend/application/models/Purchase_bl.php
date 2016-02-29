@@ -399,4 +399,56 @@ class Purchase_bl extends CI_Model {
 		
 		return $purchase_list;
 	}
+	
+	public function get_this_year_purchase_total_price()
+	{
+		$purchase_list = $this->purchase_db->get_this_year_purchase_list()->result_array();
+		
+		$item_total_price = 0;
+		$service_total_price = 0;
+		foreach($purchase_list as $purchase){
+			if($purchase['type'] == 'PR'){
+				$item_price = $this->purchase_bl->get_purchase_total_price_by_id($purchase['requests_id']);
+				$item_total_price += $item_price;
+			}
+			else{
+				$service_price = $this->purchase_bl->get_purchase_total_price_by_id($purchase['requests_id']);
+				$service_total_price += $service_price;
+			}
+		}
+		
+		return array($item_total_price, $service_total_price);
+	}
+	
+	public function get_purchase_total_price_by_id($purchase_id)
+	{
+		$purchase = $this->db
+			->where('requests_id', $purchase_id)
+		->get('requests')->row_array();
+		
+		$total_price = 0;
+		
+		if($purchase['type'] == 'PR'){
+			$item_list = $this->db
+				->where('requests_id', $purchase_id)
+			->get('request_items')->result_array();
+			
+			foreach($item_list as $item){
+				$price = $item['quantity'] * $item['cost'];
+				$total_price += $price;
+			}
+		}
+		else{
+			$service_list = $this->db
+				->where('requests_id', $purchase_id)
+			->get('request_services')->result_array();
+			
+			foreach($service_list as $service){
+				$price = $service['quantity'] * $service['cost'];
+				$total_price += $price;
+			}
+		}
+		
+		return $total_price;
+	}
 }

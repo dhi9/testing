@@ -341,4 +341,25 @@ class Order_db extends CI_Model {
 		}
 	}
 	
+	public function count_not_completed_order()
+	{
+		return $this->db->where('status !=', 'C')->count_all_results('orders');
+	}
+	
+	public function total_today_available_stock_value()
+	{
+		$stock_list = $this->db
+			->select('is.item_code, SUM(is.quantity) as quantity, i.value_amount')
+			->from('inventory_stocks as is')
+			->join('items as i', 'i.item_code = is.item_code', 'left')
+			->group_by('is.item_code')
+		->get()->result_array();
+		
+		$total = 0;
+		foreach($stock_list as $stock){
+			$total += $stock['quantity'] * $stock['value_amount'];
+		}
+		
+		return $total;
+	}
 }

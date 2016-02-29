@@ -1774,8 +1774,77 @@ public function sales_invoice($order_id){
 		//}
 
 	}
-
 	
-
-
+	public function total_sales_per_week()
+	{
+		$array_week = array();
+		$array_total = array();
+		$year = date('Y');
+		$week_number_before = date('W');
+		
+		$i = 0;
+		while ($i <= 10) {
+			$week_number = date('W', strtotime("-$i week"));
+			
+			if($week_number_before < $week_number){
+				$year -= 1;
+			}
+			
+			$week = $this->getStartAndEndDate($week_number, $year);
+			
+			$orders = $this->db
+				->select('o.order_id')
+				->from('orders o')
+				->where('o.date_created >=', $week['week_start'])
+				->where('o.date_created <=', $week['week_end'])
+			->get()->result_array();
+			
+			$total = 0;
+			foreach($orders as $order){
+				$total += $this->order_bl->total_sales_by_order_id($order['order_id']);
+			}
+			
+			array_push($array_week, "W".$week_number);
+			array_push($array_total, $total);
+			
+			$week_number_before = $week_number;
+			$i++;
+		}
+		
+		$feedback = array(
+			'call_status' => 'success',
+			'array_week' => array_reverse($array_week),
+			'array_total' => array_reverse($array_total),
+		);
+		
+		echo json_encode($feedback);
+	}
+	
+	function getStartAndEndDate($week, $year)
+	{
+		$dto = new DateTime();
+		$ret['week_start'] = $dto->setISODate($year, $week)->format('Y-m-d');
+		$ret['week_end'] = $dto->modify('+6 days')->format('Y-m-d');
+		return $ret;
+	}
+	
+	public function get_last_10_week()
+	{
+		$date = date('Y-m-d', strtotime("-10 week"));
+		
+		$orders = $this->db
+			->select('item_code, SUM(quantity) as sum')
+			->from('orders o')
+			->join('order_items oi', 'oi.order_id = o.order_id')
+			->where('o.date_created >=', $date)
+			->group_by('item_code')
+		->get()->result_array();
+		
+		$feedback = array(
+			'call_status' => 'success',
+			'stats' => $orders
+		);
+		
+		echo json_encode($feedback);
+	}
 }
