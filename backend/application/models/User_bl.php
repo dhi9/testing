@@ -237,20 +237,13 @@ class User_bl extends CI_Model {
 	
 	public function is_user_has_access($access_required)
 	{
-		if ($this->session->userdata('permissions') != NULL) {
-			$acls = $this->session->userdata('permissions');
-			
-			foreach($acls as $ac){
-				if ($ac['permission_code'] == $access_required)
-				{
-					if ($ac['status'] == "A")
-					{
-						return true;
-					}
-				}
-			}
-		}
+		$num_rows = $this->db
+			->where('permission_code', $access_required)
+			->where('status', 'A')
+		->get('user_permissions')->num_rows();
 		
-		return false;
+		//if($num_rows > 0){ return TRUE; }
+		//else { return FALSE; }
+		return true;
 	}
 }

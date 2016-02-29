@@ -41,8 +41,6 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
         }
     })
     
-    console.log($scope.siteConsignmentList);
-    
     
 	$scope.attributeList = AttributeFactory.attributeActiveList;
 	AttributeFactory.getAttributeActiveList().then(function(){

@@ -183,7 +183,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/views/order_detail.html",
 			resolve: loadSequence('orderDetailController', 'customerService', 'attributeFactory', 'purchaseService', 'itemService'),
 			title: "Order Detail",
-					data : { logged_on_only: true, role: '' },
+					data : { logged_on_only: true, role: 'SALESORDERAKTIF' },
 			ncyBreadcrumb: {
 				label: 'DETAIL'
 			}
@@ -202,7 +202,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/purchase_discussion/purchase_discussion_list.html",
 			resolve: loadSequence('ngTable', 'purchaseDiscussionListController', 'purchaseService'),
 			title: "Purchase Discussion",
-			data : { logged_on_only: true, role: '' },
+			data : { logged_on_only: true, role: 'PURCHASEDISCUSSION' },
 			ncyBreadcrumb: {
 				label: 'BARU'
 			}
@@ -213,7 +213,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			resolve: loadSequence('ngTable', 'purchaseItemDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory',
             'itemFactory', 'attributeFactory', 'siteService'),
 			title: "Purchase Discussion",
-			data : { logged_on_only: true, role: '' },
+			data : { logged_on_only: true, role: 'PURCHASEDISCUSSION' },
 			ncyBreadcrumb: {
 				label: 'BARU'
 			}
@@ -223,7 +223,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/purchase_discussion/purchase_service_discussion_detail.html",
 			resolve: loadSequence('ngTable', 'purchaseServiceDiscussionDetailController', 'purchaseService', 'warehouseService', 'supplierService', 'vendorService', 'itemService', 'purchaseFactory', 'vendorFactory', 'itemFactory', 'attributeFactory', 'siteService'),
 			title: "Purchase Discussion",
-			data : { logged_on_only: true, role: '' },
+			data : { logged_on_only: true, role: 'PURCHASEDISCUSSION' },
 			ncyBreadcrumb: {
 				label: 'BARU'
 			}
@@ -496,7 +496,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/manual_stock_setting/stock_setting_new.html",
 			resolve: loadSequence('ngTable','stockSettingNewController', 'itemLookupService', 'itemService', 'siteService', 'inventoryService', 'attributeFactory'),
 			title: "Stock Status",
-			data : { logged_on_only: true, role: 'ADMIN' },
+			data : { logged_on_only: true, role: 'STOCKADJUSTMENT' },
 			ncyBreadcrumb: {
 				label: 'STOCK STATUS'
 			}
@@ -506,7 +506,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/manual_stock_setting/stock_setting_detail.html",
 			resolve: loadSequence('ngTable','stockSettingDetailController', 'inventoryService', 'siteService', 'attributeFactory'),
 			title: "Stock Status",
-			data : { logged_on_only: true, role: 'ADMIN' },
+			data : { logged_on_only: true, role: 'STOCKADJUSTMENT' },
 			ncyBreadcrumb: {
 				label: 'STOCK STATUS'
 			}
@@ -527,7 +527,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/inventory_tag_display/tag_display.html",
 			resolve: loadSequence('ngTable','tagDisplayController', 'itemFactory'),
 			title: "Tag Display",
-			data : { logged_on_only: true, role: 'ADMIN' },
+			data : { logged_on_only: true, role: 'TAGDISPLAY' },
 			ncyBreadcrumb: {
 				label: 'TAG DISPLAY'
 			}
@@ -541,7 +541,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/stock_display/stock_display_list.html",
 			resolve: loadSequence('ngTable', 'stockDisplayListController', 'inventoryService', 'categoryFactory', 'itemService', 'itemFactory', 'siteService'),
 			title: "Stock Display",
-			data : { logged_on_only: true, role: 'ORDERAKTIF' },
+			data : { logged_on_only: true, role: 'STOCKDISPLAY' },
 			ncyBreadcrumb: {
 				label: 'BARU'
 			}
@@ -551,12 +551,12 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/inventory_stock_status/stock_status.html",
 			resolve: loadSequence('ngTable', 'stockOpnameDetailController', 'itemService', 'siteService', 'itemFactory', 'inventoryService', 'vendorFactory', 'purchaseService', 'attributeFactory'),
 			title: "Detail Stock Display",
-			data : { logged_on_only: true, role: 'STOCKSTATUS' },
+			data : { logged_on_only: true, role: 'STOCKDISPLAY' },
 			ncyBreadcrumb: {
 				label: 'BARU'
 			}
 		})
-		.state('app.report.stock_display', {
+		/*.state('app.report.stock_display', {
 			url:'/deliveryreport',
 			templateUrl: "assets/js/wave/stock_display/stock_display_list.html",
 			resolve: loadSequence('ngTable', 'ngTableExport', 'deliveryReportController'),
@@ -565,7 +565,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			ncyBreadcrumb: {
 				label: 'PENGIRIMAN'
 			}
-		})
+		})*/
 
 
 	.state('app.delivery', {
@@ -1029,7 +1029,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/vehicle_master/vehicle_master.html",
 			resolve: loadSequence('ngTable', 'vehicleMasterController', 'vehicleService'),
 			title: "Vehicle",
-			data : { logged_on_only: true, role: 'ADMIN' },
+			data : { logged_on_only: true, role: '' },
 			ncyBreadcrumb: {
 				label: 'VEHICLE'
 			}
@@ -1040,7 +1040,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/vehicle_master/vehicle_master_new.html",
 			resolve: loadSequence('ngTable', 'vehicleMasterNewController', 'angularFileUpload', 'vehicleService' , 'vendorService'),
 			title: "Vehicle",
-			data : { logged_on_only: true, role: 'ADMIN' },
+			data : { logged_on_only: true, role: '' },
 			ncyBreadcrumb: {
 				label: 'VEHICLE'
 			}
@@ -1051,7 +1051,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/vehicle_master/vehicle_master_edit.html",
 			resolve: loadSequence('ngTable', 'vehicleMasterEditController', 'vehicleService','angularFileUpload','vendorService'),
 			title: "Vehicle",
-			data : { logged_on_only: true, role: 'ADMIN' },
+			data : { logged_on_only: true, role: '' },
 			ncyBreadcrumb: {
 				label: 'VEHICLE'
 			}
@@ -1111,7 +1111,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/views/document_flow.html",
 			resolve: loadSequence('documentFlowController'),
 			title: "Alur Dokumen",
-			data : { logged_on_only: true, role: '' },
+			data : { logged_on_only: true, role: 'DOCUMENTFLOW' },
 			ncyBreadcrumb: {
 				label: 'ALUR_DOKUMEN'
 			}
@@ -1121,7 +1121,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/stock_report/stock_report.html",
 			resolve: loadSequence('stockReportController', 'ngTable', 'itemService', 'siteService'),
 			title: "Laporan Stock",
-			data : { logged_on_only: true, role: '' },
+			data : { logged_on_only: true, role: 'STOCKREPORT' },
 			ncyBreadcrumb: {
 				label: 'LAPORAN STOCK'
 			}
@@ -1131,7 +1131,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			templateUrl: "assets/js/wave/inventory_report/inventory_report.html",
 			resolve: loadSequence('inventoryReportController', 'ngTable', 'itemService', 'siteService', 'inventoryService', 'categoryFactory', 'itemFactory'),
 			title: "Laporan Stock",
-			data : { logged_on_only: true, role: '' },
+			data : { logged_on_only: true, role: 'INVENTORYREPORT' },
 			ncyBreadcrumb: {
 				label: 'LAPORAN INVENTORY'
 			}
@@ -1151,7 +1151,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			},
 			resolve: loadSequence('stockReportDetailController', 'ngTable', 'itemService', 'siteService'),
 			title: "Laporan Stock",
-			data : { logged_on_only: true, role: '' },
+			data : { logged_on_only: true, role: 'STOCKREPORT' },
 			ncyBreadcrumb: {
 				label: 'LAPORAN STOCK'
 			}

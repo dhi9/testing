@@ -149,27 +149,32 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			"label":"Buat Sales Order",
 			"code":"BUATSALESORDER"
 		},
-		/*{
+		{
 			"label":"Sales Order Troli",
 			"code":"SALESORDERTROLI"
-		},*/
+		},
 		{
 			"label":"Sales Order Aktif",
 			"code":"SALESORDERAKTIF"
 		},
+		
 		{
 			"label":"Purchase Order",
 			"code":""
 		},
 		{
+			"label":"Purchase Discussion",
+			"code":"PURCHASEDISCUSSION"
+		},
+		{
 			"label":"Buat Purchase Request",
 			"code":"BUATPURCHASEREQUEST"
 		},
-		/*{
+		{
 			"label":"Buat Service Request",
 			"code":"BUATSERVICEREQUEST"
 		},
-		{
+		/*{
 			"label":"Buat Stock Transfer Order",
 			"code":"BUATSTOCKTRANSFERORDER"
 		},*/
@@ -181,26 +186,40 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			"label":"Order Aktif",
 			"code":"ORDERAKTIF"
 		},
+		
 		{
 			"label":"Inventory",
 			"code":""
 		},
 		{
+			"label":"Tag Display",
+			"code":"TAGDISPLAY"
+		},
+		{
 			"label":"Stock Status",
 			"code":"STOCKSTATUS"
 		},
-		/*{
+		{
 			"label":"Stock Opname",
 			"code":"STOCKOPNAME"
 		},
 		{
+			"label":"Pengaturan Stock Manual",
+			"code":"STOCKADJUSTMENT"
+		},
+		{
+			"label":"Stock Display",
+			"code":"STOCKDISPLAY"
+		},
+		
+		{
 			"label":"Pengiriman",
 			"code":""
 		},
-		{
+		/*{
 			"label":"Atur Dokumen",
 			"code":"ATURDOKUMEN"
-		},
+		},*/
 		{
 			"label":"Pengiriman Baru",
 			"code":"PENGIRIMANBARU"
@@ -213,47 +232,29 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 			"label":"Credit Block",
 			"code":"CREDITBLOCK"
 		},
+		
 		{
 			"label":"Report",
 			"code":""
 		},
 		{
-			"label":"Laporan Adjustment",
-			"code":"LAPORANADJUSTMENT"
+			"label":"Alur Dokumen",
+			"code":"DOCUMENTFLOW"
 		},
 		{
-			"label":"Laporan Penjualan Harian",
-			"code":"LAPORANPENJUALANHARIAN"
+			"label":"Laporan Stock",
+			"code":"STOCKREPORT"
 		},
 		{
-			"label":"Laporan Pelanggan",
-			"code":"LAPORANPELANGGAN"
-		},*/
+			"label":"Laporan Inventory",
+			"code":"INVENTORYREPORT"
+		},
+		
 		{
 			"label":"Master Database",
 			"code":""
 		},
 		{
-			"label":"Customer Master",
-			"code":"CUSTOMERMASTER"
-		},
-		{
-			"label":"Stock Master",
-			"code":"STOCKMASTER"
-		},
-		{
-			"label":"Vendor Master",
-			"code":"VENDORMASTER"
-		},
-		{
-			"label":"User Master",
-			"code":"USERMASTER"
-		},
-		{
-			"label":"Site Master",
-			"code":"SITEMASTER"
-		},
-		/*{
 			"label":"Attribute Master",
 			"code":"ATTRIBUTEMASTER"
 		},
@@ -268,25 +269,26 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 		{
 			"label":"Company Master",
 			"code":"COMPANYMASTER"
-		},*/
+		},
+		{
+			"label":"Customer Master",
+			"code":"CUSTOMERMASTER"
+		},
+		{
+			"label":"Site Master",
+			"code":"SITEMASTER"
+		},
+		{
+			"label":"Stock Master",
+			"code":"STOCKMASTER"
+		},
+		{
+			"label":"User Master",
+			"code":"USERMASTER"
+		},
+		{
+			"label":"Vendor Master",
+			"code":"VENDORMASTER"
+		},
 	];
-	
-	$scope.approvalList=[
-		{
-			"label":"P & G",
-			"code":"PG"
-		},
-		{
-			"label":"NIKE",
-			"code":"NIKE"
-		},
-		{
-			"label":"HAGGAR",
-			"code":"HAGGAR"
-		},
-		{
-			"label":"ESPRIT",
-			"code":"ESPRIT"
-		}
-	]
 });

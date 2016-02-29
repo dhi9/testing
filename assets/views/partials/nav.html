@@ -104,21 +104,21 @@
 			</div>
 		</a>
 		<ul class="sub-menu">
-            <li ui-sref-active="active">
-                <a ui-sref="app.inventory.tag_display">
-                    <span class="title">Tag Display</span>
-                </a>
-            </li>
-            <li ui-sref-active="active">
-                <a ui-sref="app.inventory.stock_status">
-                    <span class="title">Stock Status</span>
-                </a>
-            </li>
-            <li ui-sref-active="active">
-                <a ui-sref="app.inventory.stock_opname">
-                    <span class="title">Stock Opname</span>
-                </a>
-            </li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.inventory.tag_display">
+					<span class="title">Tag Display</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.inventory.stock_status">
+					<span class="title">Stock Status</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.inventory.stock_opname">
+					<span class="title">Stock Opname</span>
+				</a>
+			</li>
 			<li ui-sref-active="active">
 				<a ui-sref="app.inventory.manual_stock_setting">
 					<span class="title">Pengaturan Stock Manual</span>
@@ -197,8 +197,7 @@
 			</li>
 		</ul>
 	</li>
-
-
+	
 	<li ng-class="{'active open':$state.includes('app.report')}">
 		<a href="javascript:void(0)">
 			<div class="item-content">
@@ -235,7 +234,7 @@
 			-->
 		</ul>
 	</li>
-
+	
 	<li ng-class="{'active open':$state.includes('app.master')}">
 		<a href="javascript:void(0)">
 			<div class="item-content">
@@ -249,13 +248,38 @@
 		</a>
 		<ul class="sub-menu">
 			<li ui-sref-active="active">
+				<a ui-sref="app.master.attribute">
+					<span class="title">Attribute Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.bank">
+					<span class="title">Bank Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
 				<a ui-sref="app.master.category">
 					<span class="title">Category Master</span>
 				</a>
 			</li>
 			<li ui-sref-active="active">
+				<a ui-sref="app.master.company">
+					<span class="title">Company Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
 				<a ui-sref="app.master.customer_list">
 					<span class="title">Customer Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.site">
+					<span class="title">Site Master</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.master.stock">
+					<span class="title">Stock Master</span>
 				</a>
 			</li>
 			<li ui-sref-active="active">
@@ -268,26 +292,6 @@
 					<span class="title">Item Master</span>
 				</a>
 			</li>-->
-			<li ui-sref-active="active">
-				<a ui-sref="app.master.stock">
-					<span class="title">Stock Master</span>
-				</a>
-			</li>
-			<li ui-sref-active="active">
-				<a ui-sref="app.master.vendor">
-					<span class="title">Vendor Master</span>
-				</a>
-			</li>
-			<li ui-sref-active="active">
-				<a ui-sref="app.master.site">
-					<span class="title">Site Master</span>
-				</a>
-			</li>
-			<li ui-sref-active="active">
-				<a ui-sref="app.master.attribute">
-					<span class="title">Attribute Master</span>
-				</a>
-			</li>
 			<!--
 			<li ui-sref-active="active">
 				<a ui-sref="app.master.vehicle">
@@ -296,13 +300,8 @@
 			</li>
 			-->
 			<li ui-sref-active="active">
-				<a ui-sref="app.master.company">
-					<span class="title">Company Master</span>
-				</a>
-			</li>
-			<li ui-sref-active="active">
-				<a ui-sref="app.master.bank">
-					<span class="title">Bank Master</span>
+				<a ui-sref="app.master.vendor">
+					<span class="title">Vendor Master</span>
 				</a>
 			</li>
 		</ul>
