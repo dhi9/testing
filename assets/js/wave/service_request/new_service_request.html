@@ -23,7 +23,7 @@
 					<div class="input-group">
 						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" autocomplete="off"/>
 						<span class="input-group-btn">
-							<button type="button" class="btn btn-primary" ng-click="searchSupplier(supplierName)">
+							<button type="button" class="btn btn-primary" ng-click="searchSupplier(supplierName)" disabled="disabled">
 									<i class="fa fa-search"></i>
 							</button>
 						</span>
