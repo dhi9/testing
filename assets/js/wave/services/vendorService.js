@@ -8,11 +8,15 @@ app.service('VendorService', function($http, apiUrl) {
   this.getVendorByReference = function(reference){
 		return $http.get(url + 'vendorapi/get_vendor_by_reference/' + reference);
 	}
-	
+
 	this.getVendorList = function(){
 		return $http.get(url + 'vendorapi/get_vendor_list');
 	}
-	
+
+	this.getActiveVendorList = function(){
+		return $http.get(url + 'vendorapi/get_active_vendor_list');
+	}
+
 	this.getVendorHistoryListByVendorId = function(vendorId){
 		return $http.get(url + 'vendorapi/get_vendor_history_list_by_vendor_id/' + vendorId);
 	}

@@ -349,6 +349,29 @@ class Inventory_db extends CI_Model {
 		return $this->db->get();
 	}
 	
+	public function get_inventory_report_by_filter($data)
+	{
+		//$this->db->select("*, COUNT(it.tag_id) as tags, COLUMN_JSON(inven.attributes) as attributes");
+		
+			$this->db->select("*, COLUMN_JSON(inven.attributes) as attributes");
+		
+		$this->db->from("inventory_stocks inven");
+		$this->db->join("sites s", "s.site_id = inven.site_id", "left");
+		$this->db->join("storage_locations sl", "sl.storage_id = inven.storage_id", "left");
+		$this->db->join("bin_locations b", "b.bin_id = inven.bin_id", "left");
+		
+		if(!empty($data['site_id'])){
+			$this->db->where_in("inven.site_id", array(implode(',', $data['site_id'])));
+		}
+		if(!empty($data['storage_id'])){
+			$this->db->where_in("inven.storage_id", array(implode(',', $data['storage_id'])));
+		}
+		
+		$this->db->group_by("inven.inventory_stock_id");
+		
+		return $this->db->get();
+	}
+	
 	public function get_stock_movements($site_id, $start_date, $end_date)
 	{
 		return $this->db

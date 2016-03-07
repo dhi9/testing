@@ -7,8 +7,8 @@ class Reportapi extends CI_Controller {
 	{
 		// Call the CI_Model constructor
 		parent::__construct();
-		
-		$this->load->model(array('delivery_model','user_model', 'stock_movement_bl', 'stock_movement_db', 'site_db'));
+		$this->load->helper('url');
+		$this->load->model(array('delivery_model','user_model', 'stock_movement_bl', 'stock_movement_db', 'site_db', 'company_db', 'inventory_db', 'order_db'));
 	}
 	
 	public function get_delivery_report()
@@ -251,5 +251,137 @@ class Reportapi extends CI_Controller {
 			//}
 		}
 		
+	}
+	
+	public function get_inventory_report()
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$feedback = array(
+				"call_status" => "error",
+				"error_code" => "701",
+				"error_message" => "User not logged on"
+			);
+		}
+		/*
+		else if (! $this->user_model->is_user_has_access("REPORT")) {
+			$feedback = array(
+				"call_status" => "error",
+				"error_code" => "702",
+				"error_message" => "User tidak mempunyai hak untuk melakukan hal ini."
+			);
+		}
+		*/
+		else {
+			$data = json_decode(file_get_contents('php://input'), true);
+			$where = array ();
+			if(! empty($data['site_reference'])){
+				$array = explode('-', $data['site_reference']);
+				$site= array();
+				foreach ($array as $key => $value){
+					$site_id = $this->item_model->get_site_id_by_site_reference($value)->row_array();
+					if ($site_id !== NULL){
+						array_push($site, $site_id['site_id']);
+					}
+				}
+				$where['site_id'] = $site;
+			}
+			if(! empty($data['storage_name'])){
+				$arrays = explode('-', $data['storage_name']);
+				$storage= array();
+				foreach ($arrays as $key => $value){
+					$storage_id = $this->site_db->get_storage_by_name($value)->row_array();
+					if ($storage_id !== NULL){
+						array_push($storage, $storage_id['storage_id']);
+					}
+				}
+				$where['storage_id'] = $storage;
+			}
+			
+			$stock = $this->inventory_db->get_inventory_report_by_filter($where)->result_array();
+	
+			$feedback = array(
+				"call_status" => "success",
+				"result" => $stock
+			);
+		}
+		
+		echo json_encode($feedback);
+	}
+	
+	
+	public function daily_report(){
+		$data['CompanyDetail'] = $this->company_db->get_company()->row();
+		//$data['Chart'] = $this->load->view('pdf-daily-report-chart', NULL, true);
+		$data['yesterday'] = date('Y-m-d H:i:s', strtotime('yesterday'));
+		$data['endofyesterday'] = date('Y-m-d 23:59:59', strtotime('yesterday'));
+		$order = $this->order_db->get_order_between_date($data['yesterday'], $data['endofyesterday'])->result_array();
+		$order_items = array();
+		$top5item = array();
+		$cost_total = 0;
+		$discount_total = 0;
+		$tax_total = 0;
+		foreach($order as $o){
+			$items =  $this->order_db->get_order_items($o['order_id'])->result_array();
+			foreach($items as $i){
+				array_push($order_items, $i);
+			}
+		}
+		
+		foreach($order_items as $oi){
+			if(array_key_exists($oi['item_code'], $top5item)){
+				$top5item[$oi['item_code']]['quantity'] += $oi['quantity'];
+				$top5item[$oi['item_code']]['cost'] += $oi['cost'];
+				$top5item[$oi['item_code']]['disc_percent'] += $oi['cost'] * $oi['disc_percent']/100;
+				$top5item[$oi['item_code']]['disc_value'] += $oi['disc_value'];
+			}else{
+				$top5item[$oi['item_code']] = array(
+					'quantity'=> $oi['quantity'],
+					'cost'=>$oi['cost'],
+					'disc_percent'=> $oi['cost'] * $oi['disc_percent']/100,
+					'disc_value'=> $oi['disc_value']
+				);
+				//array_push($top5item, $item_code);
+			}
+				$cost_total += $oi['cost'];
+				$discount_total += $oi['cost'] * $oi['disc_percent']/100;
+		}
+		$data['order_items'] = $order_items;
+		$data['order'] = $order;
+		$data['top5item'] = $top5item;
+		$data['sales_total'] = count($order);
+		$data['cost_total'] = $cost_total;
+		$data['discount_total'] = $discount_total;
+		$data['tax_total'] = $tax_total;
+		$html = $this->load->view('pdf-daily-report', $data, true);
+		//$html = $this->load->view('pdf-daily-report', $data);
+		$this->load->library('pdf');
+		$pdf = $this->pdf->load('','A4',9,'dejavusans');
+		//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
+		$pdf->WriteHTML($html); 
+		ob_clean();
+		//$pdf->Output($filename.".pdf", 'D');
+		$pdf->Output($request_reference.".pdf", 'F');
+		$pdf->Output();
+	}
+	public function piegraph($data = NULL){
+		$this->load->library('jpgraph');
+        
+       $bar_graph = $this->jpgraph->piechart();
+       $datax = array(2,10,20,10,20,10,20);
+        $datay = array("rendah","sedang","bagus","a","bagus","sedang","bagus");
+        
+        $graph = new PieGraph(260,230,"auto"); 
+        $graph->SetScale('textint'); 
+        $graph->img->SetMargin(50,30,70,100); 
+        $graph->SetShadow(); 
+               
+        $bplot = new PiePlot($datax); 
+        $bplot->SetCenter(0.45,0.40);
+        $bplot->SetLegends($datay);
+        $bplot->value->Show(); 
+        $bplot->value->SetFont(FF_ARIAL,FS_BOLD); 
+                
+        $graph->Add($bplot); 
+        $graph->Stroke();    
 	}
 }

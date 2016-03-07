@@ -95,7 +95,7 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 		}
 	});
 	
-	VendorService.getVendorList().success(function(data){
+	VendorService.getActiveVendorList().success(function(data){
 		if (data.call_status === "success") {
 			$scope.supplierList = data.vendor_list;
 		}

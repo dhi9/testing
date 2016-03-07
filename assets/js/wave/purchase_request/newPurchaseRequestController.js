@@ -1,4 +1,4 @@
-app.controller('NewPurchaseRequestController', function($filter, $scope, $http, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, PurchaseFactory, ItemFactory, VendorFactory, AttributeFactory, SiteService) {
+app.controller('NewPurchaseRequestController', function($filter, $scope, $http, $state, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, PurchaseFactory, ItemFactory, VendorFactory, AttributeFactory, SiteService) {
 	
 	$scope.edit = {};
 	$scope.edit.itemList = true;
@@ -64,8 +64,8 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 		$scope.itemList = ItemFactory.itemList;
 	});
 	
-	VendorFactory.getVendorList().then(function(){
-		$scope.supplierList = VendorFactory.vendorList;
+	VendorFactory.getActiveVendorList().then(function(){
+		$scope.supplierList = VendorFactory.activeVendorList;
 	});
 	
 	WarehouseService.getAddressList().success(function(data){
@@ -305,6 +305,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 						type: "success",
 						animation: "slide-from-top"
 					});
+					$state.go("app.purchase.approve_purchase_request");
 				}
 			});
 		}else{
@@ -342,6 +343,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 						type: "success",
 						animation: "slide-from-top"
 					});
+					$state.go("app.purchase.purchase_discussion");
 				}
 			});
 		}else{

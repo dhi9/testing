@@ -411,11 +411,14 @@ class Inventoryapi extends CI_Controller {
 			}
 			
 			
-			if($dt['item_name']!= NULL){
+			if($dt['item_name'] != NULL || $dt['item_name'] != ""){
 				
 			}else{
-				array_push($error_messages, "Nama can't be empty");
+				if($dt['action'] != "Ubah"){
+					array_push($error_messages, "Nama can't be empty");
+				}
 			}
+			
 			
 			if($dt['sell_price_type']!= NULL){
 				if($dt['sell_price_type'] == "Persen" || $dt['sell_price_type'] == "P"){
@@ -428,7 +431,9 @@ class Inventoryapi extends CI_Controller {
 					array_push($error_messages, "Harga Jual must between (Persen/Tambah/Tetap)");
 				}
 			}else{
-				array_push($error_messages, "Nama can't be empty");
+				if($dt['action'] != "Ubah"){
+					array_push($error_messages, "Harga Jual can't be empty");
+				}
 			}
 			
 			if($dt['discount_type'] != NULL){

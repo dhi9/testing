@@ -11,56 +11,50 @@
 
 <!-- start: YOUR CONTENT HERE -->
 
-<div ng-controller="InventoryReportController">  
+<div ng-controller="InventoryReportController">
 
 	<div class="container-fluid container-fullw">
-        <div class="row">
-            <div class="form-group">
-                <label for="text" class="col-sm-1 control-label">Site ID</label>
-                <div class="input-group">
-                    <select class="form-control" ng-model="search.site_id"
-                            ng-options="site.site_id as site.site_name for site in siteList"></select>
-                            
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-alt btn-hover btn-primary" ng-click="displayCustomerListModal()">
-                                <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="form-group">
-                <label for="text" class="col-sm-1 control-label">Lokasi</label>
-                <div class="input-group">
-                    <select class="form-control" ng-model="search.location_id"
-                        ng-options="storage.storage_id as storage.storage_name for storage in storageList"></select>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="text" class="col-sm-1 control-label">SiteID</label>
+					<div class="input-group">
+						<input type="text" class="form-control" ng-model="search.searchSite"/>
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-primary" ng-click="siteListModal()">
+								<i class="fa fa-search"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
 
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-alt btn-hover btn-primary" ng-click="displayCustomerListModal()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                
-                    <!--    <input type="text" class="form-control" ng-model="tag_input"
-                                typeahead="tag.tag_name as tag.tag_name for tag in tagList | filter:$viewValue | limitTo:20">
-                    -->
-                </div>
-               
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="text" class="col-sm-1 control-label">Lokasi</label>
+					<div class="input-group">
+						<input type="text" class="form-control" ng-model="search.searchStorage" ng-disabled="! search.searchSite"/>
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-primary" ng-click="storageListModal(search.searchSite)" ng-disabled="! search.searchSite">
+								<i class="fa fa-search"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
 
-                
-            </div>
-        </div>
-        <br>
-        
-        <div class="col-md-3 pull-right" p>
-                    <button class="btn btn-primary" ng-click="applyFilter()">Cari</button>
-                    <button class="btn btn-primary pull-right" ng-click="exportToCSV()">Export to CSV</button>
-                </div>
-        <br>
+		<div class="col-md-3 pull-right" p>
+					<button class="btn btn-primary" ng-click="applyFilter()">Cari</button>
+					<button class="btn btn-primary pull-right" ng-click="exportToCSV()">Export to CSV</button>
+				</div>
+		<br>
 
-       
+
 
 		<br/>
 		<div class="table-responsive">
@@ -68,19 +62,19 @@
 				<tr ng:repeat="stock in $data | filter: search.$">
 					<td data-title="'SiteID'" sortable="'site_name'">{{ stock.site_id}}</td>
 
-                <!--
-                    <td data-title="'Site'" sortable="'site_name'">{{ stock.site_name}}</td>
+				<!--
+					<td data-title="'Site'" sortable="'site_name'">{{ stock.site_name}}</td>
 					<td data-title="'Tipe'" sortable="'tipe'">{{ stock.item_tipe}}</td>
-                -->
+				-->
 					<td data-title="'Kategori'" sortable="'kategori'">{{ stock.item_name}}</td>
-					
-                    <td data-title="'Kode Barang (SKU)'" sortable="'kode_barang'">{{ stock.item_code }}</td>
-					
-                    <td data-title="'Nama Barang'" sortable="'item_name'">{{ stock.item_code }}</td>
-                    <td data-title="'Batch'" sortable="'batch'">{{ stock.bin_name }}</td>
-                    <td data-title="'Lokasi'" sortable="'lokasi'">{{ stock.storage_name }}</td>
 
-                    <td data-title="'UOM Dasar'" sortable="'item_unit'">{{ stock.item_unit}}</td>
+					<td data-title="'Kode Barang (SKU)'" sortable="'kode_barang'">{{ stock.item_code }}</td>
+
+					<td data-title="'Nama Barang'" sortable="'item_name'">{{ stock.item_code }}</td>
+					<td data-title="'Batch'" sortable="'batch'">{{ stock.bin_name }}</td>
+					<td data-title="'Lokasi'" sortable="'lokasi'">{{ stock.storage_name }}</td>
+
+					<td data-title="'UOM Dasar'" sortable="'item_unit'">{{ stock.item_unit}}</td>
 					<td data-title="'Tersedia'" sortable="'quantity'">{{ stock.quantity}}</td>
 					<td data-title="'Quality'" sortable="'quality'">{{ stock.quality}}</td>
 					<td data-title="'Block'" sortable="''">{{ stock.block_status }}</td>
@@ -88,12 +82,59 @@
 					<td data-title="'Proses Pengadaan'" sortable="''">{{  }}</td>
 					<td data-title="'Sales Order'" sortable="''">{{  }}</td>
 			<!--		<td class="col-sm-1">
-                        <button class="btn btn-primary" ui-sref="app.inventory.stock_status_detail ({item_code : '{{stock.item_code}}', attributes : '{{stock.attributes.link}}', site_reference : '{{stock.site_reference}}'})">Details</button>
-                    </td>       -->
+						<button class="btn btn-primary" ui-sref="app.inventory.stock_status_detail ({item_code : '{{stock.item_code}}', attributes : '{{stock.attributes.link}}', site_reference : '{{stock.site_reference}}'})">Details</button>
+					</td>       -->
 				</tr>
 			</table>
 		</div>
 	</div>
+
+
+	<script type="text/ng-template" id="modal_site_list">
+		<div class="modal-header">
+			<h3 class="modal-title">Site Detail</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="site in $data | filter: filter" ng-class="{ 'info': site.selected }">
+						<td data-title="'Kode Barang'" sortable="'site_reference'">{{ site.site_reference }}</td>
+						<td data-title="'Nama Barang'" sortable="'site_name'">{{ site.site_name }}</td>
+						<td class="col-md-2">
+							<button class="btn btn-alt btn-hover btn-primary" ng-if="!site.selected" ng-click="site.selected=true">Pilih</button>
+							<button class="btn btn-alt btn-hover btn-danger" ng-if="site.selected" ng-click="site.selected=false">Batal</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="modal_storage_list">
+		<div class="modal-header">
+			<h3 class="modal-title">Storage Detail</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="location in $data | filter: filter" ng-class="{ 'info': location.selected }">
+						<td data-title="'Nama Lokasi'" sortable="'location'">{{ location.storage_name }}</td>
+						<td class="col-md-2">
+							<button class="btn btn-alt btn-hover btn-primary" ng-if="!location.selected" ng-click="location.selected=true">Pilih</button>
+							<button class="btn btn-alt btn-hover btn-danger" ng-if="location.selected" ng-click="location.selected=false">Batal</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+
 </div>
 
 <!-- End of Customer Row -->
