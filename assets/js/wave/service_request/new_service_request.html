@@ -22,8 +22,8 @@
 					<label for="txtSearchCustomer"><h5>Cari Supplier &nbsp;</h5></label>
 					<div class="input-group">
 						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" autocomplete="off"/>
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-primary" ng-click="searchSupplier(supplierName)" disabled="disabled">
+						<span class="input-group-btn" ng-show="hide">
+							<button type="button" class="btn btn-primary" ng-click="searchSupplier(supplierName)">
 									<i class="fa fa-search"></i>
 							</button>
 						</span>
@@ -268,7 +268,7 @@
 														<div class="form-group">
 															<label for="txtCustomerName" class="col-sm-4 control-label">Alamat <span class="symbol required"></label>
 															<div class="col-sm-8">
-																<select class="cs-skin-slide" ng-model="deliveryRequest.site_id" ng-options="a.site_id as a.site_reference for a in siteList" ng-disabled="deliveryRequest.editMode" ></select>
+																<select class="cs-skin-slide" ng-model="deliveryRequest.site_id" ng-options="a.site_id as a.site_reference for a in siteNonConsignmentList" ng-disabled="deliveryRequest.editMode" ></select>
 															</div>
 														</div>
 													</div>

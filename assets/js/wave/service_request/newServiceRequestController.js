@@ -30,6 +30,13 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
         }
     });
 
+	$scope.siteNonConsignmentList = [];
+	SiteService.getSiteNonConsignmentList().success(function(data) {
+		if (data.call_status == "success"){
+			$scope.siteNonConsignmentList = data.site_list;
+		}
+	});
+
     PurchaseService.getUsersList().success(function(data){
 		if (data.call_status === "success") {
 			$scope.userList = data.users_list;
