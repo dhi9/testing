@@ -382,6 +382,14 @@ this.getDeliveryItemsByDeliveryId = function(delivery_id) {
 		return $http.post(this.hostname+'reportapi/get_stock_report', search);
 	}
 
+	this.getInventoryReport = function(data) {
+		return $http.post(this.hostname+'reportapi/get_inventory_report', data);
+	}
+
+	this.checkData = function(data) {
+		return $http.get(this.hostname+'kioskapi/check_data/'+ data);
+	}
+
 
 	this.exportStockReport = function(json){
 		//return $http.post(url + 'create_pdf' , requestReference);
