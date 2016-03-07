@@ -160,4 +160,21 @@ app.controller('StockDisplayListController', function($filter, $scope, $http, ng
 
 	$scope.addChooseTag = [];
 
+	$scope.saveExpenses = function () {
+		var sheets = [{
+			Advance: 1000,
+			Attachment: true,
+			//Department: "Sales",
+			Expenses:$scope.stockDisplayList,
+			//Id: "E892659",
+			//Manager: "Andrew Fuller",
+			Name: "Stock Display",
+			//Position: "Sales Representative",
+			//Purpose: "On business",
+			//SSN: "A37830"
+		}]
+		var workbook = XlsxExport.exportStockDisplay(sheets);
+		var xlsx = wijmo.xlsx.XlsxConverter.exportToFile(workbook, 'VONTIS-STOCK-DISPLAY-EXPORT.xlsx');
+	}
+
 });
