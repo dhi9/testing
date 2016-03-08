@@ -541,13 +541,24 @@ class Purchase_model extends CI_Model {
 	
 	public function send_email($to, $pdf)
 	{
+		$companyDetail = $this->company_db->get_company()->row()->company_name;
+		$type = $this->purchase_model->get_active_requests_by_requests_reference($pdf)->row()->type;
+		$subject = "";
+		if($type == "PR"){
+			$subject = "Purchase Order";
+		}elseif($type == "SR"){
+			$subject = "Service Order";
+		}else{
+			
+		}
+		$data['client_name'] = $companyDetail;
 		$this->load->library('email');
-		$this->email->from('test@waveconsulting.co.id', 'VONTIS Messeger');
+		$this->email->from('test@waveconsulting.co.id', 'VONTIS RT');
 		//$this->email->to($to);
 		$this->email->to($to);
 		$this->email->cc('test@waveconsulting.co.id'); 
-		$this->email->subject('VONTIS Messeger');
-		$this->email->message("");
+		$this->email->subject("$companyDetail - $subject $pdf");
+		$this->email->message($this->load->view('email-format-po', $data, TRUE));
 		$this->email->attach('docs/'.$pdf.'.pdf');	
 		$this->email->send();
 	}
