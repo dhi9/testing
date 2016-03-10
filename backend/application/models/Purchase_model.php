@@ -147,7 +147,7 @@ class Purchase_model extends CI_Model {
 	public function get_active_item_requests_by_requests_id($requests_id)
 	{
 		return $this->db
-			->select('r.*, i.item_name')
+			->select('r.*, i.item_name, COLUMN_JSON(r.attributes) as attributes')
 			->from('request_items r')
 			->join('items i', 'r.item_code = i.item_code')
 			->where('r.requests_id', $requests_id)
@@ -175,7 +175,7 @@ class Purchase_model extends CI_Model {
 	public function get_active_delivery_requests_items_by_requests_delivery_request_id($requests_delivery_request_id)
 	{
 		return $this->db
-			->select('r.*, i.item_name')
+			->select('r.*, i.item_name, COLUMN_JSON(r.attributes) as attributes')
 			->from('request_delivery_request_items r')
 			->join('items i', 'r.item_code = i.item_code')
 			->where('r.requests_delivery_request_id', $requests_delivery_request_id)
@@ -432,6 +432,12 @@ class Purchase_model extends CI_Model {
 	
 	public function insert_request_delivery_request_items($array)
 	{
+		if(! empty($array['attributes'])){
+			$attributes = $array['attributes'];
+			$this->db->set('attributes', "COLUMN_CREATE($attributes)", FALSE);
+			unset($array['attributes']) ;
+		}
+		
 		if ( $this->db->insert('request_delivery_request_items', $array) )
 		{
 			return $this->db->insert_id();

@@ -62,6 +62,7 @@ class Purchaseapi extends CI_Controller {
 				
 				$item_code = $item_request['item_code'];
 				$attributes = $this->purchase_bl->json_to_cb($item_request['attributes']);
+				//$attributes = $item_request['attributes'];
 				$quantity = $item_request['quantity'];
 				$item_unit = $item_request['item_unit'];
 				$remark = $item_request['remark'];
@@ -88,7 +89,7 @@ class Purchaseapi extends CI_Controller {
 					$insert_item_delivery_request = array(
 							'requests_delivery_request_id' => $requests_delivery_request_id,
 							'item_code' => $item_delivery_request['item_code'],
-							'attributes' => @$item_delivery_request['attributes'],
+							'attributes' => $this->purchase_bl->json_to_cb($item_delivery_request['attributes']),
 							'quantity' => $item_delivery_request['quantity'],
 							'item_unit' => $item_delivery_request['item_unit'],
 					);
@@ -276,6 +277,7 @@ class Purchaseapi extends CI_Controller {
 			$items = $this->purchase_model->get_active_delivery_requests_items_by_requests_delivery_request_id($key['requests_delivery_request_id'])->result_array();
 			foreach($items as $item){
 				$item['plan'] = $i;
+				$item['attributes'] = $key['attributes'];
 				$item['requested_date'] = $key['requested_date'];
 				$item['remark'] = $key['remark'];
 				$item['site_id'] = $key['site_id'];
@@ -306,9 +308,9 @@ class Purchaseapi extends CI_Controller {
 			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
 			$pdf->WriteHTML($html); 
 			ob_clean();
-			$pdf->Output($request_reference.".pdf", 'D');
-			//$pdf->Output($request_reference.".pdf", 'F');
-			//$pdf->Output();
+			//$pdf->Output($request_reference.".pdf", 'D');
+			$pdf->Output($request_reference.".pdf", 'F');
+			$pdf->Output();
 			//force_download($filename.".pdf","./docs/".$filename.".pdf");
 			
 		//}

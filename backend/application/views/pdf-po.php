@@ -166,7 +166,23 @@
                     <td align="center" style="height:20px"><?php echo $i ?></td>
                     <td><?php echo $key['item_code'];$i+=1 ?></td>
                     <td><?php echo $key['item_name'] ?></td>
-                    <td><?php //echo $key['attributes'] ?></td>
+                    <td>
+                        <?php 
+                     
+                        if ($key['attributes'] != NULL) {
+                           $attributes = json_decode($key['attributes']);
+                            $countAtt = 0;
+                            foreach ($attributes as $attKey => $attVal) {
+                                if($countAtt >= 1){
+                                    echo ", ";
+                                }
+                                echo $attKey.":".$attVal;
+                                $countAtt += 1;
+                            }
+                        }
+                        
+                        ?>
+                    </td>
                     <td><?php echo $key['quantity'] ?></td>
                     <td><?php echo $key['item_unit'] ?></td>
                     <td><?php echo @$key['remark'] ?></td>
