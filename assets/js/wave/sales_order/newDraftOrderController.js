@@ -809,7 +809,7 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 			}
 		}
 	}
-	
+
 	$scope.inputCustomer = function(data){
 		$scope.order.customer_input_type = "E";
 		$scope.order.customer_id = $scope.customerIdToSearch;
@@ -822,9 +822,11 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 		$scope.order.customer_details.phone_number = data.customer_details.phone_number;
 		$scope.order.customer_details.fax_number = data.customer_details.fax_number;
 		$scope.order.customer_details.customer_email = data.customer_details.customer_email;
+
+		$scope.customerName = data.customer_details.customer_name;
 	}
-	$scope.getCustomerById = function() {
-		CustomerService.getCustomerById($scope.customerIdToSearch).
+	$scope.getCustomerById = function(customerId) {
+		CustomerService.getCustomerById(customerId).
 			success(function(data, status, headers, config) {
 				if (data.call_status === "success") {
 					if ($scope.order.order_details.order_items[0].item_code !== "") {
@@ -863,19 +865,19 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 				console.log(config);
 			})
 		;
-		
+
 		CustomerFactory.getCustomerCombinedItemList($scope.customerIdToSearch).then(function () {
 			$scope.customerCombinedItemList = CustomerFactory.customerCombinedItemList;
 		});
 	}
-	
+
 	$scope.getTotalInDeliveryRequests = function(itemCode, materialType, remark) {
 		var deliveryRequests = $scope.order.delivery_request_details;
 		var total = 0;
-		
+
 		angular.forEach(deliveryRequests, function(deliveryRequest) {
 			var deliveryRequestItems = deliveryRequest.requested_delivery_items;
-			
+
 			angular.forEach(deliveryRequestItems, function(deliveryRequestItem) {
 				if (deliveryRequestItem.item_code == itemCode
 					&& deliveryRequestItem.material_type == materialType
@@ -886,30 +888,30 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 				}
 			});
 		});
-		
+
 		return total;
 	}
-	
+
 	$scope.isNoDeliveryRequestItemRemaining = function() {
 		orderItems = $scope.order.order_details.order_items;
 		noItemRemaining = true;
-		
+
 		orderItems.forEach(function(orderItem) {
 			total = $scope.getTotalInDeliveryRequests(orderItem.item_code, orderItem.material_type, orderItem.remark);
 			itemRemaining = orderItem.quantity - total;
-			
+
 			if (itemRemaining > 0) {
 				noItemRemaining = false;
 			}
 		});
-		
+
 		return noItemRemaining;
 	}
-	
+
 	$scope.getCurrentDateString = function() {
 		return moment(Date.now()).format('YYYY-MM-DD');
 	}
-	
+
 	$scope.displayItemDetailModal = function(index) {
 		if ($scope.customerIdToSearch || $scope.order.customer_input_type == "N") {
 			var customer = true;
@@ -917,12 +919,12 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 		else {
 			var customer = false;
 		}
-		
+
 		var pass_data = {
 			index: index,
 			customer: customer
 		};
-		
+
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_item_detail',
 			controller: 'ItemDetailModalCtrl',
@@ -935,14 +937,14 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 			scope: $scope
 		});
 	}
-	
+
 	$scope.displayChildItemDetailModal = function(index, item) {
 		var indexParent = $scope.order.order_details.order_items.indexOf(item);
 		var pass_data = {
 			index: index,
 			parent_index:indexParent
 		};
-		
+
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_child_item_detail',
 			controller: 'ItemDetailModalCtrl',
@@ -955,32 +957,30 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 			scope: $scope
 		});
 	}
-	
+
 	$scope.displayCustomerListModal = function() {
 		/*var pass_data = {
-			index: index
-		};*/
-
-		console.log("open");
+		 index: index
+		 };*/
 
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_customer_list',
 			controller: 'CustomerListModalCtrl',
 			size: 'lg',
 			/*resolve: {
-				passed_data: function () {
-					return pass_data;
-				}
-			},*/
+			 passed_data: function () {
+			 return pass_data;
+			 }
+			 },*/
 			scope: $scope
 		});
 	}
-	
+
 	$scope.displayPaymentReceiptModal = function() {
 		/*var pass_data = {
 			index: index
 		};*/
-		
+
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_payment_receipt',
 			controller: 'PaymentReceiptModalCtrl',
@@ -993,7 +993,7 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 			scope: $scope
 		});
 	}
-	
+
 	$scope.init = function() {
 		$scope.order = {
 			"customer_input_type": "E",
@@ -1279,7 +1279,6 @@ app.controller('CustomerListModalCtrl', function ($scope, $modalInstance, ngTabl
 	$scope.setCustomerIdToSearch = function(customerId) {
 		$scope.customerIdToSearch = customerId;
 		$scope.getCustomerById($scope.customerIdToSearch);
-		
 		$modalInstance.dismiss('close');
 	}
 
