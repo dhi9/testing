@@ -1,4 +1,4 @@
-app.controller('PurchaseServiceDiscussionDetailController', function($filter, $scope, $http, $modal, $stateParams, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService, VendorFactory) {
+app.controller('PurchaseServiceDiscussionDetailController', function($filter, $scope, $http,$state, $modal, $stateParams, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService, VendorFactory) {
 	var draftReference = $stateParams.reference;
 	
 	PurchaseService.getDraftByDraftReference(draftReference).success(function(data){
@@ -362,16 +362,18 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 				approver_id: $scope.approve.user_id,
 				notes: $scope.notes,
 				status: 'A',
+				draft_reference: draftReference,
 			};
 			
-			PurchaseService.insertDraftService(data).success(function(data){
+			PurchaseService.updateDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
 						title: "Service Request Berhasil Disimpan",
-						text: "Draft disimpan dengan reference " + data.draft_reference,
+						text: "Draft disimpan dengan reference " + draftReference,
 						type: "success",
 						animation: "slide-from-top",
 					});
+					$state.go("app.purchase.purchase_discussion");
 				}
 			})
 			.error(function(data){

@@ -1316,11 +1316,13 @@ class Purchaseapi extends CI_Controller {
 			
 			$data = json_decode($json, true);
 			
+			date_default_timezone_set("Asia/Jakarta");
+			
 			$this->db->update(
 				'draft_requests',
 				array(
 					'draft_data' => $json,
-					'date_modified' => date('Y-m-d'),
+					'date_modified' => date('Y-m-d H:i:s'),
 					'status' => $data['status']
 				),
 				array('draft_reference' => $data['draft_reference'])
