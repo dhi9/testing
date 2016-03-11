@@ -147,7 +147,7 @@ class Purchase_model extends CI_Model {
 	public function get_active_item_requests_by_requests_id($requests_id)
 	{
 		return $this->db
-			->select('r.*, i.item_name')
+			->select('r.*, i.item_name, COLUMN_JSON(r.attributes) as attributes')
 			->from('request_items r')
 			->join('items i', 'r.item_code = i.item_code')
 			->where('r.requests_id', $requests_id)
@@ -175,7 +175,7 @@ class Purchase_model extends CI_Model {
 	public function get_active_delivery_requests_items_by_requests_delivery_request_id($requests_delivery_request_id)
 	{
 		return $this->db
-			->select('r.*, i.item_name')
+			->select('r.*, i.item_name, COLUMN_JSON(r.attributes) as attributes')
 			->from('request_delivery_request_items r')
 			->join('items i', 'r.item_code = i.item_code')
 			->where('r.requests_delivery_request_id', $requests_delivery_request_id)
@@ -432,6 +432,12 @@ class Purchase_model extends CI_Model {
 	
 	public function insert_request_delivery_request_items($array)
 	{
+		if(! empty($array['attributes'])){
+			$attributes = $array['attributes'];
+			$this->db->set('attributes', "COLUMN_CREATE($attributes)", FALSE);
+			unset($array['attributes']) ;
+		}
+		
 		if ( $this->db->insert('request_delivery_request_items', $array) )
 		{
 			return $this->db->insert_id();
@@ -541,13 +547,24 @@ class Purchase_model extends CI_Model {
 	
 	public function send_email($to, $pdf)
 	{
+		$companyDetail = $this->company_db->get_company()->row()->company_name;
+		$type = $this->purchase_model->get_active_requests_by_requests_reference($pdf)->row()->type;
+		$subject = "";
+		if($type == "PR"){
+			$subject = "Purchase Order";
+		}elseif($type == "SR"){
+			$subject = "Service Order";
+		}else{
+			
+		}
+		$data['client_name'] = $companyDetail;
 		$this->load->library('email');
-		$this->email->from('test@waveconsulting.co.id', 'VONTIS Messeger');
+		$this->email->from('test@waveconsulting.co.id', 'VONTIS RT');
 		//$this->email->to($to);
 		$this->email->to($to);
 		$this->email->cc('test@waveconsulting.co.id'); 
-		$this->email->subject('VONTIS Messeger');
-		$this->email->message("");
+		$this->email->subject("$companyDetail - $subject $pdf");
+		$this->email->message($this->load->view('email-format-po', $data, TRUE));
 		$this->email->attach('docs/'.$pdf.'.pdf');	
 		$this->email->send();
 	}

@@ -167,7 +167,8 @@
                     <td><?php echo $key['item_code'];$i+=1 ?></td>
                     <td><?php echo $key['item_name'] ?></td>
                     <td>
-                        <?php
+                        <?php 
+                     
                         if ($key['attributes'] != NULL) {
                            $attributes = json_decode($key['attributes']);
                             $countAtt = 0;
@@ -179,6 +180,7 @@
                                 $countAtt += 1;
                             }
                         }
+                        
                         ?>
                     </td>
                     <td><?php echo $key['quantity'] ?></td>
