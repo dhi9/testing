@@ -383,8 +383,11 @@ class Inventoryapi extends CI_Controller {
 	public function check_is_data_for_import_stock_valid($data){
 		function validateDate($date)
 		{
-			$d = DateTime::createFromFormat('d/m/Y', $date);
-			return $d && $d->format('d/m/Y') == $date;
+			//$date = DateTime::createFromFormat("dd/mm/YY", $date);
+			//return ($date === false ? false : true);
+			$newDate = date("m/d/Y", strtotime($date));
+			$d = DateTime::createFromFormat("m/d/Y", $newDate);
+			return $d && $d->format("m/d/Y") == $newDate;
 		}
 		// check if item_code is exist
 		$item_insert_valid = array();
@@ -392,7 +395,7 @@ class Inventoryapi extends CI_Controller {
 		$item_invalid = array();
 		foreach($data as $dt){
 			$error_messages = array();
-			
+			if(!empty($dt['no'])){
 			if($dt['item_code'] != NULL){
 				$item = $this->item_db->get_item_by_item_code($dt['item_code']);
 				if($dt['action'] == "Baru"){
@@ -471,6 +474,8 @@ class Inventoryapi extends CI_Controller {
 					array_push($item_update_valid, $dt);
 				}
 			}
+			
+			}
 			/*
 			if($dt['item_code'] != NULL){
 				$item = $this->item_db->get_item_by_item_code($dt['item_code']);
@@ -509,109 +514,113 @@ class Inventoryapi extends CI_Controller {
 		$json = file_get_contents('php://input');
 		$data = json_decode($json, true);
 		foreach($data as $item){
-			unset($item['no']);
-			//unset($item['action']);
-			//unset($item['category']);
-			unset($item['availability']);
-			unset($item['sell_price_type']);
-			//unset($item['discount_type']);
-			//unset($item['discount_start_date']);
-			//unset($item['discount_end_date']);
-			//unset($item['tag']);
-			unset($item['remark']);
-			unset($item['attributes']);
-			
-			//Discount
-			$start = DateTime::createFromFormat('d/m/Y', $item['discount_start_date']);
-			$end = DateTime::createFromFormat('d/m/Y', $item['discount_end_date']);
-			if(!empty($start) && !empty($end)){
-				$item['discount_start_date'] = $start->format('d/m/Y');
-				$item['discount_end_date'] = $end->format('d/m/Y');
-			}else{
-				$item['discount_start_date'] = null;
-				$item['discount_end_date'] = null;
-			}
-			switch ($item['discount_type']){
-				case "Normal":
-				case "N":
-					break;
-				case "Persen":
-				case "P":
-					$item['discount_perc_start_date'] = date_create($item['discount_start_date']);
-					$item['discount_perc_end_date'] = date_create($item['discount_end_date']);
-					break;
-				case "Tetap":
-				case "T":
-					$item['discount_special_price_start_date'] = date_create($item['discount_start_date']);
-					$item['discount_special_price_end_date'] = date_create($item['discount_end_date']);
-					break;
-				default:
-					$item['discount_type'] = "N";
-					break;
-			}
-			unset($item['discount_start_date']);
-			unset($item['discount_end_date']);
-			//End Discount
-			
-			//Categories
-			$category = $this->category_db->get_category_by_reference($item['category']);
-			if($category->num_rows() > 0){
-				$item['category_id'] = $category->row()->category_id;
-			}else{
-				$insert_category = array(
-					"category_name" => $item['category']
-				);
-				$item['category_id'] = $this->category_db->insert_category($insert_category);
-			}
-			unset($item['category']);
-			//End Categories
-			
-			//Tags
-			if($item['tag'] != NULL){
-				$item['tag'] = str_replace(", ",",",$item['tag']);
-				$tags = explode(",", $item['tag']);
-				foreach($tags as $t){
-					$tag = $this->item_db->get_tag($t);
-					if($tag->num_rows() > 0){
-						$tag_id = $tag->row()->tag_id;
-						$item_tags = $this->item_db->get_item_tags($tag_id, $item['item_code']);
-						if($item_tags->num_rows() > 0){
-							$update_item_tag = array(
-								"item_tag_id" => $item_tags->row()->item_tag_id,
-								"status" => "A"
-							);
-							$this->item_db->update_item_tag($update_item_tag);
+			if(!empty($item['no'])){
+				unset($item['no']);
+				//unset($item['action']);
+				//unset($item['category']);
+				unset($item['availability']);
+				unset($item['sell_price_type']);
+				//unset($item['discount_type']);
+				//unset($item['discount_start_date']);
+				//unset($item['discount_end_date']);
+				//unset($item['tag']);
+				unset($item['remark']);
+				unset($item['attributes']);
+				
+				//Discount
+				$start = date("Y-m-d H:i:s", strtotime($item['discount_start_date']));
+				$end = date("Y-m-d H:i:s", strtotime($item['discount_end_date']));
+				//$start = DateTime::createFromFormat('d/m/Y', $item['discount_start_date']);
+				//$end = DateTime::createFromFormat('d/m/Y', $item['discount_end_date']);
+				if(!empty($start) && !empty($end)){
+					$item['discount_start_date'] = date_create($start);//->format('d/m/Y');
+					$item['discount_end_date'] = date_create($end);//->format('d/m/Y');
+				}else{
+					$item['discount_start_date'] = null;
+					$item['discount_end_date'] = null;
+				}
+				switch ($item['discount_type']){
+					case "Normal":
+					case "N":
+						break;
+					case "Persen":
+					case "P":
+						$item['discount_perc_start_date'] = date_format($item['discount_start_date'], "Y-m-d");
+						$item['discount_perc_end_date'] = date_format($item['discount_end_date'], "Y-m-d");
+						break;
+					case "Tetap":
+					case "T":
+						$item['discount_special_price_start_date'] = date_format($item['discount_start_date'], "Y-m-d");
+						$item['discount_special_price_end_date'] = date_format($item['discount_end_date'], "Y-m-d");
+						break;
+					default:
+						$item['discount_type'] = "N";
+						break;
+				}
+				unset($item['discount_start_date']);
+				unset($item['discount_end_date']);
+				//End Discount
+				
+				//Categories
+				$category = $this->category_db->get_category_by_reference($item['category']);
+				if($category->num_rows() > 0){
+					$item['category_id'] = $category->row()->category_id;
+				}else{
+					$category_name = $item['category'];
+					$insert_category = array(
+						"category_name" => $category_name
+					);
+					$item['category_id'] = $this->category_db->insert_category($insert_category);
+				}
+				unset($item['category']);
+				//End Categories
+				
+				//Tags
+				if($item['tag'] != NULL){
+					$item['tag'] = str_replace(", ",",",$item['tag']);
+					$tags = explode(",", $item['tag']);
+					foreach($tags as $t){
+						$tag = $this->item_db->get_tag($t);
+						if($tag->num_rows() > 0){
+							$tag_id = $tag->row()->tag_id;
+							$item_tags = $this->item_db->get_item_tags($tag_id, $item['item_code']);
+							if($item_tags->num_rows() > 0){
+								$update_item_tag = array(
+									"item_tag_id" => $item_tags->row()->item_tag_id,
+									"status" => "A"
+								);
+								$this->item_db->update_item_tag($update_item_tag);
+							}else{
+								$insert_item_tag = array(
+									"tag_id" => $tag_id,
+									"item_code" => $item['item_code']
+								);
+								$this->item_db->insert_item_tag($insert_item_tag);
+							}
 						}else{
+							$insert_tag = array(
+								"tag_name" => $t
+							);
+							$tag_id = $this->item_db->insert_tag($insert_tag);
 							$insert_item_tag = array(
 								"tag_id" => $tag_id,
 								"item_code" => $item['item_code']
 							);
 							$this->item_db->insert_item_tag($insert_item_tag);
 						}
-					}else{
-						$insert_tag = array(
-							"tag_name" => $t
-						);
-						$tag_id = $this->item_db->insert_tag($insert_tag);
-						$insert_item_tag = array(
-							"tag_id" => $tag_id,
-							"item_code" => $item['item_code']
-						);
-						$this->item_db->insert_item_tag($insert_item_tag);
 					}
 				}
+				unset($item['tag']);
+				//End Tags
+				
+				if($item['action'] == "Baru"){
+					unset($item['action']);
+					$this->item_db->insert_item($item);
+				}else{
+					unset($item['action']);
+					$this->item_db->update_item($item);
+				}
 			}
-			unset($item['tag']);
-			//End Tags
-			
-			if($item['action'] == "Baru"){
-				unset($item['action']);
-				$this->item_db->insert_item($item);
-			}else{
-				unset($item['action']);
-				$this->item_db->update_item($item);
-			}
-			
 		}
 		
 		

@@ -1,8 +1,6 @@
-app.controller('changePurchaseRequestDetailController', function($filter, $scope, $http, $modal, $stateParams, $rootScope, PurchaseService, VendorService, ItemService, WarehouseService, SweetAlert, AttributeFactory, SiteService) {
+app.controller('changePurchaseRequestDetailController', function($filter, $scope, $http, $state, $modal, $stateParams, $rootScope, PurchaseService, VendorService, ItemService, WarehouseService, SweetAlert, AttributeFactory, SiteService) {
 	var draftReference = $stateParams.reference;
 	//$scope.username = $rootScope.username;
-    
-    console.log($scope);
 	
 	$scope.edit = {};
 	$scope.edit.itemList = true;
@@ -28,9 +26,9 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
         }
     });
 
-    $scope.attributeList = AttributeFactory.attributeList;
-    AttributeFactory.getAttributeList().then(function(){
-        $scope.attributeList = AttributeFactory.attributeList;
+    $scope.attributeList = AttributeFactory.attributeActiveList;
+    AttributeFactory.getAttributeActiveList().then(function(){
+        $scope.attributeList = AttributeFactory.attributeActiveList;
     });
 
     $scope.warehouse = {};
@@ -65,12 +63,13 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 			$scope.currency = $scope.purchase.currency;
 			$scope.itemRequestList = $scope.purchase.item_request_list;
 			$scope.deliveryRequestList = $scope.purchase.delivery_request_list;
-			
-/*			for(var i = 0; i < $scope.itemRequestList.length; i++){
+			/*
+			for(var i = 0; i < $scope.itemRequestList.length; i++){
                 $scope.itemRequestList[i].attributes = JSON.parse($scope.itemRequestList[i].attributes);
 				$scope.loadItemRequest(i, $scope.itemRequestList[i]);
 			}
-*/			
+			*/
+
 			for(var i = 0; i < $scope.deliveryRequestList.length; i++){
 				$scope.deliveryRequestList[i].date = new Date(moment($scope.purchase.delivery_request_list[i].date));
 			}
@@ -151,6 +150,7 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 				item_code: itemRequestList[i].item_code,
 				requested_quantity: itemRequestList[i].quantity,
 				item_name: itemRequestList[i].item_name,
+				attributes: itemRequestList[i].attributes,
 				remaining: itemRequestList[i].quantity - $scope.totalItemInItemDeliveryRequest(itemRequestList[i].item_code),
 				item_unit: itemRequestList[i].item_unit
 			};
@@ -249,7 +249,7 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 	}
 	
 	$scope.isDeliveryRequestValid = function(deliveryRequest){
-		if (deliveryRequest.date == "" || deliveryRequest.warehouse_id == "" || (!$scope.isItemDeliveryRequestValid(deliveryRequest) )) {
+		if (deliveryRequest.date == "" || (!$scope.isItemDeliveryRequestValid(deliveryRequest) )) {
 			return false;
 		}
 		else {
@@ -398,7 +398,13 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 	$scope.submitPurchaseRequest = function(){
 		for (var i = 0; i < $scope.itemRequestList.length; i++) {
 			delete $scope.itemRequestList[i].uom_list;
-            $scope.itemRequestList[i].attributes = JSON.stringify($scope.itemRequestList[i].attributes);
+           // $scope.itemRequestList[i].attributes = JSON.stringify($scope.itemRequestList[i].attributes);
+		}
+
+		for (var j = 0; j < $scope.deliveryRequestList.length; j++) {
+			for (var k = 0; k < $scope.deliveryRequestList[j].item_delivery_request_list.length; k++) {
+				$scope.deliveryRequestList[j].item_delivery_request_list[k].attributes = JSON.stringify($scope.deliveryRequestList[j].item_delivery_request_list[k].attributes);
+			}
 		}
 		var data = {
 			draft_reference: draftReference,
@@ -411,6 +417,7 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 			approver_name: $scope.approve.name,
 			approver_email: $scope.approve.email,
 			approver_id: $scope.approve.user_id,
+			status: "A",
 		};
 		
 		PurchaseService.updateDraftPurchase(data).success(function(data){
@@ -420,6 +427,7 @@ app.controller('changePurchaseRequestDetailController', function($filter, $scope
 					type: "success", 
 					animation: "slide-from-top"
 				});
+				$state.go("app.purchase.approve_purchase_request");
 			}
 		});
 	}

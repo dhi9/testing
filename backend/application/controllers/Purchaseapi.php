@@ -8,7 +8,7 @@ class Purchaseapi extends CI_Controller {
 		// Call the CI_Model constructor
 		parent::__construct();
 		
-		$this->load->model(array('purchase_model', 'auditlog_model', 'user_model', 'site_model', 'purchase_bl', 'site_db', 'stock_movement_db', 'inventory_db', 'inventory_bl', 'vendor_model', 'warehouse_model', 'company_db', 'user_db', 'item_bl'));
+		$this->load->model(array('purchase_model', 'auditlog_model', 'user_model', 'site_model', 'purchase_bl', 'site_db', 'stock_movement_db', 'inventory_db', 'inventory_bl', 'vendor_model', 'warehouse_model', 'company_db', 'user_db', 'item_bl', 'attribute_db'));
 		$this->load->helper('url');
 		$this->load->helper('string');
 		$this->load->helper('download');
@@ -271,13 +271,13 @@ class Purchaseapi extends CI_Controller {
 		$ActiveItemRequestList = $this->purchase_model->get_active_item_requests_by_requests_id($ActiveRequestDetail['requests_id'])->result_array();
 		$ActiveDeliveryRequestList = $this->purchase_model->get_active_delivery_requests_by_requests_id($ActiveRequestDetail['requests_id'])->result_array();
 		$ActiveDeliveryAddressList = $this->purchase_model->get_site_list()->result_array();
+		$ActiveAttributes = $this->attribute_db->get_attribute_active_list()->result_array();
 		$ActiveDeliveryRequestItemList = array();
 		$i = 1;
 		foreach($ActiveDeliveryRequestList as $key){
 			$items = $this->purchase_model->get_active_delivery_requests_items_by_requests_delivery_request_id($key['requests_delivery_request_id'])->result_array();
 			foreach($items as $item){
 				$item['plan'] = $i;
-				$item['attributes'] = $key['attributes'];
 				$item['requested_date'] = $key['requested_date'];
 				$item['remark'] = $key['remark'];
 				$item['site_id'] = $key['site_id'];
@@ -294,6 +294,7 @@ class Purchaseapi extends CI_Controller {
 		$data['ActiveDeliveryRequestList'] = $ActiveDeliveryRequestList;
 		$data['ActiveDeliveryAddressList'] = $ActiveDeliveryAddressList;
 		$data['ActiveDeliveryRequestItemList'] = $ActiveDeliveryRequestItemList;
+		$data['ActiveAttributes'] = $ActiveAttributes;
 		$random = random_string('numeric', 3);
 		$filename = "REPORT$random - PURCHASE";
 
@@ -412,7 +413,7 @@ class Purchaseapi extends CI_Controller {
 			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
 			$pdf->WriteHTML($html); 
 			ob_clean();
-			$pdf->Output($request_reference.".pdf", 'D');
+			$pdf->Output($filename.".pdf", 'D');
 			//$pdf->Output($request_reference.".pdf", 'F');
 			//$pdf->Output();
 			//force_download($filename.".pdf","./docs/".$filename.".pdf");
@@ -1319,6 +1320,7 @@ class Purchaseapi extends CI_Controller {
 				'draft_requests',
 				array(
 					'draft_data' => $json,
+					'date_modified' => date('Y-m-d'),
 					'status' => $data['status']
 				),
 				array('draft_reference' => $data['draft_reference'])

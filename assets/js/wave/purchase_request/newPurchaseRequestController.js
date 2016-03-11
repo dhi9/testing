@@ -318,7 +318,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 						type: "success",
 						animation: "slide-from-top"
 					});
-					$state.go("app.purchase.approve_purchase_request");
+					$state.reload();
 				}
 			});
 		}else{

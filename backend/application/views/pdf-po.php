@@ -148,7 +148,15 @@
                     <th width="5">No.</th>
                     <th>ArticleID/SKU</th>
                     <th>Nama Barang/Name</th>
-                    <th>Attribute</th>
+                    <?php
+                        foreach($ActiveAttributes as $attrib){
+                            
+                        
+                    ?>
+                        <th><?php echo $attrib['attribute_name'] ?></th>
+                    <?php
+                        }
+                    ?>
                     <th>Jumlah/QTY</th>
                     <th>Unit</th>
                     <th>Remarks/Keterangan</th>
@@ -161,28 +169,23 @@
                  $itemlength = sizeof($itemList);
                  $total=0;
                  $i=1;
-                 foreach ($itemList as $key) { ?>
+                 foreach ($itemList as $key) { 
+                 $attributes = json_decode($key['attributes'], TRUE);
+                 $countAttrib = count($attributes);
+                 ?>
                 <tr>
                     <td align="center" style="height:20px"><?php echo $i ?></td>
                     <td><?php echo $key['item_code'];$i+=1 ?></td>
                     <td><?php echo $key['item_name'] ?></td>
-                    <td>
-                        <?php 
-                     
-                        if ($key['attributes'] != NULL) {
-                           $attributes = json_decode($key['attributes']);
-                            $countAtt = 0;
-                            foreach ($attributes as $attKey => $attVal) {
-                                if($countAtt >= 1){
-                                    echo ", ";
-                                }
-                                echo $attKey.":".$attVal;
-                                $countAtt += 1;
-                            }
-                        }
+                    <?php
+                        foreach($ActiveAttributes as $attrib){
+                            
                         
-                        ?>
-                    </td>
+                    ?>
+                        <td align="center"><?php echo $attributes[$attrib['attribute_name']] ?></td>
+                    <?php
+                        }
+                    ?>
                     <td><?php echo $key['quantity'] ?></td>
                     <td><?php echo $key['item_unit'] ?></td>
                     <td><?php echo @$key['remark'] ?></td>
@@ -195,7 +198,13 @@
                     <td align="center" style="height:20px"><?php echo $j ?></td>
                     <td></td>
                     <td></td>
+                    <?php
+                     for($k=0;$k<$countAttrib;$k+=1){ ?>
+                     ?>
                     <td></td>
+                    <?php
+                                                       }
+                    ?>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -302,7 +311,13 @@
                     <th>Tanggal Pengiriman</th>
                     <th>ArticleID/SKU</th>
                     <th>Nama Barang/Name</th>
-                    <th>Attribute</th>
+                    <?php
+                        foreach($ActiveAttributes as $attrib){
+                    ?>
+                        <th><?php echo $attrib['attribute_name'] ?></th>
+                    <?php
+                        }
+                    ?>
                     <th>Jumlah/QTY</th>
                     <th>Unit</th>
                     <th>Catatan Pengiriman</th>
@@ -322,7 +337,15 @@
                     <td><?php echo date("Y-m-d",strtotime($key['requested_date'])); ?></td>
                     <td><?php echo $key['item_code'];$i+=1 ?></td>
                     <td><?php echo $key['item_name'] ?></td>
-                    <td><?php //echo $key['attributes'] ?></td>
+                    <?php
+                        $attributes = json_decode($key['attributes'], TRUE);
+                        foreach($ActiveAttributes as $attrib){
+                    ?>
+                        <td align="center"><?php echo $attributes[$attrib['attribute_name']] ?></td>
+                    <?php
+                        }
+                    ?>
+                    
                     <td><?php echo $key['quantity'] ?></td>
                     <td><?php echo $key['item_unit'] ?></td>
                     <td><?php echo @$key['remark'] ?></td>
@@ -346,7 +369,13 @@
                     <td align="center" style="height:30px"><?php echo $j ?></td>
                     <td></td>
                     <td></td>
+                    <?php
+                     for($k=0;$k<$countAttrib;$k+=1){ ?>
+                     ?>
                     <td></td>
+                    <?php
+                                                       }
+                    ?>
                     <td></td>
                     <td></td>
                     <td></td>

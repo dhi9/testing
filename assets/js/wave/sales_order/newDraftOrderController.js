@@ -812,8 +812,9 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 
 	$scope.inputCustomer = function(data){
 		$scope.order.customer_input_type = "E";
-		$scope.order.customer_id = $scope.customerIdToSearch;
-		$scope.order.customer_details.customer_id = $scope.customerIdToSearch;
+		$scope.order.customer_id = data.customer_details.customer_id;
+		$scope.order.customer_details.customer_id = data.customer_details.customer_id;
+		$scope.customerName = data.customer_details.customer_name;
 		$scope.order.customer_details.customer_name = data.customer_details.customer_name;
 		$scope.order.customer_details.pic_name = data.customer_details.pic_name;
 		$scope.order.customer_details.address = data.customer_details.address;
