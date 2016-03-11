@@ -223,7 +223,7 @@ class Purchase_bl extends CI_Model {
 			$purchase_delivered_item_id = $this->purchase_db->insert_delivered_items($insert_good_recieved);
 			
 			$this->inventory_bl->add_stock_quantity($insert_good_recieved, $good_received['quantity']);
-			
+			$insert_good_recieved['purchase_delivered_item_id'] = $purchase_delivered_item_id;
 			$insert_good_recieved['attributes'] = $good_received['attributes'];
 			array_push($gr, $insert_good_recieved);
 			

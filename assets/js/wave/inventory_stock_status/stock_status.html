@@ -11,10 +11,10 @@
 
 <!-- start: YOUR CONTENT HERE -->
 
-<div ng-controller="StockStatusController">  
+<div ng-controller="StockStatusController">
 
 <div class="container-fluid container-fullw">
-    
+
 	<div class="row">
 		<div class="col-lg-12">
 			<form class="form-horizontal" ng-submit="submitSearch()">
@@ -72,7 +72,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<button type="submit" class="btn btn-primary">Cari</button>
 			</form>
 		</div>
@@ -126,28 +126,28 @@
 	</div>
 </script>
 
-    <script type="text/ng-template" id="modal_storage_list">
-        <div class="modal-header">
-            <h3 class="modal-title">Storage Detail</h3>
-        </div>
-        <div class="modal-body bg-white">
-            <input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
-            <div class="table-responsive">
-                <table class="table" ng-table="tableParams">
-                    <tr ng:repeat="location in $data | filter: filter" ng-class="{ 'info': location.selected }">
-                        <td data-title="'Nama Lokasi'" sortable="'location'">{{ location.storage_name }}</td>
-                        <td class="col-md-2">
-                            <button class="btn btn-alt btn-hover btn-primary" ng-if="!location.selected" ng-click="location.selected=true">Pilih</button>
-                            <button class="btn btn-alt btn-hover btn-danger" ng-if="location.selected" ng-click="location.selected=false">Batal</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
-            <button class="btn btn-danger" ng-click="closeModal()">Batal</button>
-        </div>
-    </script>
-		
+	<script type="text/ng-template" id="modal_storage_list">
+		<div class="modal-header">
+			<h3 class="modal-title">Storage Detail</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<input type="text" class="form-control" placeholder="Filter" ng-model="filter.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="tableParams">
+					<tr ng:repeat="location in $data | filter: filter" ng-class="{ 'info': location.selected }">
+						<td data-title="'Nama Lokasi'" sortable="'location'">{{ location.storage_name }}</td>
+						<td class="col-md-2">
+							<button class="btn btn-alt btn-hover btn-primary" ng-if="!location.selected" ng-click="location.selected=true">Pilih</button>
+							<button class="btn btn-alt btn-hover btn-danger" ng-if="location.selected" ng-click="location.selected=false">Batal</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<button class="btn btn-primary" ng-click="saveModal()">Simpan</button>
+			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+
 <script type="text/ng-template" id="modal_attribute_value_list">
 	<div class="modal-header">
 		<h3 class="modal-title">Daftar {{attributeName}}</h3>

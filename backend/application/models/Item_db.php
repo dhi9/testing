@@ -385,8 +385,10 @@ class Item_db extends CI_Model {
 	public function get_item_delivery_by_delivery_item_id($id)
 	{
 		return $this->db
+			->select('*, COLUMN_JSON(attributes) as attributes')
+			->from('request_delivery_request_items')
 			->where('purchase_delivery_request_item_id', $id)
-			->get('request_delivery_request_items');
+			->get();
 	}
 	
 	public function get_items_with_tag($id)

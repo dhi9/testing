@@ -31,7 +31,7 @@
 						<td data-title="'Status'" sortable="'statusLabel'">{{ item.statusLabel }}</td>
 						<td>
 							<button class="btn btn-primary" ui-sref="app.master.stock_edit({item_code: '{{ item.item_code }}'})">
-								<span>Ubah</span>
+								<span>Detail</span>
 								<i class="glyph-icon icon-close"></i>
 							</button>
 						</td>
@@ -56,6 +56,9 @@
 						<li>
 							<a ng-click="saveExpenses()">Export Data</a>
 						</li>
+						<li>
+							<a href="assets/VONTIS%20RT%20-%20Data%20Import%20Reference%20Guide.pdf" target="_blank">Bantuan</a>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -69,7 +72,7 @@
 <!-- end: YOUR CONTENT HERE -->
 
 <!-- JSZip -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="vendor/wijmo/scripts/vendor/jszip.min.js"></script>
 
 <!-- Wijmo -->
 <script src="vendor/wijmo/scripts/vendor/wijmo.min.js" type="text/javascript"></script>

@@ -80,8 +80,12 @@
 		<div class="row">
 			<div class="col-md-12">
 				<br>
-				<button class="btn btn-alt btn-hover btn-primary" ng-click="checkWorkbook()" ladda="loadingImportStock">
+				<button class="btn btn-alt btn-hover btn-primary" ng-click="checkWorkbook()" ladda="loadingImportStock" ng-if="!progress">
 					<span>Lanjut</span>
+					<i class="glyph-icon icon-plus"></i>
+				</button>
+				<button class="btn btn-alt btn-hover btn-primary"  ui-sref="app.master.stock" ng-if="progress" >
+					<span>Kembali</span>
 					<i class="glyph-icon icon-plus"></i>
 				</button>
 				<button class="btn btn-alt btn-hover btn-primary" ng-click="startImportStock()" ng-if="progress && invalidData.length == 0" >
@@ -104,8 +108,9 @@
 </div>
 
 <!-- end: YOUR CONTENT HERE -->
+
 <!-- JSZip -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="vendor/wijmo/scripts/vendor/jszip.min.js"></script>
 
 <!-- Wijmo -->
 <script src="vendor/wijmo/scripts/vendor/wijmo.min.js" type="text/javascript"></script>

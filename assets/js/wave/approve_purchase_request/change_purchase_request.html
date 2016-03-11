@@ -169,8 +169,10 @@
 												</div>
 											</td>
 											<td>{{ itemRequest.item_name }}</td>
-                                            <td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'"><input type="text" class="form-control" placeholder="{{attribute.default_value}}" ng-model="itemRequest.attributes[attribute.attribute_name]" /></td>
-                                            <td><input type="number" class="form-control" placeholder="0" ng-model="itemRequest.quantity" min="1" maxlength="15" /></td>
+											<td ng-repeat="attribute in attributeList" ng-if="attribute.status != 'X'">
+												<select ng-model="itemRequest.attributes[attribute.attribute_name]" ng-options="attrib.attribute_item as attrib.attribute_item for attrib in attribute.attribute_items"></select>
+											</td>
+											<td><input type="number" class="form-control" placeholder="0" ng-model="itemRequest.quantity" min="1" maxlength="15" /></td>
 											<td>
 												<select ng-model="itemRequest.item_unit" ng-options="uom.alternative_uom as uom.alternative_uom for uom in itemRequest.uom_list"></select>
 											</td>

@@ -223,6 +223,12 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 				$scope.itemRequestList[index] = data.item_details;
 				$scope.itemRequestList[index].quantity = '';
 				$scope.itemRequestList[index].item_unit = data.item_details.item_unit;
+				$scope.itemRequestList[index].attributes = {};
+				
+				for(var i = 0; i < $scope.attributeList.length; i++){
+					var attribute = $scope.attributeList[i];
+					$scope.itemRequestList[index].attributes[attribute.attribute_name] = attribute.default_value;
+				}
 			}
 		});
 	};
@@ -233,6 +239,12 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 				$scope.itemRequestList[index] = data.item_details;
 				$scope.itemRequestList[index].quantity = '';
 				$scope.itemRequestList[index].item_unit = data.item_details.item_unit;
+				$scope.itemRequestList[index].attributes = {};
+				
+				for(var i = 0; i < $scope.attributeList.length; i++){
+					var attribute = $scope.attributeList[i];
+					$scope.itemRequestList[index].attributes[attribute.attribute_name] = attribute.default_value;
+				}
 			}
 		});
 	};
@@ -297,6 +309,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 				notes: $scope.notes,
 				status: 'A',
 			};
+			
 			PurchaseService.insertDraftPurchase(data).success(function(data){
 				if (data.call_status == 'success') {
 					SweetAlert.swal({
@@ -305,7 +318,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 						type: "success",
 						animation: "slide-from-top"
 					});
-					$state.go("app.purchase.approve_purchase_request");
+					$state.reload();
 				}
 			});
 		}else{
@@ -319,8 +332,7 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 	};
 	
 	$scope.submitDraftPurchase = function(supplier){
-		var valid = PurchaseFactory.isPurchaseValid(supplier);
-		if(valid){
+		if(supplier.vendor_id != null || supplier.vendor_id != undefined || supplier.vendor_id != "" ){
 			var data = {
 				supplier_id: $scope.supplier.vendor_id,
 				currency: $scope.currency,
