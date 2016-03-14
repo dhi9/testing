@@ -202,7 +202,8 @@ class Purchase_db extends CI_Model {
 	{
 		return $this->db
 			->select('*')
-			->from('request_delivery_requests')
+			->from('request_delivery_requests rd')
+			->join('sites s', 's.site_id = rd.site_id', 'left')
 			->where('requests_id', $requests_id)
 		->get();
 	}

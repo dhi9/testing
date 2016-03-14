@@ -30,7 +30,7 @@
 					<tr ng-repeat="deliveryRequest in ActiveDeliveryRequestList">
 						<td>Permintaan Pengiriman {{ $index+1 }}</td>
 						<td>{{ deliveryRequest.requested_date | date:'dd-MM-yyyy'}}</td>
-						<td>{{ searchWarehouseById(deliveryRequest.warehouse_id).city}}</td>
+						<td>{{ deliveryRequest.site_name}}</td>
 						<td>{{ statusLabel(deliveryRequest.status)}}</td>
 						<td>
 							<button class="btn btn-primary" ui-sref="app.purchase.purchase_delivery_request_detail({requests_delivery_requests_id :'{{ deliveryRequest.requests_delivery_request_id }}'})">
