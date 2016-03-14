@@ -8,7 +8,7 @@ class Reportapi extends CI_Controller {
 		// Call the CI_Model constructor
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->model(array('delivery_model','user_model', 'stock_movement_bl', 'stock_movement_db', 'site_db', 'company_db', 'inventory_db', 'order_db'));
+		$this->load->model(array('delivery_model','user_model', 'stock_movement_bl', 'stock_movement_db', 'site_db', 'company_db', 'inventory_db', 'order_db', 'purchase_model'));
 	}
 	
 	public function get_delivery_report()
@@ -308,12 +308,41 @@ class Reportapi extends CI_Controller {
 		echo json_encode($feedback);
 	}
 	
+	public function sksort($array, $subkey="quantity", $sort_ascending=false) {
+	
+		if (count($array))
+			$temp_array[key($array)] = array_shift($array);
+	
+		foreach($array as $key => $val){
+			$offset = 0;
+			$found = false;
+			foreach($temp_array as $tmp_key => $tmp_val)
+			{
+				if(!$found and strtolower($val[$subkey]) > strtolower($tmp_val[$subkey]))
+				{
+					$temp_array = array_merge(    (array)array_slice($temp_array,0,$offset),
+												array($key => $val),
+												array_slice($temp_array,$offset)
+											  );
+					$found = true;
+				}
+				$offset++;
+			}
+			if(!$found) $temp_array = array_merge($temp_array, array($key => $val));
+		}
+	
+		if ($sort_ascending) $array = array_reverse($temp_array);
+	
+		else $array = $temp_array;
+	}
 	
 	public function daily_report(){
 		$data['CompanyDetail'] = $this->company_db->get_company()->row();
 		//$data['Chart'] = $this->load->view('pdf-daily-report-chart', NULL, true);
 		$data['yesterday'] = date('Y-m-d H:i:s', strtotime('yesterday'));
 		$data['endofyesterday'] = date('Y-m-d 23:59:59', strtotime('yesterday'));
+		$data['date'] = date('d/m/Y', strtotime('yesterday'));
+		$data['day'] = date('l', strtotime('yesterday'));
 		$order = $this->order_db->get_order_between_date($data['yesterday'], $data['endofyesterday'])->result_array();
 		$order_items = array();
 		$top5item = array();
@@ -345,30 +374,37 @@ class Reportapi extends CI_Controller {
 				$cost_total += $oi['cost'];
 				$discount_total += $oi['cost'] * $oi['disc_percent']/100;
 		}
+		
 		$data['order_items'] = $order_items;
 		$data['order'] = $order;
+		//$this->sksort($top5item, "quantity", true);
 		$data['top5item'] = $top5item;
 		$data['sales_total'] = count($order);
 		$data['cost_total'] = $cost_total;
 		$data['discount_total'] = $discount_total;
 		$data['tax_total'] = $tax_total;
+		$filename = "VONTIS-DAILY";
+		$pdfFilePath = FCPATH."/docs/".$filename.".pdf";
+		ini_set('memory_limit','32M');
 		$html = $this->load->view('pdf-daily-report', $data, true);
 		//$html = $this->load->view('pdf-daily-report', $data);
 		$this->load->library('pdf');
 		$pdf = $this->pdf->load('','A4',9,'dejavusans');
 		//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
 		$pdf->WriteHTML($html); 
-		ob_clean();
+		//ob_clean();
 		//$pdf->Output($filename.".pdf", 'D');
-		$pdf->Output($request_reference.".pdf", 'F');
-		$pdf->Output();
+		$pdf->Output($pdfFilePath, 'F');
+		//$pdf->Output();
+		$this->purchase_model->send_email_daily_report("rizky@wvi.co.id",$filename);
 	}
 	public function piegraph($data = NULL){
+		
 		$this->load->library('jpgraph');
         
        $bar_graph = $this->jpgraph->piechart();
        $datax = array(2,10,20,10,20,10,20);
-        $datay = array("rendah","sedang","bagus","a","bagus","sedang","bagus");
+        $datay = array($data,"sedang","bagus","a","bagus","sedang","bagus");
         
         $graph = new PieGraph(260,230,"auto"); 
         $graph->SetScale('textint'); 

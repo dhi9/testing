@@ -60,18 +60,18 @@
 		<div class="table-responsive">
 			<table class="table" ng-table="stockTableParams">
 				<tr ng:repeat="stock in $data | filter: search.$">
-					<td data-title="'SiteID'" sortable="'site_name'">{{ stock.site_id}}</td>
+					<td data-title="'SiteID'" sortable="'site_name'">{{ stock.site_reference}}</td>
 
 				<!--
 					<td data-title="'Site'" sortable="'site_name'">{{ stock.site_name}}</td>
 					<td data-title="'Tipe'" sortable="'tipe'">{{ stock.item_tipe}}</td>
 				-->
-					<td data-title="'Kategori'" sortable="'kategori'">{{ stock.item_name}}</td>
+					<td data-title="'Kategori'" sortable="'kategori'">{{ stock.category_name}}</td>
 
 					<td data-title="'Kode Barang (SKU)'" sortable="'kode_barang'">{{ stock.item_code }}</td>
 
-					<td data-title="'Nama Barang'" sortable="'item_name'">{{ stock.item_code }}</td>
-					<td data-title="'Batch'" sortable="'batch'">{{ stock.bin_name }}</td>
+					<td data-title="'Nama Barang'" sortable="'item_name'">{{ stock.item_name }}</td>
+					<td data-title="'Batch'" sortable="'batch'">{{ stock.batch_reference }}</td>
 					<td data-title="'Lokasi'" sortable="'lokasi'">{{ stock.storage_name }}</td>
 
 					<td data-title="'UOM Dasar'" sortable="'item_unit'">{{ stock.item_unit}}</td>
@@ -139,6 +139,18 @@
 
 <!-- End of Customer Row -->
 
-
-
 <!-- end: YOUR CONTENT HERE -->
+
+<!-- JSZip -->
+<script src="vendor/wijmo/scripts/vendor/jszip.min.js"></script>
+
+<!-- Wijmo -->
+<script src="vendor/wijmo/scripts/vendor/wijmo.min.js" type="text/javascript"></script>
+<script src="vendor/wijmo/scripts/vendor/wijmo.xlsx.min.js" type="text/javascript"></script>
+<link href="vendor/wijmo/styles/vendor/wijmo.min.css" rel="stylesheet" />
+
+<script src="vendor/wijmo/scripts/vendor/wijmo.angular.min.js" type="text/javascript"></script>
+
+<script src="vendor/wijmo/scripts/xlsxExport/expenseReportExport.js" type="text/javascript"></script>
+
+<!-- <script src="vendor/wijmo/scripts/xlsxImport/drawWorkbook.js"></script> -->

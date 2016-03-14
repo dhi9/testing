@@ -353,12 +353,14 @@ class Inventory_db extends CI_Model {
 	{
 		//$this->db->select("*, COUNT(it.tag_id) as tags, COLUMN_JSON(inven.attributes) as attributes");
 		
-			$this->db->select("*, COLUMN_JSON(inven.attributes) as attributes");
+			$this->db->select("*, COLUMN_JSON(inven.attributes) as attributes, SUM(quantity) as quantity");
 		
 		$this->db->from("inventory_stocks inven");
 		$this->db->join("sites s", "s.site_id = inven.site_id", "left");
+		$this->db->join("items i", "i.item_code = inven.item_code", "left");
+		$this->db->join("categories c", "c.category_id = i.category_id", "left");
 		$this->db->join("storage_locations sl", "sl.storage_id = inven.storage_id", "left");
-		$this->db->join("bin_locations b", "b.bin_id = inven.bin_id", "left");
+		$this->db->join("batchs b", "b.batch_id = inven.batch_id", "left");
 		
 		if(!empty($data['site_id'])){
 			$this->db->where_in("inven.site_id", array(implode(',', $data['site_id'])));
@@ -367,7 +369,7 @@ class Inventory_db extends CI_Model {
 			$this->db->where_in("inven.storage_id", array(implode(',', $data['storage_id'])));
 		}
 		
-		$this->db->group_by("inven.inventory_stock_id");
+		$this->db->group_by("inven.item_code, inven.site_id, inven.batch_id");
 		
 		return $this->db->get();
 	}

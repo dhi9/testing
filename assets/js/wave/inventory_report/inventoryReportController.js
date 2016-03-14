@@ -46,8 +46,13 @@ app.controller('InventoryReportController', function($filter, $scope, $http, $mo
 			}
 		}
 	};
-	InventoryService.getStockDisplay().success(function (data) {
-		$scope.stockDisplayList = data.stock_display_list;
+	var data = {
+		site_reference: "",
+		//tag: $scope.search.tag
+		storage_name: ""
+	};
+	ApiCallService.getInventoryReport(data).success(function (data) {
+		$scope.stockDisplayList = data.result;
 
 		$scope.setAttributes();
 		$scope.stockTableParams.total($scope.stockDisplayList.length);
@@ -198,6 +203,48 @@ app.controller('InventoryReportController', function($filter, $scope, $http, $mo
 	$scope.removeChooseTag = [];
 
 	$scope.addChooseTag = [];
+
+	$scope.exportToCSV = function () {
+		var sheets = [{
+			Advance: 1000,
+			Attachment: true,
+			Expenses:$scope.stockDisplayList,
+			Name: "Inventory Report",
+			Column:[
+				{ value: 'No' },
+				{ value: 'SiteID' },
+				{ value: 'Kategori' },
+				{ value: 'ArticleID/SKU' },
+				{ value: 'Nama' },
+				{ value: 'Batch' },
+				{ value: 'Lokasi' },
+				{ value: 'UOM' },
+				{ value: 'Tersedia' },
+				{ value: 'Quality' },
+				{ value: 'Block' },
+				{ value: 'Konsinyasi' },
+				{ value: 'Proses Pengadaan' },
+				{ value: 'Sales Order' }
+			],
+			Field:[
+				{ value: "site_reference", width: 100 },
+				{ value: "category_name", width: 100 },
+				{ value: "item_code", width: 100 },
+				{ value: "item_name", width: 100 },
+				{ value: "batch_reference", width: 100 },
+				{ value: "storage_name", width: 100 },
+				{ value: "item_unit", width: 100 },
+				{ value: "quantity", width: 100 },
+				{ value: "quality", width: 100 },
+				{ value: "block", width: 100 },
+				{ value: "consignment", width: 100 },
+				{ value: "availability", width: 100 },
+				{ value: "salesoorder", width: 100 }
+			]
+		}]
+		var workbook = XlsxExport.exportCustomColumn(sheets);
+		var xlsx = wijmo.xlsx.XlsxConverter.exportToFile(workbook, 'VONTIS-INVENTORY-REPORT-EXPORT.xlsx');
+	}
 
 });
 
