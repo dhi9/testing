@@ -80,6 +80,13 @@ class Order_db extends CI_Model {
 		return $this->db->where('order_id', $order_id)->get('orders');
 	}
 	
+	public function get_order_between_date($start_date = NULL, $end_date=NULL)
+	{
+		return $this->db->where('date_created >=', $start_date)
+						->where('date_created <=', $end_date)
+						->get('orders');
+	}
+	
 	public function get_order_items($order_id)
 	{
 		/*return $this->db
