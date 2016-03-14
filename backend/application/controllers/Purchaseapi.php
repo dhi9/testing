@@ -110,6 +110,8 @@ class Purchaseapi extends CI_Controller {
 				$ActiveItemRequestList = $this->purchase_model->get_active_item_requests_by_requests_id($ActiveRequestDetail['requests_id'])->result_array();
 				$ActiveDeliveryRequestList = $this->purchase_model->get_active_delivery_requests_by_requests_id($ActiveRequestDetail['requests_id'])->result_array();
 				$ActiveDeliveryAddressList = $this->purchase_model->get_site_list()->result_array();
+				$ActiveAttributes = $this->attribute_db->get_attribute_active_list()->result_array();
+				
 				$ActiveDeliveryRequestItemList = array();
 				$i = 1;
 				foreach($ActiveDeliveryRequestList as $key){
@@ -133,6 +135,7 @@ class Purchaseapi extends CI_Controller {
 				$data['ActiveDeliveryRequestList'] = $ActiveDeliveryRequestList;
 				$data['ActiveDeliveryAddressList'] = $ActiveDeliveryAddressList;
 				$data['ActiveDeliveryRequestItemList'] = $ActiveDeliveryRequestItemList;
+				$data['ActiveAttributes'] = $ActiveAttributes;
 				
 				$filename = $data['draft_reference'];
 		
