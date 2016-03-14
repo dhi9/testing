@@ -51,7 +51,43 @@
 			</li>
 		</ul>
 	</li>
-	
+
+	<li ng-class="{'active open':$state.includes('app.delivery')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-truck"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title">Pengiriman</span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<!--<li ui-sref-active="active">
+				<a ui-sref="app.delivery.active_orders">
+					<span class="title">Sales Order Aktif</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.delivery.document_flow({order_reference: 'cari'})">
+					<span class="title">Alur Dokumen</span>
+				</a>
+			</li>
+			-->
+			<li ui-sref-active="active">
+				<a ui-sref="app.delivery.order_to_deliver">
+					<span class="title">Pengiriman Baru</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.delivery.active_delivery">
+					<span class="title">Pengiriman Aktif</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+
 	<li ng-class="{'active open':$state.includes('app.purchase')}">
 		<a href="javascript:void(0)">
 			<div class="item-content">
@@ -145,41 +181,7 @@
 		</ul>
 	</li>
 	
-	<li ng-class="{'active open':$state.includes('app.delivery')}">
-		<a href="javascript:void(0)">
-			<div class="item-content">
-				<div class="item-media">
-					<i class="ti-truck"></i>
-				</div>
-				<div class="item-inner">
-					<span class="title">Pengiriman</span><i class="icon-arrow"></i>
-				</div>
-			</div>
-		</a>
-		<ul class="sub-menu">
-			<!--<li ui-sref-active="active">
-				<a ui-sref="app.delivery.active_orders">
-					<span class="title">Sales Order Aktif</span>
-				</a>
-			</li>
-			<li ui-sref-active="active">
-				<a ui-sref="app.delivery.document_flow({order_reference: 'cari'})">
-					<span class="title">Alur Dokumen</span>
-				</a>
-			</li>
-			-->
-			<li ui-sref-active="active">
-				<a ui-sref="app.delivery.order_to_deliver">
-					<span class="title">Pengiriman Baru</span>
-				</a>
-			</li>
-			<li ui-sref-active="active">
-				<a ui-sref="app.delivery.active_delivery">
-					<span class="title">Pengiriman Aktif</span>
-				</a>
-			</li>
-		</ul>	
-	</li>
+
 	
 	<li ng-class="{'active open':$state.includes('app.creditblock')}">
 		<a href="javascript:void(0)">
