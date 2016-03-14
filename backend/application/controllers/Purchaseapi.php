@@ -312,9 +312,9 @@ class Purchaseapi extends CI_Controller {
 			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
 			$pdf->WriteHTML($html); 
 			ob_clean();
-			//$pdf->Output($request_reference.".pdf", 'D');
-			$pdf->Output($request_reference.".pdf", 'F');
-			$pdf->Output();
+			$pdf->Output($request_reference.".pdf", 'D');
+			//$pdf->Output($request_reference.".pdf", 'F');
+			//$pdf->Output();
 			//force_download($filename.".pdf","./docs/".$filename.".pdf");
 			
 		//}
