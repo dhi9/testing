@@ -776,8 +776,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
-					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()" ng-if="order.order_detail.payment_status == 'X'">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal(order.order_detail.order_id)" ng-if="order.order_detail.payment_status != 'X'">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -811,8 +811,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
-					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()" ng-if="order.order_detail.payment_status == 'X'">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal(order.order_detail.order_id)" ng-if="order.order_detail.payment_status != 'X'">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -846,8 +846,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
-					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()" ng-if="order.order_detail.payment_status == 'X'">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal(order.order_detail.order_id)" ng-if="order.order_detail.payment_status != 'X'">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -881,8 +881,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
-					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()" ng-if="order.order_detail.payment_status == 'X'">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal(order.order_detail.order_id)" ng-if="order.order_detail.payment_status != 'X'">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -908,8 +908,8 @@
 			</div>
 			<div class="col-md-2">
 				<form role="form" class="form-horizontal">
-					<button class="btn btn-primary" type="submit" ng-click="payOrder()">Bayar</button>
-					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">PAID</button>
+					<button class="btn btn-primary" type="submit" ng-click="payOrder()" ng-if="order.order_detail.payment_status == 'X'">Bayar</button>
+					<button class="btn btn-primary" ng-click="displayPaymentReceiptModal(order.order_detail.order_id)" ng-if="order.order_detail.payment_status != 'X'">PAID</button>
 					<br><br>
 					<button class="btn btn-primary" type="submit" ng-click="saveCart()">Simpan Draft</button>
 				</form>
@@ -1064,7 +1064,7 @@
 						<button type="submit" class="btn btn-primary">Cetak</button>
 					</td>
 					<td class="col-md-4" align="center">
-						<button type="submit" class="btn btn-primary">Download PDF</button>
+						<button type="submit" class="btn btn-primary" ng-click="downloadSalesInvoice()">Download PDF</button>
 					</td>
 					<td class="col-md-4" align="center">
 						<button type="submit" class="btn btn-danger" ng-click="closeModal()">Tidak Cetak</button>

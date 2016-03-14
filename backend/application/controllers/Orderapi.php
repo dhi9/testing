@@ -11,7 +11,7 @@ class Orderapi extends CI_Controller {
 			'customer_model', 'order_model', 'delivery_model',
 			'auditlog_model', 'update_history_model', 'status_model',
 			'user_model', 'order_bl', 'inventory_bl', 'delivery_db',
-			'purchase_bl', 'item_bl', 'company_db'
+			'purchase_bl', 'item_bl', 'company_db', 'attribute_db'
 		));
 	}
 	
@@ -1665,6 +1665,7 @@ class Orderapi extends CI_Controller {
 				$insert_invoice_item = array(
 					"invoice_id" => $invoice_id,
 					"item_code" => $item['item_code'],
+					"attributes" => $this->purchase_bl->array_to_cb($item['attributes']),
 					"quantity" => $item['quantity'],
 					"item_unit" => $item['item_unit'],
 					"cost" => $item['cost']
@@ -1695,22 +1696,18 @@ public function sales_invoice($order_id){
 
 		$SalesInvoiceCompanyDetail = $this->company_db->get_company()->row();
 	
-
-		$this->db->where('order_id', $order_id);
-		$invoice = $this->db->get('sales_invoices')->row_array();
-
+		$invoice = $this->order_db->get_sales_invoice_by_order_id($order_id)->row_array();
 		
-
-		$this->db->where('invoice_id', $invoice['invoice_id']);
-		$query = $this->db->get('sales_invoice_items')->result_array();
-
+		$invoice_items = $this->order_db->get_sales_invoice_items_by_invoice_id($invoice['invoice_id'])->result_array();
 		
+		$ActiveAttributes = $this->attribute_db->get_attribute_active_list()->result_array();
 
 		$SalesInvoiceCompanyDetail->img = "<img src='".$SalesInvoiceCompanyDetail->delivery_image."'>";
 		
 		$data['SalesInvoiceCompanyDetail'] = $SalesInvoiceCompanyDetail;
-		$data['DataList'] = $query;
+		$data['DataList'] = $invoice_items;
 		$data['DataBank'] = $invoice;
+		$data['ActiveAttributes'] = $ActiveAttributes;
 
 		$filename = "SALES INVOICE";
 
@@ -1725,9 +1722,9 @@ public function sales_invoice($order_id){
 			//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
 			$pdf->WriteHTML($html); 
 			ob_clean();
-			//$pdf->Output($request_reference.".pdf", 'D');
-			$pdf->Output($request_reference.".pdf", 'F');
-			$pdf->Output();
+			$pdf->Output($filename.".pdf", 'D');
+			//$pdf->Output($request_reference.".pdf", 'F');
+			//$pdf->Output();
 			//force_download($filename.".pdf","./docs/".$filename.".pdf");
 			
 		//}

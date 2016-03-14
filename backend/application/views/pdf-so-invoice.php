@@ -33,7 +33,14 @@
                 <tr>
                     <th width="5">No.</th>
                     <th>ArticleID/SKU</th>
-                    <th>Attributes</th>
+                    <?php
+                        $countAttrib = count($ActiveAttributes);
+                        foreach($ActiveAttributes as $attrib){
+                    ?>
+                        <th><?php echo $attrib['attribute_name'] ?></th>
+                    <?php
+                        }
+                    ?>
                     <th>QTY</th>
                     <th>Unit</th>
                     <th>Subtotal</th>
@@ -61,7 +68,14 @@
                 <tr>
                     <td align="center" style="height:20px"><?php echo $i ?></td>
                     <td><?php echo $invo['item_code']; $i+=1 ?></td>
-                    <td><?php echo $invo['attributes'] ?></td>
+                    <?php
+                        $attributes = json_decode($invo['attributes'], TRUE);
+                        foreach($ActiveAttributes as $attrib){
+                    ?>
+                        <td align="center"><?php echo $attributes[$attrib['attribute_name']] ?></td>
+                    <?php
+                        }
+                    ?>
                     <td><?php echo $invo['quantity'] ?></td>
                     <td><?php echo number_format($invo['cost']);
 
@@ -112,7 +126,13 @@
                 <tr>
                     <td align="center" style="height:20px"><?php echo $j?></td>
                     <td></td>
+                    <?php
+                        for($k=0; $k<$countAttrib; $k+=1){
+                            ?>
                     <td></td>
+                            <?php
+                        }
+                    ?>
                     <td></td>
                     <td></td>
                     <td></td>

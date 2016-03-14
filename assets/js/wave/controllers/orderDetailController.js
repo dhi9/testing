@@ -1,4 +1,4 @@
-app.controller('OrderDetailController', function($rootScope, $scope, $state, $stateParams, $modal, $filter, ItemLookupService, PurchaseService, CustomerService, ApiCallService, SweetAlert, AttributeFactory, ItemService) {
+app.controller('OrderDetailController', function($rootScope, $scope, $state, $stateParams, $modal, $filter, ItemLookupService, PurchaseService, CustomerService, ApiCallService, SweetAlert, AttributeFactory, ItemService, OrderService) {
 
 	$scope.state = $state.current;
 
@@ -884,12 +884,20 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 	};
 
 
-	$scope.displayPaymentReceiptModal = function() {
+	$scope.displayPaymentReceiptModal = function(item) {
+		var pass_data = {
+			item: item
+		};
 
 		var modalInstance = $modal.open({
 			templateUrl: 'modal_payment_receipt',
 			controller: 'PaymentReceiptModalCtrl',
 			size: 'md',
+			resolve: {
+				passed_data: function () {
+					return pass_data;
+				}
+			},
 			scope: $scope
 		});
 	};
@@ -1339,6 +1347,7 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 					closeOnConfirm: true,
 					animation: "slide-from-top"
 				});
+				$scope.order.order_detail.payment_status = "P";
 			}else{
 				SweetAlert.swal({
 					title: data.error_code,
@@ -1354,6 +1363,7 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 	}
 
 	$scope.init();
+	console.log($scope);
 });
 
 app.controller('OrderUpdateHistoryModalCtrl', function ($scope, $modalInstance, passed_data, ApiCallService) {
@@ -1551,7 +1561,14 @@ app.controller('BeforeGIModalCtrl', function ($scope, $modalInstance, ItemServic
 	};
 });
 
-app.controller('PaymentReceiptModalCtrl', function ($scope, $modalInstance, ItemService, PurchaseService, SweetAlert) {
+app.controller('PaymentReceiptModalCtrl', function ($scope, $modalInstance, passed_data, ItemService, PurchaseService, SweetAlert, OrderService) {
+	$scope.order_id = passed_data.item;
+
+	$scope.downloadSalesInvoice = function (){
+		OrderService.getSalesInvoice($scope.order_id).success(function(){
+
+		});
+	}
 
 	$scope.closeModal = function () {
 		$modalInstance.dismiss();

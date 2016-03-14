@@ -323,6 +323,14 @@ class Order_db extends CI_Model {
 			->where('order_id', $order_id)
 		->get('sales_invoices');
 	}
+	public function get_sales_invoice_items_by_invoice_id($invoice_id)
+	{
+		return $this->db
+			->select("*, COLUMN_JSON(attributes) as attributes")
+			->from("sales_invoice_items")
+			->where("invoice_id", $invoice_id)
+		->get();
+	}
 	
 	public function insert_sales_invoice($array)
 	{
@@ -338,6 +346,12 @@ class Order_db extends CI_Model {
 	
 	public function insert_sales_invoice_item($array)
 	{
+		if(! empty($array['attributes'])){
+			$attributes = $array['attributes'];
+			$this->db->set('attributes', "COLUMN_CREATE($attributes)", FALSE);
+			unset($array['attributes']) ;
+		}
+		
 		if ( $this->db->insert('sales_invoice_items', $array) )
 		{
 			return $this->db->insert_id();
