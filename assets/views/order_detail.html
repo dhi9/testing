@@ -191,13 +191,13 @@
 												<td colspan="{{ 7 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Tambahan Discount</td>
 												<td colspan="3">{{ totalDiscValue() || 0 | number:2 }}</td>
 											</tr>
-											<tr>
+											<tr ng-if="company.pkp">
 												<td colspan="{{ 7 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">DPP</td>
 												<td colspan="3">{{ 0 || 0 | number:2 }}</td>
 											</tr>
-											<tr>
+											<tr ng-if="company.pkp">
 												<td colspan="{{ 7 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">PPN</td>
-												<td colspan="3">{{ 0 || 0 | number:2 }}</td>
+												<td colspan="3">{{ totalTax() || 0 | number:2 }}</td>
 											</tr>
 											<tr>
 												<td colspan="{{ 7 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Grand Total</td>
@@ -248,13 +248,13 @@
 												<td colspan="{{ 6 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Discount</td>
 												<td colspan="3">{{ totalDiscPercent() || 0 | number:2 }}</td>
 											</tr>
-											<tr>
+											<tr ng-if="company.pkp">
 												<td colspan="{{ 6 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">DPP</td>
 												<td colspan="3">{{ 0 || 0 | number:2 }}</td>
 											</tr>
-											<tr>
+											<tr ng-if="company.pkp">
 												<td colspan="{{ 6 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">PPN</td>
-												<td colspan="3">{{ 0 || 0 | number:2 }}</td>
+												<td colspan="3">{{ totalTax() || 0 | number:2 }}</td>
 											</tr>
 											<tr>
 												<td colspan="{{ 6 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Grand Total</td>

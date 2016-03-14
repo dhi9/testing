@@ -1,4 +1,4 @@
-app.controller('OrderDetailController', function($rootScope, $scope, $state, $stateParams, $modal, $filter, ItemLookupService, PurchaseService, CustomerService, ApiCallService, SweetAlert, AttributeFactory, ItemService, OrderService) {
+app.controller('OrderDetailController', function($rootScope, $scope, $state, $stateParams, $modal, $filter, ItemLookupService, PurchaseService, CustomerService, ApiCallService, SweetAlert, AttributeFactory, ItemService, OrderService, CompanyFactory) {
 
 	$scope.state = $state.current;
 
@@ -46,6 +46,16 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 
 	AttributeFactory.getAttributeActiveList().then(function(){
 		$scope.attributeActiveList = AttributeFactory.attributeActiveList;
+	});
+
+	$scope.company = CompanyFactory.company;
+	CompanyFactory.getCompanyDetail().then(function(){
+		$scope.company =  CompanyFactory.company;
+		if ($scope.company.pkp == null || $scope.company.pkp == undefined || $scope.company.pkp == 0) {
+			$scope.company.pkp = false;
+		}else{
+			$scope.company.pkp = true;
+		}
 	});
 
 	$scope.customerIdToSearch = "";
@@ -317,6 +327,15 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 		};
 	}
 
+	$scope.totalTax = function(){
+		var total = 0;
+		if($scope.company.pkp){
+			for (var i = 0; i < $scope.order.order_detail.order_items.length; i += 1) {
+				total += ($scope.order.order_detail.order_items[i].quantity*$scope.order.order_detail.order_items[i].cost*$scope.company.ppn/100);
+			}
+		}
+		return total;
+	}
 	$scope.totalDisc = function(){
 		if ($scope.order) {
 			var total = 0;
@@ -328,7 +347,7 @@ app.controller('OrderDetailController', function($rootScope, $scope, $state, $st
 	$scope.totalGrand = function(){
 		if ($scope.order) {
 			var total = 0;
-			total += $scope.totalWithoutDisc() - $scope.totalDiscPercent() - $scope.totalDiscValue();
+			total += $scope.totalWithoutDisc() - $scope.totalDiscPercent() - $scope.totalDiscValue() + $scope.totalTax();
 			return total;
 		};
 	}

@@ -247,11 +247,20 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 	  return total;
 	}
 	$scope.totalDiscValue = function(){
-	  var total = 0;
-	  for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
-		 total += $scope.order.order_details.order_items[i].disc_value;
-	  }
-	  return total;
+		var total = 0;
+		for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+			total += $scope.order.order_details.order_items[i].disc_value;
+		}
+		return total;
+	}
+	$scope.totalTax = function(){
+		var total = 0;
+		if($scope.company.pkp){
+			for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+				total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.company.ppn/100);
+			}
+		}
+		return total;
 	}
 	$scope.totalDisc = function(){
 	  var total = 0;
@@ -260,7 +269,7 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 	}
 	$scope.totalGrand = function(){
 	  var total = 0;
-	  total += ($scope.totalWithoutDisc() - $scope.totalDisc());
+	  total += ($scope.totalWithoutDisc() - $scope.totalDisc() + $scope.totalTax());
 	  return total;
 	}
 
@@ -1024,6 +1033,7 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 			},
 			"delivery_request_details": [],
 			"payment_type" : 'cash',
+			"delivery_type" : 'A',
 			"payment_detail": {},
 			"order_type" : 'B',
 			"product_type": ""

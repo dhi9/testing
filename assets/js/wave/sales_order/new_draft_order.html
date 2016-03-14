@@ -260,12 +260,6 @@
 														<i class="ti-plus"></i> <span> Tambah Barang</span>
 													</button>
 												</div>
-												<div ng-show="!HLPFIELD_items_is_edit_mode">
-													<button class="btn btn-alt btn-hover btn-primary" ng-click="activateItemsEditMode()" ng-disabled="isAnyInEditMode()">
-														<span>EDIT</span>
-														<i class="glyph-icon icon-plus"></i>
-													</button>
-												</div>
 											</td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Total</td>
 											<td colspan="3">{{ totalWithoutDisc() || 0 | number:2 }}</td>
@@ -279,15 +273,15 @@
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Tambahan Discount</td>
 											<td colspan="3">{{ totalDiscValue() || 0 | number:2 }}</td>
 										</tr>
-										<tr>
+										<tr ng-if="company.pkp">
 											<td colspan="3" style="border-bottom: none"></td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">DPP</td>
-											<td colspan="3">{{ total() || 0 | number:2 }}</td>
+											<td colspan="3">{{ totalTax() || 0 | number:2 }}</td>
 										</tr>
-										<tr>
+										<tr ng-if="company.pkp">
 											<td colspan="3" style="border-bottom: none"></td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">PPN</td>
-											<td colspan="3">{{ total() || 0 | number:2 }}</td>
+											<td colspan="3">{{ totalTax() || 0 | number:2 }}</td>
 										</tr>
 										<tr>
 											<td colspan="3" style="border-bottom: none"></td>
@@ -332,6 +326,42 @@
 												<td>{{ item.remark }}</td>
 											</tr>
 										</tbody>
+										<tr>
+											<td colspan="3" style="border-bottom: none">
+												<div ng-show="!HLPFIELD_items_is_edit_mode">
+													<button class="btn btn-alt btn-hover btn-primary" ng-click="activateItemsEditMode()" ng-disabled="isAnyInEditMode()">
+														<span>EDIT</span>
+														<i class="glyph-icon icon-plus"></i>
+													</button>
+												</div>
+											</td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Total</td>
+											<td colspan="3">{{ totalWithoutDisc() || 0 | number:2 }}</td>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Discount</td>
+											<td colspan="3">{{ totalDiscPercent() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Tambahan Discount</td>
+											<td colspan="3">{{ totalDiscValue() || 0 | number:2 }}</td>
+										</tr>
+										<tr ng-if="company.pkp">
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">DPP</td>
+											<td colspan="3">{{ 0 || 0 | number:2 }}</td>
+										</tr>
+										<tr ng-if="company.pkp">
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">PPN</td>
+											<td colspan="3">{{ totalTax() || 0 | number:2 }}</td>
+										</tr>
+										<tr>
+											<td colspan="3" style="border-bottom: none"></td>
+											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Grand Total</td>
+											<td colspan="3" style="border-top: 1px #CCC solid;border-bottom:none">{{ totalGrand() || 0 | number:2 }}</td>
+										</tr>
 
 									</table>
 									</div>
@@ -438,7 +468,12 @@
 
 									</table>
 									</div>
-
+									<div ng-show="!HLPFIELD_items_is_edit_mode">
+										<button class="btn btn-alt btn-hover btn-primary" ng-click="activateItemsEditMode()" ng-disabled="isAnyInEditMode()">
+											<span>EDIT</span>
+											<i class="glyph-icon icon-plus"></i>
+										</button>
+									</div>
 									<div ng-show="HLPFIELD_items_is_edit_mode">
 
 										<button class="btn btn-alt btn-hover btn-primary" ng-click="confirmItemsEdit()">
@@ -451,12 +486,7 @@
 										</button>
 
 									</div>
-									<div ng-show="!HLPFIELD_items_is_edit_mode">
-										<button class="btn btn-alt btn-hover btn-primary" ng-click="activateItemsEditMode()" ng-disabled="isAnyInEditMode()">
-											<span>EDIT</span>
-											<i class="glyph-icon icon-plus"></i>
-										</button>
-									</div>
+
 								</div>
 
 
@@ -514,7 +544,7 @@
 													{{ totalDisc() || 0 | number:2 }}
 												</td>
 											</tr>
-											<tr>
+											<tr ng-if="company.pkp">
 												<td>
 													DPP
 												</td>
@@ -522,12 +552,12 @@
 													0.00
 												</td>
 											</tr>
-											<tr>
+											<tr ng-if="company.pkp">
 												<td>
 													PPN
 												</td>
 												<td>
-													0.00
+													{{ totalTax() || 0 | number:2}}
 												</td>
 											</tr>
 											<tr>
@@ -925,9 +955,11 @@
 						<button class="btn btn-primary" type="submit">
 							Bayar
 						</button>
+						<!--
 						<button class="btn btn-primary" ng-click="displayPaymentReceiptModal()">
 							PAID
 						</button>
+						-->
 						<br><br>
 						<button class="btn btn-primary" type="submit" ng-click="saveCart()">
 							Simpan Draft
