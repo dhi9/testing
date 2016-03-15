@@ -433,7 +433,8 @@ class Inventory_bl extends CI_Model {
 					"item_code" => $i['item_code'],
 					"batch_reference" => 0,
 					"is" => 'item',
-					"konsinyasi" => $konsinyasi
+					"konsinyasi" => $konsinyasi,
+					"pengadaan" => $this->purchase_bl->count_provision_by_item_code($tmp_item_code)
 				);
 				array_push($data, $row);
 			}

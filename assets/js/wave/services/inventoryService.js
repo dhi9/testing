@@ -78,4 +78,16 @@ app.service('InventoryService', function($http, apiUrl) {
 	this.totalTodayStockValue = function(){
 		return $http.get(url + 'total_today_stock_value/');
 	}
+	
+	this.getInventoryList = function(data){
+		return $http.post(url + 'get_all_inventory', data);
+	}
+
+	this.getInventoryListByItemCode = function(itemCode){
+		return $http.get(url + 'get_all_inventory_by_item_code/' + itemCode);
+	}
+
+	this.getInventoryBySiteReference = function(siteReference, itemCode){
+		return $http.get(url + 'get_all_inventory_by_site_reference/' + siteReference + '/' + itemCode);
+	}
 });
