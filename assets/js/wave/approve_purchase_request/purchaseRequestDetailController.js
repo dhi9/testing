@@ -1,4 +1,4 @@
-app.controller('PurchaseRequestDetailController', function($filter, $scope, $http, $modal, $stateParams, $rootScope, $state, PurchaseService, VendorService, WarehouseService, SweetAlert, AttributeFactory, SiteService) {
+app.controller('PurchaseRequestDetailController', function($filter, $scope, $http, $modal, $stateParams, $rootScope, $state, PurchaseService, VendorService, WarehouseService, SweetAlert, AttributeFactory, SiteService, UserService) {
 	var draftReference = $stateParams.reference;
 	//var purchaseId = $stateParams.purchase_id;
 	var draftId = 2;
@@ -39,6 +39,9 @@ app.controller('PurchaseRequestDetailController', function($filter, $scope, $htt
             $scope.itemRequestList = $scope.purchase.item_request_list;
 			$scope.deliveryRequestList = $scope.purchase.delivery_request_list;
 
+			UserService.getUserByUserId($scope.draft.draft_approver).success(function(data){
+				$scope.draft.approver = data.user.username;
+			});
             for(var i = 0; i < $scope.deliveryRequestList.length; i++){
                 $scope.deliveryRequestList[i].date = new Date(moment($scope.deliveryRequestList[i].date));
             }
@@ -48,12 +51,13 @@ app.controller('PurchaseRequestDetailController', function($filter, $scope, $htt
                     $scope.itemRequestList[ji].attributes = JSON.parse($scope.itemRequestList[ji].attributes);
                 }
             }*/
-
+			/*
             for (var j = 0; j < $scope.deliveryRequestList.length; j++) {
                 for (var k = 0; k < $scope.deliveryRequestList[j].item_delivery_request_list.length; k++) {
                     $scope.deliveryRequestList[j].item_delivery_request_list[k].attributes = JSON.parse($scope.deliveryRequestList[j].item_delivery_request_list[k].attributes);
                 }
             }
+            */
             /*.getUserById($scope.draft.draft_approver).success(function(data){
                 if (data.call_status === "success") {
                     $scope.username = data.user.username;
@@ -83,7 +87,7 @@ app.controller('PurchaseRequestDetailController', function($filter, $scope, $htt
 		return moment(Date.now()).format('YYYY-MM-DD');
 	}
 	$scope.getDataDraft = function () {
-
+		/*
         for(var ji = 0; ji < $scope.purchase.item_request_list.length; ji++){
             $scope.purchase.item_request_list[ji].attributes = JSON.stringify($scope.purchase.item_request_list[ji].attributes);
         }
@@ -93,6 +97,7 @@ app.controller('PurchaseRequestDetailController', function($filter, $scope, $htt
                 $scope.deliveryRequestList[j].item_delivery_request_list[k].attributes = JSON.stringify($scope.deliveryRequestList[j].item_delivery_request_list[k].attributes);
             }
         }
+        */
         var dataDraft = {
 			draft_reference: draftReference,
 			supplier_id: $scope.purchase.supplier_id,
@@ -148,7 +153,7 @@ app.controller('PurchaseRequestDetailController', function($filter, $scope, $htt
 			success(function(data, status, headers, config) {
 				if (data.call_status === "success") {
 					SweetAlert.swal( data.draft_reference, "Telah dikembalikan ke user untuk direvisi.", "success");
-					$state.go('app.purchase.approve_purchase_request');
+					$state.go('app.purchase.purchase_discussion');
 				}
 				else {
 					SweetAlert.swal({

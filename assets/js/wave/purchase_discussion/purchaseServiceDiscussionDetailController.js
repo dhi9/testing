@@ -436,7 +436,49 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 			});
 		}
 	}
-	
+
+	$scope.deleteDraftPurchaseOrder = function() {
+		$scope.needChangedButtonLoading = true;
+		SweetAlert.swal({
+				title: "Hapus",
+				text: "Mohon konfirmasi untuk menghapus",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",confirmButtonText: "Hapus",
+				cancelButtonText: "Kembali",
+				closeOnConfirm: false,
+				closeOnCancel: true },
+			function(isConfirm){
+				if (isConfirm) {
+					PurchaseService.deleteDraftPurchaseOrder(draftReference).
+						success(function(data, status, headers, config) {
+							if (data.call_status === "success") {
+								SweetAlert.swal("Berhasil", "Purchase Requests / Service Requests Telah dihapus.", "success");
+								//$state.go('app.purchase.approve_purchase_request');
+								//$scope.submitted_order_reference = data.order_reference;
+								//$scope.is_order_saved = true;
+							}
+							else {
+								SweetAlert.swal({
+									title: "Gagal menghapus",
+									text: data.error_message,
+									type: "error",
+									confirmButtonText: "Ok",
+									closeOnConfirm: true,
+									animation: "slide-from-top"
+								});
+							}
+						}).
+						error(function(data, status, headers, config) {
+							console.log(data);
+							console.log(status);
+							console.log(header);
+							console.log(config);
+						});
+				}
+			});
+	};
+
 	$scope.sumTotal = function(){
 		var sum = 0;
 		for(var i = 0; i < $scope.itemRequestList.length; i++){
