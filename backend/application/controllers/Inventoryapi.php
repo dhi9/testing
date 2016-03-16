@@ -647,4 +647,498 @@ class Inventoryapi extends CI_Controller {
 		
 		echo json_encode($feedback);
 	}
+	
+	public function get_all_inventory()
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$array = array(
+				"call_status" => "error",
+				"error_code" => "701",
+				"error_message" =>"User not logged on"
+			);
+		}
+		else {
+			$data = json_decode(file_get_contents('php://input'), true);
+			//$items = $this->item_model->get_all_inventory()->result_array();
+			$where = array(
+				'item_code' => $data['item_code']
+			);
+			if(! empty($data['site_reference'])){
+				$array = explode('-', $data['site_reference']);
+				$site= array();
+				foreach ($array as $a){
+					$site_id = $this->item_model->get_site_id_by_site_reference($a)->row_array();
+					if ($site_id !== NULL){
+						array_push($site, $site_id['site_id']);
+					}
+				}
+				$where['site_id'] = implode(',', $site);
+			}
+			if(! empty($data['storage_name'])){
+				$array = explode('-', $data['storage_name']);
+				$storage= array();
+				foreach ($array as $a){
+					$storage_id = $this->site_model->get_storage_by_storage_name($a)->row_array();
+					if ($storage_id !== NULL){
+						array_push($storage, $storage_id['storage_id']);
+					}
+				}
+				$where['storage_id'] =  implode(',', $storage);
+			}
+			if(! empty($data['attributes'])){
+				$attributes = explode('-', $data['attributes']);
+				$where['attributes'] = $attributes;
+			}
+			if(! empty($data['tag'])){
+				$array = explode('-', $data['tag']);
+				$tag= array();
+				/*
+				foreach ($array as $a){
+					$tag_id = $this->item_model->get_site_id_by_site_reference($a)->row_array();
+					if ($tag_id !== NULL){
+						array_push($tag, $tag_id['tag']);
+					}
+				}
+				$where['tag'] = $tag;
+				*/
+			}
+			
+			$array = array(
+				'call_status' => 'success',
+				'inventList' => $this->inventory_bl->set_stock_status_data_by($where),
+				'where' => $where,
+			);
+			//echo print_r($array['inventList']);
+		}
+		
+		echo json_encode($array);
+	}
+	
+	public function get_all_inventory_by_item_code($item_code)
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$array = array(
+					"call_status" => "error",
+					"error_code" => "701",
+					"error_message" =>"User not logged on"
+			);
+		}
+		else {
+			//$items = $this->item_model->get_all_inventory()->result_array();
+			$items = $this->item_model->get_all_inventory_by_item_code($item_code)->result_array();
+			$attribute_list = $this->attribute_db->get_attribute_active_list()->result_array();
+			$data=array();
+			foreach($items as $i ){
+				if ($i['bin_name']==null){
+					$parent_site = array(
+							"parentId" => "",
+							"selfId" => $i['site_reference'],
+							"name" => $i['site_reference'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => 0,
+							"is" => 'site'
+					);
+					array_push($data, $parent_site);
+					
+					$parent_storage = array(
+							"parentId" => $i['site_reference'],
+							"selfId" => $i['storage_name'],
+							"name" =>  $i['storage_name'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'storage'
+					);
+					array_push($data, $parent_storage);
+					$batchs = array(
+							"parentId" => $i['bin_name'],
+							"selfId" => $i['batch_reference'],
+							"name" => $i['batch_reference'],
+							"quantity" => $i['quantity'],
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'batch'
+					);
+					array_push($data, $batchs);
+				}else {
+					$parent_site = array(
+							"parentId" => "",
+							"selfId" => $i['site_reference'],
+							"name" => $i['site_reference'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => 0,
+							"is" => 'site'
+					);
+					array_push($data, $parent_site);
+					$parent_storage = array(
+							"parentId" => $i['site_reference'],
+							"selfId" => $i['storage_name'],
+							"name" =>  $i['storage_name'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'storage'
+					);
+					array_push($data, $parent_storage);
+					$parent_bin = array(
+							"parentId" => $i['storage_name'] ,
+							"selfId" => $i['bin_name'],
+							"name" => $i['bin_name'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"is" => 'bin'
+					);
+					array_push($data, $parent_bin);
+					$attribute = (array) json_decode($i['attributes']);
+					$result = "";
+					$n = 1;
+					foreach($attribute as $key => $val){
+						if($n > 1){
+							$result = $result.", ";
+						}
+						//$result = $result.$key.":".$val;
+						$result = $result.$val;
+						$n += 1;
+					}
+					$batchs = array(
+							"parentId" => $i['bin_name'],
+							"selfId" => $i['batch_reference']." / ".$result,
+							"name" => $i['batch_reference']." / ".$result,
+							"quantity" => $i['quantity'],
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'batch'
+					);
+					array_push($data, $batchs);
+				}
+			}
+			
+			function unique_multidim_array($array, $key){
+				$temp_array = array();
+				$i = 0;
+				$key_array = array();
+				foreach($array as $val){
+					if(!in_array($val[$key],$key_array)){
+						$key_array[$i] = $val[$key];
+						array_push($temp_array,$val);
+					}
+					$i++;
+				}
+				return $temp_array;
+			}
+			
+			$data = unique_multidim_array($data,'selfId');
+			$dataCopy = $data;
+			$index = 0;
+			foreach ($data as $d){
+				foreach ($dataCopy as $dc){
+					if ($d['is'] == 'batch'){
+						if($d['selfId'] == $dc['parentId']){
+							$data[$index]['quantity'] += $dc['quantity'];
+							$dataCopy = $data;
+						}
+					}
+				}
+				$index++;
+			}
+			
+			$index = 0;
+			foreach ($data as $d){
+				foreach ($dataCopy as $dc){
+					if ($d['is'] == 'bin'){
+						if($d['selfId'] == $dc['parentId']){
+							$data[$index]['quantity'] += $dc['quantity'];
+							$dataCopy = $data;
+						}
+					}
+				}
+				$index++;
+			}
+			
+			$index = 0;
+			foreach ($data as $d){
+				foreach ($dataCopy as $dc){
+					if ($d['is'] == 'storage'){
+						if($d['selfId'] == $dc['parentId']){
+							$data[$index]['quantity'] += $dc['quantity'];
+							$dataCopy = $data;
+						}
+					}
+				}
+				$index++;
+			}
+			
+			$index = 0;
+			foreach ($data as $d){
+				foreach ($dataCopy as $dc){
+					if ($d['is'] == 'site'){
+						if($d['selfId'] == $dc['parentId']){
+							$data[$index]['quantity'] += $dc['quantity'];
+							$dataCopy = $data;
+						}
+					}
+				}
+				$index++;
+			}
+			$array = array(
+				'call_status' => 'success',
+				'inventList' => $data,
+			);
+		}
+		
+		echo json_encode($array);
+		//echo json_encode($data);
+	}
+	
+	public function get_all_inventory_by_site_reference($site_reference, $item_code)
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$array = array(
+					"call_status" => "error",
+					"error_code" => "701",
+					"error_message" =>"User not logged on"
+			);
+		}
+		else {
+			$array = explode('-', $site_reference);
+			$site= array();
+			foreach ($array as $a){
+				$site_id = $this->item_model->get_site_id_by_site_reference($a)->row_array();
+				if ($site_id !== NULL){
+					array_push($site, $site_id['site_id']);
+				}
+			}
+			//$items = $this->item_model->get_all_inventory()->result_array();
+			$items = $this->item_model->get_all_inventory_by_site_reference($site, $item_code)->result_array();
+			$attribute_list = $this->attribute_db->get_attribute_active_list()->result_array();
+				
+			$data=array();
+			foreach($items as $i ){
+				if ($i['batch_id']==NULL){
+					$parent_site = array(
+							"parentId" => "",
+							"selfId" => $i['site_reference'],
+							"name" => $i['site_reference'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => 0,
+							"is" => 'site'
+					);
+					array_push($data, $parent_site);
+					$parent_storage = array(
+							"parentId" => $i['site_reference'],
+							"selfId" => $i['storage_name'],
+							"name" =>  $i['storage_name'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'storage'
+					);
+					array_push($data, $parent_storage);
+					$batchs = array(
+							"parentId" => $i['storage_name'],
+							"selfId" => $i['batch_reference'],
+							"name" => $i['batch_reference'],
+							"quantity" => $i['quantity'],
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'batch'
+					);
+					array_push($data, $batchs);
+				}elseif ($i['bin_name']==null){
+					$parent_site = array(
+							"parentId" => "",
+							"selfId" => $i['site_reference'],
+							"name" => $i['site_reference'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => 0,
+							"is" => 'site'
+					);
+					array_push($data, $parent_site);
+					$parent_storage = array(
+							"parentId" => $i['site_reference'],
+							"selfId" => $i['storage_name'],
+							"name" =>  $i['storage_name'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'storage'
+					);
+					array_push($data, $parent_storage);
+					$batchs = array(
+							"parentId" => $i['storage_name'],
+							"selfId" => $i['batch_reference'],
+							"name" => $i['batch_reference'],
+							"quantity" => $i['quantity'],
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'batch'
+					);
+					array_push($data, $batchs);
+				}
+				else{
+					$parent_site = array(
+							"parentId" => "",
+							"selfId" => $i['site_reference'],
+							"name" => $i['site_reference'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => 0,
+							"is" => 'site'
+					);
+					array_push($data, $parent_site);
+					$parent_storage = array(
+							"parentId" => $i['site_reference'],
+							"selfId" => $i['storage_name'],
+							"name" =>  $i['storage_name'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'storage'
+					);
+					array_push($data, $parent_storage);
+					$parent_bin = array(
+							"parentId" => $i['storage_name'] ,
+							"selfId" => $i['bin_name'],
+							"name" => $i['bin_name'],
+							"quantity" => 0,
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"is" => 'bin'
+					);
+					array_push($data, $parent_bin);
+					$aa = (array) json_decode($i['attributes']);
+					$result = "";
+					$n = 1;
+					foreach($aa as $key => $val){
+						if($n > 1){
+							$result = $result.", ";
+						}
+						//$result = $result.$key.":".$val;
+						$result = $result.$val;
+						$n += 1;
+					}
+					$batchs = array(
+							"parentId" => $i['bin_name'],
+							"selfId" => $i['batch_reference']." / ".$result,
+							"name" => $i['batch_reference']." / ".$result,
+							"quantity" => $i['quantity'],
+							"quality" => $i['quality'],
+							"block_status" => $i['block_status'],
+							"item_code" => $i['item_code'],
+							"batch_reference" => $i['batch_reference'],
+							"is" => 'batch'
+					);
+					array_push($data, $batchs);
+				}
+			}
+		}
+		function unique_multidim_array($array, $key){
+			$temp_array = array();
+			$i = 0;
+			$key_array = array();
+			foreach($array as $val){
+				if(!in_array($val[$key],$key_array)){
+					$key_array[$i] = $val[$key];
+					array_push($temp_array,$val);
+				}
+				$i++;
+			}
+			return $temp_array;
+		}
+		$data = unique_multidim_array($data,'selfId');
+		$dataCopy = $data;
+		$index = 0;
+		foreach ($data as $d){
+			foreach ($dataCopy as $dc){
+				if ($d['is'] == 'batch'){
+					if($d['selfId'] == $dc['parentId']){
+						$data[$index]['quantity'] += $dc['quantity'];
+						$dataCopy = $data;
+					}
+				}
+			}
+			$index++;
+		}
+	
+		$index = 0;
+		foreach ($data as $d){
+			foreach ($dataCopy as $dc){
+				if ($d['is'] == 'bin'){
+					if($d['selfId'] == $dc['parentId']){
+						$data[$index]['quantity'] += $dc['quantity'];
+						$dataCopy = $data;
+					}
+				}
+			}
+			$index++;
+		}
+	
+		$index = 0;
+		foreach ($data as $d){
+			foreach ($dataCopy as $dc){
+				if ($d['is'] == 'storage'){
+					if($d['selfId'] == $dc['parentId']){
+						$data[$index]['quantity'] += $dc['quantity'];
+						$dataCopy = $data;
+					}
+				}
+			}
+			$index++;
+		}
+	
+		$index = 0;
+		foreach ($data as $d){
+			foreach ($dataCopy as $dc){
+				if ($d['is'] == 'site'){
+					if($d['selfId'] == $dc['parentId']){
+						$data[$index]['quantity'] += $dc['quantity'];
+						$dataCopy = $data;
+					}
+				}
+			}
+			$index++;
+		}
+	
+		$inventory = array(
+				'call_status' => 'success',
+				'inventList' => $data,
+		);
+		echo json_encode($inventory);
+		//echo json_encode($data);
+	}
 }

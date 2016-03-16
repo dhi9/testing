@@ -353,7 +353,6 @@ class Itemapi extends CI_Controller {
 			);
 		}
 		else {
-			
 			$data = json_decode(file_get_contents('php://input'), true);
 			//$items = $this->item_model->get_all_inventory()->result_array();
 			$where = array(

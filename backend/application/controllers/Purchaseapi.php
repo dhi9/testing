@@ -15,7 +15,8 @@ class Purchaseapi extends CI_Controller {
 		$this->load->library('email');
 	}
 	
-	public function approve_draft_order() {
+	public function approve_draft_order()
+	{
 		if (! $this->user_model->is_user_logged_in()) {
 			$feedback = array(
 				"call_status" => "error",
@@ -33,15 +34,15 @@ class Purchaseapi extends CI_Controller {
 			$data = json_decode($json, true);
 				
 			$insert_purchase = array(
-					'vendor_id' => $data['supplier_id'],
-					'currency' => $data['currency'],
-					'approver_id' => $this->session->userdata('user_id'),
-					'requests_creator' => $data['draft_creator'],
-					'requests_reference' => $data['draft_reference'],
-					'date_created' => $data['date_modified'],
-					'supplier_email' => $data['supplier_email'],
-					'type' => 'PR',
-					'status' => 'P'
+				'vendor_id' => $data['supplier_id'],
+				'currency' => $data['currency'],
+				'approver_id' => $this->session->userdata('user_id'),
+				'requests_creator' => $data['draft_creator'],
+				'requests_reference' => $data['draft_reference'],
+				'date_created' => $data['date_modified'],
+				'supplier_email' => $data['supplier_email'],
+				'type' => 'PR',
+				'status' => 'P'
 			);
 			$requests_id = $this->purchase_model->insert_requests($insert_purchase);
 			

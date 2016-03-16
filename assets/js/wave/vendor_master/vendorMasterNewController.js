@@ -2,6 +2,10 @@ app.controller('VendorMasterNewController', function($scope, $modal, $state, Ven
 	$scope.vendor = VendorFactory.newVendor;
 
 	$scope.insertVendor = function () {
-		VendorFactory.insertVendor();
+		VendorFactory.insertVendor().then(function(data){
+            if(data.data.call_status == 'success'){
+				$state.go('app.master.vendor');
+	      }
+		})
 	};
 });

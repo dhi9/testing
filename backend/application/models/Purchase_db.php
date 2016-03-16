@@ -716,4 +716,14 @@ class Purchase_db extends CI_Model {
 	{
 		return $this->db->where('status !=', 'C')->count_all_results('requests');
 	}
+	
+	public function get_not_received_purchase_list_by_item_code($item_code)
+	{
+		return $this->db
+			->from('request_items ri')
+			->join('requests r', 'r.requests_id = ri.requests_id')
+			->where('r.status !=', 'C')
+			->where('ri.item_code', $item_code)
+		->get();
+	}
 }

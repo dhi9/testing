@@ -457,4 +457,36 @@ class Purchase_bl extends CI_Model {
 		
 		return $total_price;
 	}
+	
+	public function count_provision_by_item_code($item_code)
+	{
+		$list = $this->purchase_db->get_not_received_purchase_list_by_item_code($item_code)->result_array();
+		
+		$total = 0;
+		foreach($list as $row){
+			$total_received = $this->purchase_bl->count_received_item_per_purchase($row['requests_id'], $row['item_code']);
+			
+			$difference = $row['quantity'] - $total_received;
+			$total += $difference;
+		}
+		
+		return $total;
+	}
+	
+	public function count_received_item_per_purchase($purchase_id, $item_code)
+	{
+		$list = $this->db
+			->from('request_delivery_items rdi')
+			->join('request_delivery_requests rdr', 'rdr.requests_delivery_request_id = rdi.requests_delivery_request_id')
+			->where('rdr.requests_id', $purchase_id)
+			->where('rdi.item_code', $item_code)
+		->get()->result_array();
+		
+		$total = 0;
+		foreach($list as $row){
+			$total += $row['quantity'];
+		}
+		
+		return $total;
+	}
 }
