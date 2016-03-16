@@ -113,10 +113,12 @@ class Purchase_bl extends CI_Model {
 		$insert = array(
 			'draft_creator' => $this->session->userdata('user_id'),
 			'draft_data' => $json,
-			'draft_approver' =>$data['approver_id'],
 			'type' => 'P',
 			'status' => $data['status'],
 		);
+		if(!empty($data['approver_id'])){
+			$insert['draft_approver'] = $data['approver_id'];
+		}
 		$draft_id = $this->purchase_db->insert_draft_requests($insert);
 		
 		$draft_reference = $this->purchase_bl->generate_draft_reference($draft_id, 'P');
@@ -135,10 +137,14 @@ class Purchase_bl extends CI_Model {
 		$insert = array(
 			'draft_creator' => $this->session->userdata('user_id'),
 			'draft_data' => $json,
-			'draft_approver' =>$data['approver_id'],
 			'type' => 'S',
 			'status' => $data['status'],
 		);
+		
+		if(!empty($data['approver_id'])){
+			$insert['draft_approver'] = $data['approver_id'];
+		}
+		
 		$draft_id = $this->purchase_model->insert_draft_requests($insert);
 		
 		$draft_reference = $this->purchase_model->generate_draft_reference($draft_id, 'S');
@@ -257,7 +263,7 @@ class Purchase_bl extends CI_Model {
 	public function generate_draft_reference($draft_id, $type)
 	{
 		$query_draft = $this->purchase_db->get_draft_purchase_by_id($draft_id);
-		
+		$date_created = NULL;
 		if($query_draft->num_rows() > 0)
 		{
 			$date_created = $query_draft->row()->date_created;

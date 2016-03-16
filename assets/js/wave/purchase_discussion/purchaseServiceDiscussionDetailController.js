@@ -391,7 +391,7 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 	}
 	
 	$scope.submitDraft = function(){
-		if ($scope.isItemRequestListValid() && $scope.isDeliveryRequestValid($scope.deliveryRequest) && $scope.isSupplierValid() && $scope.edit.itemList == false && $scope.approve.user_id !== undefined && $scope.approve.user_id !== ""  ) {
+		if ($scope.isSupplierValid()) {
 			for (var i = 0; i < $scope.itemRequestList.length; i++) {
 				delete $scope.itemRequestList[i].uom_list;
 			}

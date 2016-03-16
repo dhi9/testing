@@ -970,7 +970,7 @@ class Purchaseapi extends CI_Controller {
 				
 			$update_change = array(
 					'draft_reference' => $data['draft_reference'],
-					'status' => 'C'
+					'status' => 'D'
 			);
 				
 			$this->purchase_model->update_draft_purchase($update_change);

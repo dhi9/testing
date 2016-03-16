@@ -42,9 +42,10 @@ class Purchase_db extends CI_Model {
 	public function get_draft_purchase_by_draft_reference($draft_reference)
 	{
 		return $this->db
-			->select('dp.*, u.username as approver')
+			//->select('dp.*, u.username as approver')
+			->select('dp.*')
 			->from('draft_requests dp')
-			->join('users u', 'u.user_id = dp.draft_approver')
+			//->join('users u', 'u.user_id = dp.draft_approver')
 			->where('draft_reference', $draft_reference)
 		->get();
 	}
@@ -61,8 +62,11 @@ class Purchase_db extends CI_Model {
 	
 	public function get_draft_purchase_by_date_created_range($start_date, $end_date, $type)
 	{
+		if(!empty($end_date)){
+			$this->db
+			->where('date_created <=', $end_date);
+		}
 		return $this->db
-			->where('date_created <=', $end_date)
 			->where('date_created >', $start_date)
 			->where('type', $type)
 		->get('draft_requests');

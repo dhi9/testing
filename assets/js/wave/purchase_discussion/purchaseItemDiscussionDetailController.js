@@ -359,8 +359,7 @@ app.controller('PurchaseItemDiscussionDetailController', function($filter, $scop
 	};
 	
 	$scope.submitDraftPurchase = function(supplier){
-		var valid = PurchaseFactory.isPurchaseValid(supplier);
-		if(valid){
+		if(supplier.vendor_id == undefined || supplier.vendor_id == ""){
 			var data = {
 				supplier_id: $scope.supplier.vendor_id,
 				currency: $scope.currency,
