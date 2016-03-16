@@ -67,11 +67,16 @@
 		<div class="table-responsive">
 			<table class="table" ng-table="stockTableParams">
 				<tr ng:repeat="stock in $data | filter: search.$">
-					<td data-title="'Site'" sortable="'site_name'">{{ stock.site_name}}</td>
+					<td data-title="'SiteID'" sortable="'site_name'">{{ stock.site_reference}}</td>
 					<td data-title="'ArticleID/SKU'" sortable="'item_code'">{{ stock.item_code}}</td>
 					<td data-title="'Name'" sortable="'item_name'">{{ stock.item_name}}</td>
-					<td data-title="'Attribute'" sortable="'attribute'">{{ stock.attributes.string}}</td>
-					<td data-title="'Tag'" sortable="'tag'">{{ stock.tag}}</td>
+					<!--<td ng:repeat="attrib in stock.attributes.column" data-title="attrib['attribute_name']" sortable="attrib['attribute_name']">{{ stock.attributes[attrib.attribute_name]}}</td>-->
+					<td data-title="'Attributes'" sortable="'attributes'">
+						{{stock.attributes.string}}
+					</td>
+					<td data-title="'Tag'" sortable="'tag'">
+						<span ng-repeat="t in stock.tags"><i ng-if="stock.tags.length > 0 && $index != 0">, </i>{{t.tag_name }}</span>
+					</td>
 					<td data-title="'UOM Dasar'" sortable="'item_unit'">{{ stock.item_unit}}</td>
 					<td data-title="'Tersedia'" sortable="'quantity'">{{ stock.quantity}}</td>
 					<td data-title="'Quality'" sortable="'quality'">{{ stock.quality}}</td>

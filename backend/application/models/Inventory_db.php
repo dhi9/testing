@@ -331,6 +331,7 @@ class Inventory_db extends CI_Model {
 		}
 		$this->db->from("inventory_stocks inven");
 		$this->db->join("sites s", "s.site_id = inven.site_id", "left");
+		$this->db->join("items i", "i.item_code = inven.item_code", "left");
 		$this->db->join("storage_locations sl", "sl.storage_id = inven.storage_id", "left");
 		$this->db->join("bin_locations b", "b.bin_id = inven.bin_id", "left");
 		if($data['count_tags'] > 0){

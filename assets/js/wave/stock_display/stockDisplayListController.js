@@ -1,4 +1,4 @@
-app.controller('StockDisplayListController', function($filter, $scope, $http, ngTableParams, InventoryService, CategoryFactory, ItemService, ItemFactory, SiteService) {
+app.controller('StockDisplayListController', function($translate, $filter, $scope, $http, ngTableParams, InventoryService, CategoryFactory, ItemService, ItemFactory, SiteService, AttributeFactory) {
 	$scope.stockDisplayList = [];
 	$scope.itemList = [];
 	$scope.siteList = [];
@@ -12,6 +12,13 @@ app.controller('StockDisplayListController', function($filter, $scope, $http, ng
 	SiteService.getSiteList().success(function (data) {
 		$scope.siteList = data.site_list;
 	});
+	$scope.attributeActiveList = AttributeFactory.attributeActiveList;
+	AttributeFactory.getAttributeActiveList().then(function(){
+		$scope.attributeActiveList = AttributeFactory.attributeActiveList;
+	});
+	$scope.getColumnName = function(column) {
+		return $translate.instant(column);
+	}
 	$scope.setAttributes = function () {
 		if ($scope.stockDisplayList.length > 0) {
 			for (var i = 0; i < $scope.stockDisplayList.length; i += 1) {
@@ -21,6 +28,7 @@ app.controller('StockDisplayListController', function($filter, $scope, $http, ng
 					if ($scope.stockDisplayList[i].attributes['string'] == undefined) {
 						$scope.stockDisplayList[i].attributes['string'] = "";
 						$scope.stockDisplayList[i].attributes['link'] = "";
+						$scope.stockDisplayList[i].attributes['column'] = [];
 					}
 					if (sum > 1) {
 						$scope.stockDisplayList[i].attributes['string'] = $scope.stockDisplayList[i].attributes['string'] + ", ";
@@ -28,14 +36,19 @@ app.controller('StockDisplayListController', function($filter, $scope, $http, ng
 					}
 					$scope.stockDisplayList[i].attributes['string'] = $scope.stockDisplayList[i].attributes['string'] + attributeName + ":" + attributeValue;
 					$scope.stockDisplayList[i].attributes['link'] = $scope.stockDisplayList[i].attributes['link'] + attributeName + "-" + attributeValue;
+					var attrib = {attribute_name:attributeName};
+					$scope.stockDisplayList[i].attributes['column'].push(attrib);
 					sum += 1;
 				});
 			}
 		}
 	};
-	InventoryService.getStockDisplay().success(function (data) {
+	var data = {
+		site_id: null,
+		tag: null
+	};
+	InventoryService.getStockDisplayByFilter(data).success(function (data) {
 		$scope.stockDisplayList = data.stock_display_list;
-
 		$scope.setAttributes();
 		$scope.stockTableParams.total($scope.stockDisplayList.length);
 		$scope.stockTableParams.reload();

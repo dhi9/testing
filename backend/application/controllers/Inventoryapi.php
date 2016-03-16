@@ -303,9 +303,15 @@ class Inventoryapi extends CI_Controller {
 			'tags' => $array_tag,
 			'count_tags' => count($array_tag)
 		);
+		$stock_display = $this->inventory_db->get_stock_display_by_filter($array_get)->result_array();
+		$stock_display_list = array();
+		foreach($stock_display as $s){
+			$s['tags'] = $this->item_db->get_item_tag_list($s['item_code'])->result_array();
+			array_push($stock_display_list, $s);
+		}
 		$feedback= array(
 				'call_status' => 'success',
-				'stock_display_list' => $this->inventory_db->get_stock_display_by_filter($array_get)->result_array(),
+				'stock_display_list' => $stock_display_list,
 				'tags' => $array_tag,
 		);
 		echo json_encode($feedback);
