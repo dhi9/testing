@@ -450,4 +450,12 @@ class Inventory_db extends CI_Model {
 		
 		return $this->db->get();
 	}
+	
+	public function sum_consignment_by_item_code($item_code)
+	{
+		return $this->db
+			->select_sum('quantity')
+			->where('item_code', $item_code)
+		->get('consignment_stocks')->row()->quantity;
+	}
 }

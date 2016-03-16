@@ -474,7 +474,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 				$scope.storage_name = $stateParams.storage_name;
 				$scope.tag = $stateParams.tag;
 			},
-			resolve: loadSequence('ngTable','stockStatusDetailController', 'itemService','treeGrid', 'siteService'),
+			resolve: loadSequence('ngTable','stockStatusDetailController', 'itemService','treeGrid', 'siteService', 'inventoryService'),
 			title: "Stock Status",
 			data : { logged_on_only: true, role: 'STOCKSTATUS' },
 			ncyBreadcrumb: {
