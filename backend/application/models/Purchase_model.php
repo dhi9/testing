@@ -585,7 +585,7 @@ class Purchase_model extends CI_Model {
 		$this->email->from('test@waveconsulting.co.id', 'VONTIS RT');
 		//$this->email->to($to);
 		$this->email->to($to);
-		$this->email->cc('test@waveconsulting.co.id, nicholas@wvi.co.id, jerry@wvi.co.id'); 
+		$this->email->cc('test@waveconsulting.co.id'); 
 		$this->email->subject("$companyDetail - DAILY REPORT");
 		$this->email->message($this->load->view('email-format-daily-report', $data, TRUE));
 		$this->email->attach('docs/'.$pdf.'.pdf');	

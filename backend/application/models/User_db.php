@@ -23,6 +23,13 @@ class User_db extends CI_Model {
 		return $this->get_user_list();
 	}
 	
+	public function get_user_list_with_daily_report()
+	{
+		$this->db->where('accept_daily_report', 1);
+		
+		return $this->get_user_list();
+	}
+	
 	public function get_user_history_list_by_user_id($user_id)
 	{
 		return $this->db
