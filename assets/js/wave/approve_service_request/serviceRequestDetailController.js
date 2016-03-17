@@ -1,4 +1,4 @@
-app.controller('ServiceRequestDetailController', function($filter, $scope, $http, $modal, $stateParams, $rootScope, $state, PurchaseService, VendorService, WarehouseService, SweetAlert, SiteService) {
+app.controller('ServiceRequestDetailController', function($filter, $scope, $http, $modal, $stateParams, $rootScope, $state, PurchaseService, VendorService, WarehouseService, SweetAlert, SiteService, UserService) {
 	var draftReference = $stateParams.reference;
 	//var purchaseId = $stateParams.purchase_id;
 	var draftId = 2;
@@ -36,7 +36,11 @@ app.controller('ServiceRequestDetailController', function($filter, $scope, $http
 			$scope.currency = $scope.purchase.currency;
 			$scope.itemRequestList = $scope.purchase.item_request_list;
 			$scope.deliveryRequestList = $scope.purchase.delivery_request_list;
-			
+
+			UserService.getUserByUserId($scope.draft.draft_approver).success(function(data){
+				$scope.draft.approver = data.user.username;
+			});
+
 			for(var i = 0; i < $scope.deliveryRequestList.length; i++){
 				$scope.deliveryRequestList[i].date = new Date($scope.deliveryRequestList[i].date);
 			}

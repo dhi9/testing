@@ -1,17 +1,18 @@
-<!-- start: PAGE TITLE -->
-<section id="page-title" class="padding-top-15 padding-bottom-15" >
-	<div class="row">
-		<div class="col-sm-7">
-			<h1 class="mainTitle">Approve Service Request</h1>
-		</div>
-		<div ncy-breadcrumb></div>
-	</div>
-</section>
-<!-- end: PAGE TITLE -->
-
 <!-- start: YOUR CONTENT HERE -->
 
-<div ng-controller="ServiceRequestDetailController">  
+<div ng-controller="ServiceRequestDetailController">
+
+	<!-- start: PAGE TITLE -->
+	<section id="page-title" class="padding-top-15 padding-bottom-15" >
+		<div class="row">
+			<div class="col-sm-7">
+				<!--<h1 class="mainTitle">Approve Purchase Request</h1>-->
+				<h1 class="mainTitle">{{draft.draft_reference}}</h1>
+			</div>
+			<div ncy-breadcrumb></div>
+		</div>
+	</section>
+	<!-- end: PAGE TITLE -->
 
 <div class="container-fluid container-fullw">
   <div class="row">

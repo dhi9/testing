@@ -1,4 +1,4 @@
-app.controller('PurchaseServiceDiscussionDetailController', function($filter, $scope, $http,$state, $modal, $stateParams, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService, VendorFactory) {
+app.controller('PurchaseServiceDiscussionDetailController', function($filter, $scope, $http, $state, $modal, $stateParams, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService, VendorFactory) {
 	var draftReference = $stateParams.reference;
 	
 	PurchaseService.getDraftByDraftReference(draftReference).success(function(data){
@@ -454,7 +454,7 @@ app.controller('PurchaseServiceDiscussionDetailController', function($filter, $s
 						success(function(data, status, headers, config) {
 							if (data.call_status === "success") {
 								SweetAlert.swal("Berhasil", "Purchase Requests / Service Requests Telah dihapus.", "success");
-								//$state.go('app.purchase.approve_purchase_request');
+								$state.go('app.purchase.purchase_discussion');
 								//$scope.submitted_order_reference = data.order_reference;
 								//$scope.is_order_saved = true;
 							}

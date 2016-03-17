@@ -187,6 +187,16 @@ class Purchase_db extends CI_Model {
 		->get();
 	}
 	
+	public function get_active_requests_by_requests_id($request_id)
+	{
+		return $this->db
+			->select('dp.*, u.username as approver')
+			->from('requests dp')
+			->join('users u', 'u.user_id = dp.approver_id')
+			->where('requests_reference', $draft_reference)
+		->get();
+	}
+	
 	public function get_active_item_requests_by_requests_id($requests_id)
 	{
 		/*return $this->db
@@ -242,11 +252,16 @@ class Purchase_db extends CI_Model {
 	
 	public function get_delivered_items_list_by_requests_delivery_request_id($requests_delivery_request_id)
 	{
-		return $this->db->query("
-			SELECT *, COLUMN_JSON(attributes) as attributes
-			FROM `request_delivery_items`
-			WHERE `requests_delivery_request_id` = $requests_delivery_request_id
-		");
+		return $this->db
+			->select('rdi.*, i.item_name, s.site_reference, sl.storage_name, bl.bin_name, b.batch_reference, COLUMN_JSON(rdi.attributes) as attributes')
+			->from('request_delivery_items rdi')
+			->join('items i', 'i.item_code = rdi.item_code', 'left')
+			->join('sites s', 's.site_id = rdi.site_id', 'left')
+			->join('storage_locations sl', 'sl.storage_id = rdi.storage_id', 'left')
+			->join('bin_locations bl', 'bl.bin_id = rdi.bin_id', 'left')
+			->join('batchs b', 'b.batch_id = rdi.batch_id', 'left')
+			->where('requests_delivery_request_id', $requests_delivery_request_id)
+		->get();
 	}
 	
 	public function get_delivered_item_by_id($purchase_delivered_item_id)

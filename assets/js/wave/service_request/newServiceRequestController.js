@@ -1,4 +1,4 @@
-app.controller('NewServiceRequestController', function($filter, $scope, $http, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService) {
+app.controller('NewServiceRequestController', function($filter, $scope, $http, $state, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService) {
   $scope.edit = {};
 	$scope.edit.itemList = true;
 	$scope.edit.sendEmail = false;
@@ -353,6 +353,7 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 						type: "success",
 						animation: "slide-from-top",
 					});
+					$state.reload();
 				}
 			})
 			.error(function(data){
@@ -399,6 +400,7 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 						type: "success",
 						animation: "slide-from-top",
 					});
+					$state.go("app.purchase.purchase_discussion");
 				}
 			})
 			.error(function(data){

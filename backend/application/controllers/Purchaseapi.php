@@ -8,7 +8,7 @@ class Purchaseapi extends CI_Controller {
 		// Call the CI_Model constructor
 		parent::__construct();
 		
-		$this->load->model(array('purchase_model', 'auditlog_model', 'user_model', 'site_model', 'purchase_bl', 'site_db', 'stock_movement_db', 'inventory_db', 'inventory_bl', 'vendor_model', 'warehouse_model', 'company_db', 'user_db', 'item_bl', 'attribute_db'));
+		$this->load->model(array('purchase_model', 'auditlog_model', 'user_model', 'site_model', 'purchase_bl', 'site_db', 'stock_movement_db', 'inventory_db', 'inventory_bl', 'vendor_model', 'warehouse_model', 'company_db', 'user_db', 'item_bl', 'attribute_db', 'item_model'));
 		$this->load->helper('url');
 		$this->load->helper('string');
 		$this->load->helper('download');
@@ -401,11 +401,58 @@ class Purchaseapi extends CI_Controller {
 		
 	}
 	
-	public function create_gr_report(){
+	public function create_gr_report($requests_delivery_request_id){
 		
+		$delivered_items = $this->purchase_db->get_delivered_items_list_by_requests_delivery_request_id($requests_delivery_request_id)->result_array();
+		$request_items = $this->purchase_model->get_active_delivery_requests_items_by_requests_delivery_request_id($requests_delivery_request_id)->result_array();
+		$request = $this->purchase_db->get_purchase_by_purchase_delivery_request_id($requests_delivery_request_id)->row_array();
+		$request_delivery = $this->purchase_db->get_active_delivery_requests_by_delivery_requests_id($requests_delivery_request_id)->row_array();
+		$re_request_items = array();
+		$delivered_quantity = array();
+		$not_delivered_items = array();
+		foreach($request_items as $ri){
+			$ri['received_quantity'] = 0;
+			foreach($delivered_items as $di){
+				if($ri['item_code'] == $di['item_code']){
+					if(array_key_exists($ri['item_code'], $delivered_quantity)){
+						$delivered_quantity[$ri['item_code']] += $di['quantity'];
+					}else{
+						$delivered_quantity[$ri['item_code']] = $di['quantity'];
+					}
+				}
+			}
+			array_push($re_request_items, $ri);
+		}
+		foreach($re_request_items as $rri1){
+			$i = $this->item_model->get_item_by_item_code($rri1['item_code'])->row_array();
+			if($i['item_unit'] == $rri1['item_unit']){
+				$rri1['actual_quantity'] = $rri1['quantity'];
+			}else{
+				$rri1['uom_list'] = $this->item_model->get_item_uom_conversion_list_by_item_code($rri1['item_code'])->result_array();
+				foreach($rri1['uom_list'] as $rri2){
+					if($rri1['item_unit'] == $rri2['alternative_uom']){
+						$rri1['actual_quantity'] = $rri2['base_amount'] * $rri1['quantity'];
+					}elseif($rri1['item_unit'] == $rri2['base_uom']){
+						$rri1['actual_quantity'] = $rri2['base_amount'] * $rri1['quantity'];
+					}
+				}
+			}
+			
+			if($delivered_quantity[$rri1['item_code']] < $rri1['actual_quantity'] ){
+				$rri1['remain_quantity'] = $rri1['actual_quantity'] - $delivered_quantity[$rri1['item_code']];
+				array_push($not_delivered_items, $rri1);
+			}
+		}
+		
+		$data['delivered_items'] = $delivered_items;
+		$data['not_delivered_items'] = $not_delivered_items;
+		$data['re_request_items'] = $re_request_items;
+		$data['delivered_quantity'] = $delivered_quantity;
+		$data['request_items'] = $request_items;
+		$data['request'] = $request;
+		$data['request_delivery'] = $request_delivery;
 		$random = random_string('numeric', 3);
 		$filename = "GR REPORT";
-		$data = "";
 		$pdfFilePath = FCPATH."/docs/".$filename.".pdf";
 		//if (file_exists($pdfFilePath) == FALSE) {
 			ini_set('memory_limit','-1');
@@ -1327,7 +1374,8 @@ class Purchaseapi extends CI_Controller {
 				array(
 					'draft_data' => $json,
 					'date_modified' => date('Y-m-d H:i:s'),
-					'status' => $data['status']
+					'status' => $data['status'],
+					'draft_approver' => @$data['approver_id']
 				),
 				array('draft_reference' => $data['draft_reference'])
 			);

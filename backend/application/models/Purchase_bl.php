@@ -399,8 +399,9 @@ class Purchase_bl extends CI_Model {
 		
 		foreach($purchase_list as &$purchase){
 			$draft = json_decode($purchase['draft_data'], true);
-			
-			$purchase['vendor'] = $this->vendor_db->get_vendor_by_id($draft['supplier_id'])->row_array();
+			if(!empty($draft['supplier_id'])){
+				$purchase['vendor'] = $this->vendor_db->get_vendor_by_id($draft['supplier_id'])->row_array();
+			}
 		}
 		
 		return $purchase_list;
