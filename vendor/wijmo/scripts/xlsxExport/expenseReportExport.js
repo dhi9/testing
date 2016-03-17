@@ -31,7 +31,7 @@ var XlsxExport;
 				{ width: 200 },
 				{ width: 125 },
 				{ width: 125 },
-				{ width: 200 }];
+				{ width: 300 }];
 
 			//sheet.cols = [{ width: '1ch', style: { fill: { color: '#00ff00' } } }, { width: 100 }, { width: 230 }, {}, { width: 95 }, { width: 130 }, {}, {}, { width: 105 }];
 
@@ -101,14 +101,9 @@ var XlsxExport;
 		var template = [{
 			Advance: 1000,
 			Attachment: true,
-			Department: "Sales",
 			Expenses:[],
-			Id: "E892659",
-			Manager: "Andrew Fuller",
+			Manager: "Stock",
 			Name: "Stock",
-			Position: "Sales Representative",
-			Purpose: "On business",
-			SSN: "A37830"
 		}];
 		// Namespace and XlsxConverter shortcuts.
 		var xcNs = wijmo.xlsx, xc = xcNs.XlsxConverter;
@@ -139,6 +134,8 @@ var XlsxExport;
 				{ width: 200 },
 				{ width: 230 },
 				{ width: 200 },
+				{ width: 200 },
+				{ width: 200 },
 				{ width: 125 },
 				{ width: 125 },
 				{ width: 200 }];
@@ -164,7 +161,9 @@ var XlsxExport;
 					{ value: 'Nilai per UOM Dasar' },
 					{ value: 'Stock Tersedia untuk Dibeli' },
 					{ value: 'Harga Jual(Persen/Tambah/Tetap)' },
+					{ value: 'Nilai Harga Jual' },
 					{ value: 'Diskon(Normal/Persen/Tetap)' },
+					{ value: 'Nilai Diskon' },
 					{ value: 'Tgl Diskon Mulai' },
 					{ value: 'Tgl Diskon Selesai' },
 					{ value: 'Tag' }
