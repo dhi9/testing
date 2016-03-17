@@ -325,9 +325,9 @@ class Inventory_db extends CI_Model {
 	{
 		//$this->db->select("*, COUNT(it.tag_id) as tags, COLUMN_JSON(inven.attributes) as attributes");
 		if($data['count_tags'] > 0){
-			$this->db->select("*, COUNT(it.tag_id) as tags, COLUMN_JSON(inven.attributes) as attributes");
+			$this->db->select("*, SUM(inven.quantity) as quantity, COUNT(it.tag_id) as tags, COLUMN_JSON(inven.attributes) as attributes");
 		}else{
-			$this->db->select("*, COLUMN_JSON(inven.attributes) as attributes");
+			$this->db->select("*, SUM(inven.quantity) as quantity, COLUMN_JSON(inven.attributes) as attributes");
 		}
 		$this->db->from("inventory_stocks inven");
 		$this->db->join("sites s", "s.site_id = inven.site_id", "left");
@@ -343,7 +343,7 @@ class Inventory_db extends CI_Model {
 			$this->db->where("inven.site_id", $data['site_id']);
 		}
 		
-		$this->db->group_by("inven.inventory_stock_id");
+		$this->db->group_by("inven.item_code, inven.site_id, inven.attributes");
 		if($data['count_tags'] > 0){
 			$this->db->having("tags >= ".$data['count_tags']."");
 		}

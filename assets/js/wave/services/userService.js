@@ -4,11 +4,15 @@ app.service('UserService', function($http, apiUrl) {
 	this.getUserByReference = function(reference){
 		return $http.get(url + 'userapi/get_user_by_reference/' + reference);
 	}
-	
+
 	this.getUserByUsername = function(username){
 		return $http.get(url + 'userapi/get_user_by_username/' + username);
 	}
-	
+
+	this.getUserByUserId = function(userId){
+		return $http.get(url + 'userapi/get_user_by_user_id/' + userId);
+	}
+
 	this.getUserList = function(){
 		return $http.get(url + 'userapi/get_user_list');
 	}

@@ -36,6 +36,13 @@ class Itemapi extends CI_Controller {
 			foreach($items as $i){
 				$category = $this->category_db->get_category_by_id($i['category_id'])->row_array();
 				$i['category_name'] = $category['category_name'];
+				
+				$tags = $this->item_db->get_item_tag_list($i['item_code'])->result_array();
+				$i['tag'] = array();
+				foreach($tags as $t){
+					array_push($i['tag'], $t['tag_name']);
+				}
+				$i['tag'] = implode(", ", $i['tag']);
 				array_push($item_list, $i);
 			}
 			
