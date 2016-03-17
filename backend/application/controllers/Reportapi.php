@@ -437,11 +437,16 @@ class Reportapi extends CI_Controller {
 		//$pdf->Output($filename.".pdf", 'D');
 		$pdf->Output($pdfFilePath, 'F');
 		//$pdf->Output();
-		//$this->purchase_model->send_email_daily_report(implode(", ",$mail_list),$filename);
+		$this->purchase_model->send_email_daily_report(implode(", ",$mail_list),$filename);
 	}
 	public function piegraph($y = NULL, $x = NULL){
-		$datay = explode("-", $y);
-		$datax = explode("-", $x);
+		if(!empty($y) && !empty($x)){
+			$datay = explode("-", $y);
+			$datax = explode("-", $x);
+		}else{
+			$datay = array(0);
+			$datax = array("");
+		}
 		$this->load->library('jpgraph');
         
        $bar_graph = $this->jpgraph->piechart();
