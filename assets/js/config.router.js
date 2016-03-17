@@ -181,7 +181,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.order.order_detail', {
 			url:'/orderdetail/:order_id',
 			templateUrl: "assets/views/order_detail.html",
-			resolve: loadSequence('orderDetailController', 'customerService', 'attributeFactory', 'purchaseService', 'itemService'),
+			resolve: loadSequence('orderDetailController', 'customerService', 'attributeFactory', 'purchaseService', 'itemService', 'orderService', 'companyFactory'),
 			title: "Order Detail",
 					data : { logged_on_only: true, role: 'SALESORDERAKTIF' },
 			ncyBreadcrumb: {
@@ -252,7 +252,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.purchase.approve_purchase_detail', {
 			url:'/purchaserequestdetail/:reference',
 			templateUrl: "assets/js/wave/approve_purchase_request/purchase_request_detail.html",
-			resolve: loadSequence('ngTable', 'purchaseRequestDetailController', 'purchaseService', 'vendorService', 'warehouseService', 'attributeFactory', 'siteService'),
+			resolve: loadSequence('ngTable', 'purchaseRequestDetailController', 'purchaseService', 'vendorService', 'warehouseService', 'attributeFactory', 'siteService', 'userService'),
 			title: "Approve Purchase Request",
 			data : { logged_on_only: true, role: 'APPROVEREQUEST' },
 			ncyBreadcrumb: {
@@ -301,7 +301,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.service.approve_service_detail', {
 			url:'/servicerequestdetail/:reference',
 			templateUrl: "assets/js/wave/approve_service_request/service_request_detail.html",
-			resolve: loadSequence('ngTable', 'serviceRequestDetailController', 'purchaseService', 'vendorService', 'warehouseService', 'siteService'),
+			resolve: loadSequence('ngTable', 'serviceRequestDetailController', 'purchaseService', 'vendorService', 'warehouseService', 'siteService', 'userService'),
 			title: "Detail Service Request",
 			data : { logged_on_only: true, role: 'APPROVEREQUEST' },
 			ncyBreadcrumb: {
@@ -441,7 +441,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.inventory.stock_movement', {
 			url:'/stockmovement/:item_code',
 			templateUrl: "assets/js/wave/inventory_stock_status/stock_movement.html",
-			resolve: loadSequence('ngTable','stockMovementController','itemService', 'siteService'),
+			resolve: loadSequence('ngTable','stockMovementController','itemService', 'siteService', 'inventoryService'),
 			title: "Pergerakan Stock",
 			data : { logged_on_only: true, role: 'STOCKSTATUS' },
 			ncyBreadcrumb: {
@@ -539,7 +539,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 				tag: null
 			},
 			templateUrl: "assets/js/wave/stock_display/stock_display_list.html",
-			resolve: loadSequence('ngTable', 'stockDisplayListController', 'inventoryService', 'categoryFactory', 'itemService', 'itemFactory', 'siteService'),
+			resolve: loadSequence('ngTable', 'stockDisplayListController', 'inventoryService', 'categoryFactory', 'itemService', 'itemFactory', 'siteService', 'attributeFactory'),
 			title: "Stock Display",
 			data : { logged_on_only: true, role: 'STOCKDISPLAY' },
 			ncyBreadcrumb: {
@@ -1204,28 +1204,38 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		url: '/logout'
 	})
 
-	.state('app.tools', {
-			url: '/tools',
+	.state('app.kiosk', {
+			url: '/kiosk',
 			template: '<div ui-view class="fade-in-up"></div>',
-			title: 'report',
+			title: 'kiosk',
 			ncyBreadcrumb: {
-				label:'TOOL'
+				label:'KIOSK'
 			}
 		})
 
-	.state('app.tools.qrscanner', {
+	.state('app.kiosk.menu', {
+		url:'/kioskmenu',
+		templateUrl: "assets/js/wave/kiosk/kiosk_menu.html",
+		resolve: loadSequence('ngTable', 'kioskMenuController'),
+		title: "KIOSK",
+		data : { logged_on_only: true, role: '' },
+		ncyBreadcrumb: {
+			label: 'KIOSK'
+		}
+	})
+	.state('app.kiosk.qrscanner', {
 		url:'/qrcodescanner',
-		templateUrl: "assets/js/wave/tools/qr_code_scanner.html",
+		templateUrl: "assets/js/wave/kiosk/qr_code_scanner.html",
 		resolve: loadSequence('ngTable', 'qrCodeScannerController', 'qrScanner'),
-		title: "Test Page",
+		title: "QR CODE",
 		data : { logged_on_only: true, role: '' },
 		ncyBreadcrumb: {
 			label: 'QR SCANNER'
 		}
 	})
-	.state('app.tools.qrdetail', {
+	.state('app.kiosk.qrdetail', {
 		url:'/qrcodedetail/:delivery_reference',
-		templateUrl: "assets/js/wave/tools/qr_code_detail.html",
+		templateUrl: "assets/js/wave/kiosk/qr_code_detail.html",
 		resolve: loadSequence('ngTable', 'qrCodeDetailController', 'qrGenerator'),
 		title: "Test Page",
 		data : { logged_on_only: true, role: '' },
@@ -1250,9 +1260,9 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		}
 	})
 	*/
-	.state('app.tools.qrgenerator', {
+	.state('app.kiosk.qrgenerator', {
 		url:'/qrcodegenerator',
-		templateUrl: "assets/js/wave/tools/qr_code_generator.html",
+		templateUrl: "assets/js/wave/kiosk/qr_code_generator.html",
 		resolve: loadSequence('ngTable', 'qrCodeGeneratorController', 'qrGenerator'),
 		title: "Test Page",
 		data : { logged_on_only: true, role: '' },
@@ -1260,9 +1270,9 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 			label: 'QR GENERATOR'
 		}
 	})
-	.state('app.tools.barcodegenerator', {
+	.state('app.kiosk.barcodegenerator', {
 		url:'/barcodegenerator',
-		templateUrl: "assets/js/wave/tools/barcode_generator.html",
+		templateUrl: "assets/js/wave/kiosk/barcode_generator.html",
 		resolve: loadSequence('ngTable', 'barcodeGeneratorController', 'barcodeGenerator'),
 		title: "Test Page",
 		data : { logged_on_only: true, role: '' },
@@ -1271,9 +1281,9 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		}
 	})
 
-	.state('app.tools.barcodescanner', {
+	.state('app.kiosk.barcodescanner', {
 		url:'/barcodescanner',
-		templateUrl: "assets/js/wave/tools/barcode_scanner.html",
+		templateUrl: "assets/js/wave/kiosk/barcode_scanner.html",
 		//resolve: loadSequence('ngTable', 'barcodeScannerController', 'barcodeScanner'),
 		title: "Test Page",
 		data : { logged_on_only: true, role: '' },

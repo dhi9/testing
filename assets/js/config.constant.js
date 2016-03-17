@@ -155,11 +155,12 @@ app.constant('JS_REQUIRES', {
 				'purchaseServiceDiscussionDetailController': 'assets/js/wave/purchase_discussion/purchaseServiceDiscussionDetailController.js',
 				
 				//*** Wave Test Area
-				'qrCodeScannerController': 'assets/js/wave/tools/qrCodeScannerController.js',
-				'qrCodeGeneratorController': 'assets/js/wave/tools/qrCodeGeneratorController.js',
-				'qrCodeDetailController': 'assets/js/wave/tools/qrCodeDetailController.js',
-				'barcodeGeneratorController': 'assets/js/wave/tools/barcodeGeneratorController.js',
-				'barcodeScannerController': 'assets/js/wave/tools/barcodeScannerController.js',
+				'kioskMenuController': 'assets/js/wave/kiosk/kioskMenuController.js',
+				'qrCodeScannerController': 'assets/js/wave/kiosk/qrCodeScannerController.js',
+				'qrCodeGeneratorController': 'assets/js/wave/kiosk/qrCodeGeneratorController.js',
+				'qrCodeDetailController': 'assets/js/wave/kiosk/qrCodeDetailController.js',
+				'barcodeGeneratorController': 'assets/js/wave/kiosk/barcodeGeneratorController.js',
+				'barcodeScannerController': 'assets/js/wave/kiosk/barcodeScannerController.js',
 
 				//*** Wave Services
 				//'apiCallService': 'assets/js/wave/services/apiCallService.js',
