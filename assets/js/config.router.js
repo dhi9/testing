@@ -91,7 +91,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.order.draft_order_cart_detail', {
 			url:'/ordercartdetail/:draft_id',
 			templateUrl: "assets/js/wave/sales_order/draft_order_cart_detail.html",
-			resolve: loadSequence('ngTable', 'draftOrderCartDetailController', 'customerService', 'customerFactory', 'attributeFactory'),
+			resolve: loadSequence('ngTable', 'draftOrderCartDetailController', 'customerService', 'customerFactory', 'attributeFactory', 'companyFactory'),
 			title: "Buat Draft Order",
 			data : { logged_on_only: true, role: 'SALESORDERTROLI' },
 			ncyBreadcrumb: {
@@ -181,7 +181,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.order.order_detail', {
 			url:'/orderdetail/:order_id',
 			templateUrl: "assets/views/order_detail.html",
-			resolve: loadSequence('orderDetailController', 'customerService', 'attributeFactory', 'purchaseService', 'itemService'),
+			resolve: loadSequence('orderDetailController', 'customerService', 'attributeFactory', 'purchaseService', 'itemService', 'companyFactory', 'orderService', 'companyFactory'),
 			title: "Order Detail",
 					data : { logged_on_only: true, role: 'SALESORDERAKTIF' },
 			ncyBreadcrumb: {
@@ -291,7 +291,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 		.state('app.service.new_service_request', {
 			url:'/buatservicerequest',
 			templateUrl: "assets/js/wave/service_request/new_service_request.html",
-			resolve: loadSequence('ngTable', 'newServiceRequestController', 'warehouseService', 'supplierService', 'purchaseService', 'vendorService', 'itemService', 'siteService'),
+			resolve: loadSequence('ngTable', 'newServiceRequestController', 'warehouseService', 'supplierService', 'purchaseService', 'vendorService', 'itemService', 'siteService', 'vendorFactory'),
 			title: "Buat Service Request",
 			data : { logged_on_only: true, role: 'BUATSERVICEREQUEST' },
 			ncyBreadcrumb: {
