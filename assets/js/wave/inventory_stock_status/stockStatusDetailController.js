@@ -101,7 +101,7 @@ app.controller('stockStatusDetailController', function($http ,$scope, $filter, $
 			$scope.my_tree = tree = {};
 			$scope.expanding_property = {
 				field: "name",
-				displayName: "Site/Lokasi/Bin/Batch/Attributes",
+				displayName: "SKU/Site/Lokasi/Bin/Batch/Attributes",
 				sortable : true,
 				filterable: true,
 			};

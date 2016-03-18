@@ -489,4 +489,16 @@ class Purchase_bl extends CI_Model {
 		
 		return $total;
 	}
+	
+	public function count_provision_by_item_code_site_id($item_code, $site_id)
+	{
+		return $this->db
+			->select_sum('quantity')
+			->from('request_delivery_request_items rdri')
+			->join('request_delivery_requests rdr', 'rdr.requests_delivery_request_id = rdri.requests_delivery_request_id')
+			->where('rdri.item_code', $item_code)
+			->where('rdr.status', 'A')
+			->where('rdr.site_id', $site_id)
+		->get()->row()->quantity;
+	}
 }

@@ -459,4 +459,21 @@ class Inventory_db extends CI_Model {
 			->where('item_code', $item_code)
 		->get('consignment_stocks')->row()->quantity;
 	}
+	
+	public function sum_inventory_by_data($data)
+	{
+		if(! empty($data['item_code'])){
+			$this->db->where('item_code', $data['item_code']);
+		}
+		if(! empty($data['site_id'])){
+			$this->db->where('site_id', $data['site_id']);
+		}
+		if(! empty($data['storage_id'])){
+			$this->db->where('storage_id', $data['storage_id']);
+		}
+		
+		return $this->db
+			->select("coalesce(sum(quantity), 0) AS quantity", false)
+		->get('inventory_stocks')->row()->quantity;
+	}
 }

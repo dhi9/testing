@@ -397,106 +397,89 @@ class Inventory_bl extends CI_Model {
 	{
 		$this->load->model(array('attribute_db'));
 		
-		$data = array();
-		$items = $this->inventory_db->get_all_inventory_by($where)->result_array();
-		$attribute_list = $this->attribute_db->get_attribute_active_list()->result_array();
+		$item_code = $where['item_code'];
 		
-		if(count($items) == 0){
+		$data = array();
+		
+		$array = array(
+			'item_code' => $item_code
+		);
+		$sum = $this->inventory_db->sum_inventory_by_data($array);
+		
+		$row = array(
+			"parentId" => "",
+			"selfId" => $item_code,
+			"name" => $item_code,
+			"quantity" => $sum,
+			//"quality" => $i['quality'],
+			//"block_status" => $i['block_status'],
+			"item_code" => $item_code,
+			"batch_reference" => 0,
+			"is" => 'item',
+			"konsinyasi" => $this->inventory_db->sum_consignment_by_item_code($item_code),
+			"pengadaan" => $this->purchase_bl->count_provision_by_item_code($item_code)
+		);
+		array_push($data, $row);
+		
+		
+		$query = $this->db
+			->select('rdri.item_code, rdr.site_id, s.site_reference')
+			->from('request_delivery_request_items rdri')
+			->join('request_delivery_requests rdr', 'rdr.requests_delivery_request_id = rdri.requests_delivery_request_id')
+			->join('sites s', 's.site_id = rdr.site_id')
+			->where('rdri.item_code', $item_code)
+			->group_by('rdr.site_id')
+		->get()->result_array();
+		
+		foreach($query as $site_row){
+			$array = array(
+				'item_code' => $item_code,
+				'site_id' => $site_row['site_id']
+			);
+			$sum = $this->inventory_db->sum_inventory_by_data($array);
+			
 			$row = array(
-				"parentId" => "",
-				"selfId" => $where['item_code'],
-				"name" => $where['item_code'],
-				"quantity" => 0,
+				"parentId" => $item_code,
+				"selfId" => $site_row['site_reference'],
+				"name" => $site_row['site_reference'],
+				"quantity" => $sum,
 				//"quality" => $i['quality'],
 				//"block_status" => $i['block_status'],
-				"item_code" => $where['item_code'],
+				//"item_code" => $i['item_code'],
 				"batch_reference" => 0,
-				"is" => 'item',
-				"konsinyasi" => $this->inventory_db->sum_consignment_by_item_code($where['item_code']),
-				"pengadaan" => $this->purchase_bl->count_provision_by_item_code($where['item_code'])
+				"pengadaan" => $this->purchase_bl->count_provision_by_item_code_site_id($item_code, $site_row['site_id']),
+				"is" => 'site'
 			);
 			array_push($data, $row);
-		}
-		else{
-			$tmp_item_code = '';
-			$tmp_site_id = 0;
-			$tmp_storage_id = 0;
-			$tmp_bin_id = 0;
 			
-			foreach($items as $i){
-				if($tmp_item_code != $i['item_code']){
-					$tmp_item_code = $i['item_code'];
-					$tmp_site_id = 0;
-					
-					$quantity = $this->db
-						->select_sum('quantity')
-						->where('item_code', $tmp_item_code)
-					->get('inventory_stocks')->row()->quantity;
-					
-					$row = array(
-						"parentId" => "",
-						"selfId" => $i['item_code'],
-						"name" => $i['item_code'],
-						"quantity" => $quantity,
-						"quality" => $i['quality'],
-						"block_status" => $i['block_status'],
-						"item_code" => $i['item_code'],
-						"batch_reference" => 0,
-						"is" => 'item',
-						"konsinyasi" => $this->inventory_db->sum_consignment_by_item_code($tmp_item_code),
-						"pengadaan" => $this->purchase_bl->count_provision_by_item_code($tmp_item_code)
-					);
-					array_push($data, $row);
-				}
+			
+			$query2 = $this->db
+				->where('is.item_code', $item_code)
+				->where('is.site_id', $site_row['site_id'])
+				->join('storage_locations sl', 'sl.storage_id = is.storage_id', 'left')
+				->group_by('is.storage_id')
+			->get('inventory_stocks is')->result_array();
+			
+			foreach($query2 as $storage_row){
+				$array = array(
+					'item_code' => $item_code,
+					'site_id' => $storage_row['site_id'],
+					'storage_id' => $storage_row['storage_id']
+				);
+				$sum = $this->inventory_db->sum_inventory_by_data($array);
 				
-				if($tmp_site_id != $i['site_id']){
-					$tmp_site_id = $i['site_id'];
-					$tmp_storage_id = 0;
-					
-					$quantity = $this->db
-						->select_sum('quantity')
-						->where('item_code', $tmp_item_code)
-						->where('site_id', $tmp_site_id)
-					->get('inventory_stocks')->row()->quantity;
-					
-					$row = array(
-						"parentId" => $i['item_code'],
-						"selfId" => $i['site_reference'],
-						"name" => $i['site_reference'],
-						"quantity" => $quantity,
-						"quality" => $i['quality'],
-						"block_status" => $i['block_status'],
-						"item_code" => $i['item_code'],
-						"batch_reference" => 0,
-						"is" => 'site'
-					);
-					array_push($data, $row);
-				}
-				
-				if($tmp_storage_id != $i['storage_id']){
-					$tmp_storage_id = $i['storage_id'];
-					$tmp_bin_id = 0;
-					
-					$quantity = $this->db
-						->select_sum('quantity')
-						->where('item_code', $tmp_item_code)
-						->where('site_id', $tmp_site_id)
-						->where('storage_id', $tmp_storage_id)
-					->get('inventory_stocks')->row()->quantity;
-					
-					$row = array(
-						"parentId" => $i['site_reference'],
-						"selfId" => $i['storage_name'],
-						"name" => $i['storage_name'],
-						"quantity" => $quantity,
-						"quality" => $i['quality'],
-						"block_status" => $i['block_status'],
-						"item_code" => $i['item_code'],
-						"batch_reference" => $i['batch_reference'],
-						"is" => 'storage'
-					);
-					array_push($data, $row);
-				}
+				$row = array(
+					"parentId" => $site_row['site_reference'],
+					"selfId" => $storage_row['storage_name'],
+					"name" => $storage_row['storage_name'],
+					"quantity" => $sum,
+					"quality" => $storage_row['quality'],
+					"block_status" => $storage_row['block_status'],
+					"item_code" => $item_code,
+					//"batch_reference" => $storage_row['batch_reference'],
+					"is" => 'storage'
+				);
+				array_push($data, $row);
 			}
 		}
 		
