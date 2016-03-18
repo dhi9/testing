@@ -242,8 +242,8 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 	$scope.totalDiscPercent = function(){
 	  var total = 0;
 	  for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
-		 total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.order.order_details.order_items[i].disc_percent/100)
-	  }
+		 total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.order.order_details.order_items[i].disc_percent/100);
+	  }       
 	  return total;
 	}
 	$scope.totalDiscValue = function(){
@@ -253,11 +253,30 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 		}
 		return total;
 	}
+    
+    $scope.totalDiscPercentAndValue = function(){
+        var total = 0;
+        for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+            total += ($scope.order.order_details.order_items[i].quantity * $scope.order.order_details.order_items[i].cost * $scope.order.order_details.order_items[i].disc_percent/100)  ||  $scope.order.order_details.order_items[i].disc_value;
+        }
+        return total;
+    }
+    
+    $scope.totalDpp = function(){
+		var total = 0;
+		if($scope.company.pkp){
+			for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+				total = ($scope.totalWithoutDisc() - $scope.totalDiscPercentAndValue() - $scope.order.disc_additional );
+			}
+		}
+		return total;
+	}
+    
 	$scope.totalTax = function(){
 		var total = 0;
 		if($scope.company.pkp){
 			for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
-				total += ($scope.order.order_details.order_items[i].quantity*$scope.order.order_details.order_items[i].cost*$scope.company.ppn/100);
+                total = ($scope.totalDpp() * $scope.company.ppn/100)
 			}
 		}
 		return total;
@@ -269,7 +288,7 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 	}
 	$scope.totalGrand = function(){
 	  var total = 0;
-	  total += ($scope.totalWithoutDisc() - $scope.totalDisc() + $scope.totalTax());
+	  total += ($scope.totalDpp() + $scope.totalTax());
 	  return total;
 	}
 
@@ -821,7 +840,8 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 
 	$scope.inputCustomer = function(data){
 		$scope.order.customer_input_type = "E";
-		$scope.order.customer_id = data.customer_details.customer_id;
+		//$scope.order.customer_id = data.customer_details.customer_id;
+        $scope.order.customer_id = $scope.customerIdToSearch;
 		$scope.order.customer_details.customer_id = data.customer_details.customer_id;
 		$scope.customerName = data.customer_details.customer_name;
 		$scope.order.customer_details.customer_name = data.customer_details.customer_name;
@@ -832,8 +852,6 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 		$scope.order.customer_details.phone_number = data.customer_details.phone_number;
 		$scope.order.customer_details.fax_number = data.customer_details.fax_number;
 		$scope.order.customer_details.customer_email = data.customer_details.customer_email;
-
-		$scope.customerName = data.customer_details.customer_name;
 	}
 	$scope.getCustomerById = function(customerId) {
 		CustomerService.getCustomerById(customerId).
@@ -859,6 +877,7 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 									$scope.order.delivery_request_details = [];
 									$scope.HLPFIELD_items_is_edit_mode = true;
 									$scope.inputCustomer(data);
+                                    $scope.order.disc_additional = "";
 								}else{
 								}
 							});
@@ -1036,7 +1055,8 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 			"delivery_type" : 'A',
 			"payment_detail": {},
 			"order_type" : 'B',
-			"product_type": ""
+			"product_type": "",
+            "disc_additional": "" 
 		};
 
 		AuthService.isLoggedOn();

@@ -25,10 +25,10 @@ app.service('PurchaseService', function($http, apiUrl, $window) {
         //							( STRING, TITLE, URL)
     }
 
-    this.createGRReport = function(){
+    this.createGRReport = function(requests_delivery_request_id){
         //return $http.post(url + 'create_pdf' , requestReference);
 
-        var download = $window.open(url + 'create_gr_report/',"location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes");
+        var download = $window.open(url + 'create_gr_report/' + requests_delivery_request_id,"location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes");
         download.history.pushState("blank", "blank", "blank");
         //							( STRING, TITLE, URL)
     }

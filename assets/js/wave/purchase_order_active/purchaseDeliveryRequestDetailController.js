@@ -467,7 +467,8 @@ app.controller('PurchaseDeliveryRequestDetailController', function($scope, $moda
 
 	$scope.displayAfterGRModal = function() {
 		var pass_data = {
-			item: $scope.deliveredItemList
+			item: $scope.deliveredItemList,
+			requests_delivery_request_id: $scope.deliveryRequests[0].requests_delivery_request_id
 		};
 
 		var modalInstance = $modal.open({
@@ -559,12 +560,13 @@ app.controller('LocationModalCtrl', function ($scope, $modalInstance, PurchaseSe
 
 app.controller('AfterGRModalCtrl', function ($scope, $modalInstance, PurchaseService, passed_data, SweetAlert) {
 	$scope.deliveredItemList = passed_data.item;
+	$scope.requests_delivery_request_id = passed_data.requests_delivery_request_id;
 
 	$scope.openStockCard = function (requests_delivery_request_id){
 		PurchaseService.createStockCard(requests_delivery_request_id).success(function(){});
 	}
 	$scope.openGR = function (){
-		PurchaseService.createGRReport().success(function(){});
+		PurchaseService.createGRReport($scope.requests_delivery_request_id).success(function(){});
 	}
 	$scope.saveLocation = function(data){
 		if(data.new_item == "TRUE"){

@@ -1,0 +1,337 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">QR Code Scanner</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="qrCodeScannerController">  
+
+<div class="container-fluid container-fullw">
+    
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			
+			
+			<div class="load1" style="z-index: 999;background: rgba(0,0,0,0.7);width: 400px;height: 300px;position: absolute;" ng-show="scanning">
+				<div style="position: absolute;top: 40%;left: 45%">
+					<i class="fa fa-4x text-primary" ng-class="{'fa-circle-o-notch fa-spin': scanningSuccess == false, 'fa-check': scanningSuccess == true, 'fa-times': scanningSuccess == 'x'}"><span ng-if="scanningSuccess == true"></span></i>
+				</div>
+			</div>
+			<qr-scanner width="400" height="300" ng-success="onSuccess(data)" ng-error="onError(error)"/>
+			
+
+		</div>
+
+	</div>
+	
+	<div class="row" ng-show="getData == 'x'">
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<center><h4 class="panel-title text-primary">Data Not Found</h4></center>
+					</div>
+				</div>
+			</div>
+	</div>
+	<div class="row" ng-show="getData == true">
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<center><h4 class="panel-title text-primary">Data Recieved | Redirecting</h4></center>
+					</div>
+				</div>
+			</div>
+	</div>
+	<!--
+     <div class="row" ng-show="getData == true">
+		<div class="col-md-12">
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="txtCustomerName" class="col-sm-2 control-label" style="font-size: 20px">No Surat Jalan</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtCustomerName" ng-model="delivery.delivery_detail.delivery_reference" readonly style="font-size: 18px"/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+	 
+	 <div class="row" ng-show="getData == true">
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlCustomerDetail">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Customer</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+						<div class="panel-body">
+							<form class="form-horizontal">
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtCustomerName" class="col-sm-2 control-label">Nama Customer</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control underline" id="txtCustomerName" ng-model="delivery.customer_detail.customer_name" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Nama PIC</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtPICName" ng-model="delivery.customer_detail.pic_name" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtAddress" class="col-sm-2 control-label">Alamat</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control underline" id="txtAddress" ng-model="delivery.customer_detail.address" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPhoneNumber" class="col-sm-4 control-label">No. Tel</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtPhoneNumber" ng-model="delivery.customer_detail.phone_number" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtCustomerName" class="col-sm-2 control-label">Kota</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control underline" id="txtCity" ng-model="delivery.customer_detail.city" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">Kode Pos</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtPostcode" ng-model="delivery.customer_detail.postcode" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="txtCustomerName" class="col-sm-2 control-label">Email</label>
+											<div class="col-sm-10">
+												<input type="email" class="form-control underline" id="txtEmail" ng-model="delivery.customer_detail.customer_email" readonly/>
+											</div>
+										</div>
+									</div>
+
+									 <div class="col-md-4">
+										<div class="form-group">
+											<label for="txtPICName" class="col-sm-4 control-label">No. Fax</label>
+											<div class="col-sm-8">
+												<input type="text" class="form-control underline" id="txtFaxNumber" ng-model="delivery.customer_detail.fax_number" readonly/>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row" ng-show="getData == true">
+
+			<div class="col-md-12">
+				<div class="panel panel-white" id="pnlItems">
+					<div class="panel-heading border-light">
+						<h4 class="panel-title text-primary">Detail Surat Jalan</h4>
+						<ct-paneltool class="panel-tools" tool-collapse="tool-collapse"></ct-paneltool>
+					</div>
+					<div collapse="pnlItems" ng-init="pnlItems=false" class="panel-wrapper">
+						<div class="panel-body">
+					
+
+							<h4>Detail</h4>
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="txtLoadingDate{{ $index + 1 }}" 
+										class="col-sm-2 control-label">Rencana pemuatan ke truk</label>
+									<div class="col-sm-10">
+										<input type="date" id="txtLoadingDate{{ $index + 1 }}" name="input" 
+											   ng-model="delivery.delivery_detail.loading_date" placeholder="yyyy-MM-dd" 
+											   ng-readonly="true"
+											   required />
+
+									</div>
+								</div>
+                                <div class="form-group">
+                                    <label for="txtReciever" class="col-sm-2 control-label">Penerima</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="txtReciever{{ $index + 1 }}"
+                                               ng-model="delivery.delivery_detail.reciever"
+                                               ng-readonly="true"
+                                               required />
+                                    </div>
+                                </div>
+								<div class="form-group">
+									<label for="txtCustomerName" class="col-sm-2 control-label">Alamat</label>
+									<div class="col-sm-10">
+										<textarea class="form-control autosize msd-elastic: \n;" 
+												  ng-model="delivery.delivery_detail.delivery_address" 
+												  ng-readonly="true"></textarea>
+									</div>
+								</div>
+
+							</form>
+
+							<h4>Barang</h4>
+							<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Kode Barang (SKU)</th>
+                                        <th>P x L x T</th>
+                                        <th>Jumlah Pengiriman</th>
+										<th>Unit</th>
+										<th>Nama Barang</th>
+										<th>Tipe Kain</th>
+										<th>Remark</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng:repeat="item in delivery.delivery_detail.delivery_items">
+										<td>{{ item.item_code }}</td>
+                                        <td>200 x 80 x 33</td>
+										<td>{{ item.quantity_sent }}</td>
+										<td>{{ lookupItemUnit(item.item_code); }}</td>
+										<td>{{ lookupItemName(item.item_code); }}</td>
+										<td>{{ item.material_type }}</td>
+										<td>{{ item.remark }}</td>
+									</tr>
+
+								</tbody>
+
+							</table>
+													</div>
+
+							<h4>Transportasi</h4>
+							<form class="form-horizontal">
+
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="txt" class="col-sm-3 control-label">Asal</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txt" ng-model="delivery.delivery_detail.delivery_source" 
+													   ng-readonly="true" />
+											</div>
+										</div>
+									</div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtPhoneNumber" class="col-sm-3 control-label">No Kendaraan</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control"
+                                                        id="txtNoTruck"
+                                                        ng-model="delivery.delivery_detail.truck_code"
+                                                        ng-disabled="!delivery.vendor_id || !delivery.delivery_provider"
+                                                        ng-options="vehicle.vehicle_id as vehicle.vehicle_plate for vehicle in vehicleList | filter:{ vehicle_type_id : delivery.delivery_detail.delivery_provider } "
+                                                        ng-readonly="true"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+								</div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtVendor" class="col-sm-3 control-label">Vendor</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control"
+                                                        id="txtPICName"
+                                                        ng-model="delivery.vendor_id"
+                                                        ng-options="vendor.vendor_id as vendor.vendor_name for vendor in vendorList"
+                                                        ng-readonly="true"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtAddress" class="col-sm-3 control-label">Supir</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="txtAddress" ng-model="delivery.delivery_detail.driver_name"
+                                                       ng-readonly="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtPICName" class="col-sm-3 control-label">Tipe Kendaraan</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control"
+                                                        id="txtPICName"
+                                                        ng-model="delivery.delivery_detail.delivery_provider"
+                                                        ng-disabled="!delivery.vendor_id"
+                                                        ng-options="vehicle.vehicle_type_id as vehicle.vehicle_type for vehicle in vehicleType "
+                                                        ng-readonly="true"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+							</form>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		-->
+
+		
+	 
+	 
+	 
+	 
+	                            
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

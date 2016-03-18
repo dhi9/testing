@@ -542,6 +542,31 @@ class Userapi extends CI_Controller {
 		echo json_encode($feedback);
 	}
 	
+	public function get_user_by_user_id($user_id)
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$feedback = array(
+				"call_status" => "error",
+				"title" => "Not Logged In",
+				"text" => "You must login first"
+			);
+		}
+		else {
+			$user = $this->user_model->get_user_by_user_id($user_id)->row_array();
+			unset($user['password']);
+			
+			$user['access'] = $this->user_bl->get_user_access_by_user_id($user['user_id']);
+			$user['approval'] = $this->user_bl->get_user_approval_by_user_id($user['user_id']);
+			
+			$feedback = array(
+				"call_status" => "success",
+				'user' => $user
+			);
+		}
+		
+		echo json_encode($feedback);
+	}
+	
 	public function is_username_available()
 	{
 		$username = file_get_contents('php://input');

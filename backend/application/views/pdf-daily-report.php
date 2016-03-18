@@ -82,7 +82,7 @@
                             <td rowspan="4">
                               <!--<div id="chart_div"></div>-->
                                 <?php $test = "asdasd"; //echo $this->view('pdf-daily-report-chart') ?>
-                                <img src="<?php echo base_url();?>index.php/reportapi/piegraph/<?php echo $test ?>" />
+                                <img src="<?php echo base_url();?>index.php/reportapi/piegraph/<?php echo $datay."/".$datax ?>" />
                             </td>
                           </tr>
                           <tr>
@@ -132,12 +132,37 @@
                             <tbody>
                                 <?php
                                     $i = 1;
-                                    foreach($top5item as $t5k => $t5v){
+                                    function array_msort($array, $cols)
+                                    {
+                                        $colarr = array();
+                                        foreach ($cols as $col => $order) {
+                                            $colarr[$col] = array();
+                                            foreach ($array as $k => $row) { $colarr[$col]['_'.$k] = strtolower($row[$col]); }
+                                        }
+                                        $eval = 'array_multisort(';
+                                        foreach ($cols as $col => $order) {
+                                            $eval .= '$colarr[\''.$col.'\'],'.$order.',';
+                                        }
+                                        $eval = substr($eval,0,-1).');';
+                                        eval($eval);
+                                        $ret = array();
+                                        foreach ($colarr as $col => $arr) {
+                                            foreach ($arr as $k => $v) {
+                                                $k = substr($k,1);
+                                                if (!isset($ret[$k])) $ret[$k] = $array[$k];
+                                                $ret[$k][$col] = $array[$k][$col];
+                                            }
+                                        }
+                                        return $ret;
+
+                                    }
+                                    $top5itembyquantity = array_msort($top5item, array('quantity'=>SORT_DESC));
+                                    foreach($top5itembyquantity as $t5k => $t5v){
                                         if($i <= 5){
                                 ?>
                                     <tr>
                                         <td><?php echo $t5k ?></td>
-                                        <td><?php //echo $t5v['item_name'] ?></td>
+                                        <td><?php echo $t5v['item_name'] ?></td>
                                         <td><?php echo number_format($t5v['quantity']) ?></td>
                                         <td align="right"><?php echo number_format($t5v['cost']) ?></td>
                                     </tr>
@@ -165,7 +190,7 @@
           </tr>
            
            <tr>
-              <td colspan="2" align="center" style="border-bottom:none;border-top:none">
+              <td colspan="2" align="center" style="border-top:none">
                   <table border="1" width="90%" id="mg50">
                     <thead>
                         <tr>
@@ -193,12 +218,13 @@
                             <tbody>
                                 <?php
                                     $i = 1;
-                                    foreach($top5item as $t5k => $t5v){
+                                    $top5itembycost = array_msort($top5item, array('cost'=>SORT_DESC));
+                                    foreach($top5itembycost as $t5k => $t5v){
                                         if($i <= 5){
                                 ?>
                                     <tr>
                                         <td><?php echo $t5k ?></td>
-                                        <td><?php //echo $t5v['item_name'] ?></td>
+                                        <td><?php echo $t5v['item_name'] ?></td>
                                         <td><?php echo number_format($t5v['quantity']) ?></td>
                                         <td align="right"><?php echo number_format($t5v['cost']) ?></td>
                                     </tr>
@@ -222,9 +248,9 @@
                           </table>
                       </tbody>
                   </table>
+                  <br>
               </td>
           </tr>
-           
       </table>
   </body>
 </html>

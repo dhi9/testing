@@ -468,7 +468,6 @@ class Inventoryapi extends CI_Controller {
 				}
 			}
 			
-			
 			$count_error = count($error_messages);
 			if($count_error > 0){
 				$dt['error_messages'] = $error_messages;
@@ -525,8 +524,10 @@ class Inventoryapi extends CI_Controller {
 				//unset($item['action']);
 				//unset($item['category']);
 				unset($item['availability']);
-				unset($item['sell_price_type']);
+				//unset($item['sell_price_type']);
+				//unset($item['sell_price_value']);
 				//unset($item['discount_type']);
+				//unset($item['discount_value']);
 				//unset($item['discount_start_date']);
 				//unset($item['discount_end_date']);
 				//unset($item['tag']);
@@ -545,6 +546,24 @@ class Inventoryapi extends CI_Controller {
 					$item['discount_start_date'] = null;
 					$item['discount_end_date'] = null;
 				}
+				switch ($item['sell_price_type']){
+					case "Tetap":
+						$item['sell_price_type'] = "F";
+						$item['sell_price_fix'] = $item['sell_price_value'];
+						break;
+					case "Persen":
+						$item['sell_price_type'] = "P";
+						$item['sell_price_perc_last_buy_price'] = $item['sell_price_value'];
+						break;
+					case "Tambah":
+						$item['sell_price_type'] = "M";
+						$item['sell_price_markup_last_buy_price'] = $item['sell_price_value'];
+						break;
+					default:
+						$item['sell_price_type'] = "F";
+						$item['sell_price_fix'] = $item['sell_price_value'];
+						break;
+				}
 				switch ($item['discount_type']){
 					case "Normal":
 					case "N":
@@ -553,18 +572,23 @@ class Inventoryapi extends CI_Controller {
 					case "P":
 						$item['discount_perc_start_date'] = date_format($item['discount_start_date'], "Y-m-d");
 						$item['discount_perc_end_date'] = date_format($item['discount_end_date'], "Y-m-d");
+						$item['discount_perc'] = $item['discount_value'];
 						break;
 					case "Tetap":
 					case "T":
 						$item['discount_special_price_start_date'] = date_format($item['discount_start_date'], "Y-m-d");
 						$item['discount_special_price_end_date'] = date_format($item['discount_end_date'], "Y-m-d");
+						$item['discount_special_price'] = $item['discount_value'];
 						break;
 					default:
 						$item['discount_type'] = "N";
 						break;
 				}
+				
 				unset($item['discount_start_date']);
 				unset($item['discount_end_date']);
+				unset($item['sell_price_value']);
+				unset($item['discount_value']);
 				//End Discount
 				
 				//Categories

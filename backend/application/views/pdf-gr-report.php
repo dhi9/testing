@@ -15,7 +15,7 @@
             </tr>
             <tr>
                 <td>
-                    Nama PO : XXXXXXXX
+                    Nama PO : <?php echo $request['requests_reference'] ?>
                 </td>
                 <td align="right">
                     Page 1 of 1
@@ -39,17 +39,33 @@
                         </thead>
                         <tbody>
                             <?php
-                                for ($i=1 ; $i <= 20 ; $i++ ) { 
+                                $countDelivered = count($delivered_items);
+                                foreach($delivered_items as $di){
+                            ?>
+                            <tr>
+                                <td><?php echo $di['item_code'] ?></td>
+                                <td><?php echo @$di['item_name'] ?></td>
+                                <td><?php echo $di['quantity'] ?></td>
+                                <td><?php echo $di['item_unit'] ?></td>
+                                <td><?php echo date("d/m/Y",strtotime($di['date_recieved'])) ?></td>
+                                <td><?php echo $di['batch_reference'] ?></td>
+                                <td><?php echo $di['site_reference']."/".$di['storage_name']."/".$di['bin_name'] ?></td>
+                            </tr>
+                            <?php
+                                }
+                            ?>
+                            <?php
+                                for ($i=$countDelivered ; $i < 20 ; $i++ ) { 
                                     
                             ?>
                             <tr>
-                                <td>1022102</td>
-                                <td>Item X</td>
-                                <td>2500</td>
-                                <td>KG</td>
-                                <td>1/9/2015</td>
-                                <td>AAAA123</td>
-                                <td>Jakarta/Toko/X</td>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
 
                             <?php
@@ -74,14 +90,32 @@
                         </thead>
                         <tbody>
                             <?php
-                                for ($i=1 ; $i <= 5 ; $i++ ) { 
+                                $ny = 0;
+                                    $countNotDelivered = count($not_delivered_items);
+                                    foreach($not_delivered_items as $not_yet){
+                                        if($ny<5){
+                            ?>
+                            <tr>
+                                <td><?php echo $not_yet['item_code'] ?></td>
+                                <td><?php echo $not_yet['item_name'] ?></td>
+                                <td><?php echo $not_yet['remain_quantity'] ?></td>
+                                <td><?php echo $not_yet['item_unit'] ?></td>
+                            </tr>
+
+                            <?php
+                                        }
+                                        $ny += 1;
+                                }
+                            ?>
+                            <?php
+                                for ($i=$countNotDelivered ; $i < 5 ; $i++ ) { 
                                     
                             ?>
                             <tr>
-                                <td>1022102</td>
-                                <td>Item X</td>
-                                <td>2500</td>
-                                <td>KG</td>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
 
                             <?php
@@ -98,12 +132,21 @@
                     <table border="1">
                         <tr>
                             <td style="height:100px">
-
+                                <?php $request_delivery['remark'] ?>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
+        <?php
+    /*
+        echo var_dump($delivered_items)."<br>delivered items<br><br>";
+        echo var_dump($not_delivered_items)."<br>not delivered items<br><br>";
+        echo var_dump($delivered_quantity)."<br>delivered quantity<br><br>";
+        echo var_dump($request_items)."<br>request items<br><br>";
+        echo var_dump($re_request_items)."<br>re request items<br><br>";
+    */
+        ?>
     </body>
 </html>

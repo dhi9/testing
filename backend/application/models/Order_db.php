@@ -89,15 +89,12 @@ class Order_db extends CI_Model {
 	
 	public function get_order_items($order_id)
 	{
-		/*return $this->db
-			->where('order_id', $order_id)
-		->get('order_items');*/
-		
-		return $this->db->query("
-			SELECT *, COLUMN_JSON(attributes) AS `attributes`
-			FROM `order_items`
-			WHERE `order_id` = '$order_id'
-		");
+		return $this->db
+				->select('*, i.item_name, COLUMN_JSON(oi.attributes) as attributes')
+				->from('order_items oi')
+				->join('items i', 'oi.item_code = i.item_code')
+				->where('oi.order_id', $order_id)
+			->get();
 	}
 	
 	public function get_order_item_list_by_order_id($order_id)

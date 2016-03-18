@@ -8,7 +8,7 @@ class Reportapi extends CI_Controller {
 		// Call the CI_Model constructor
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->model(array('delivery_model','user_model', 'stock_movement_bl', 'stock_movement_db', 'site_db', 'company_db', 'inventory_db', 'order_db', 'purchase_model'));
+		$this->load->model(array('delivery_model','user_model', 'stock_movement_bl', 'stock_movement_db', 'site_db', 'company_db', 'inventory_db', 'order_db', 'purchase_model', 'user_db', 'order_model'));
 	}
 	
 	public function get_delivery_report()
@@ -337,15 +337,41 @@ class Reportapi extends CI_Controller {
 	}
 	
 	public function daily_report(){
+		$users = $this->user_db->get_user_list_with_daily_report()->result_array();
+		$mail_list = array();
+		foreach($users as $u){
+			array_push($mail_list, $u['email']);
+		}
 		$data['CompanyDetail'] = $this->company_db->get_company()->row();
 		//$data['Chart'] = $this->load->view('pdf-daily-report-chart', NULL, true);
 		$data['yesterday'] = date('Y-m-d H:i:s', strtotime('yesterday'));
 		$data['endofyesterday'] = date('Y-m-d 23:59:59', strtotime('yesterday'));
 		$data['date'] = date('d/m/Y', strtotime('yesterday'));
-		$data['day'] = date('l', strtotime('yesterday'));
+		setlocale (LC_TIME, 'id_ID');
+		setlocale (LC_TIME, 'INDONESIA');
+		
+		$day = date('N', strtotime('yesterday'));
+		if($day == 1){
+			$data['day'] = "Senin";
+		}elseif($day == 2){
+			$data['day'] = "Selasa";
+		}elseif($day == 3){
+			$data['day'] = "Rabu";
+		}elseif($day == 4){
+			$data['day'] = "Kamis";
+		}elseif($day == 5){
+			$data['day'] = "Jum'at";
+		}elseif($day == 6){
+			$data['day'] = "Sabtu";
+		}elseif($day == 7){
+			$data['day'] = "Minggu";
+		}else{
+			$data['day'] = "";
+		}
 		$order = $this->order_db->get_order_between_date($data['yesterday'], $data['endofyesterday'])->result_array();
 		$order_items = array();
 		$top5item = array();
+		$site_graph = array();
 		$cost_total = 0;
 		$discount_total = 0;
 		$tax_total = 0;
@@ -353,6 +379,17 @@ class Reportapi extends CI_Controller {
 			$items =  $this->order_db->get_order_items($o['order_id'])->result_array();
 			foreach($items as $i){
 				array_push($order_items, $i);
+			}
+			$gi = $this->order_model->get_good_issue_items($o['order_id'])->result_array();
+			foreach($gi as $g){
+				$site_name = $this->site_db->get_site_by_id($g['site_id'])->row()->site_reference;
+				if(array_key_exists($site_name, $site_graph)){
+					$site_graph[$site_name] += (int)$g['quantity'];
+				}else{
+					$site_graph[$site_name] = (int)$g['quantity'];
+					//array_push($site_graph, array($site_name => $g['quantity']));
+				}
+				
 			}
 		}
 		
@@ -364,6 +401,7 @@ class Reportapi extends CI_Controller {
 				$top5item[$oi['item_code']]['disc_value'] += $oi['disc_value'];
 			}else{
 				$top5item[$oi['item_code']] = array(
+					'item_name'=>$oi['item_name'],
 					'quantity'=> $oi['quantity'],
 					'cost'=>$oi['cost'],
 					'disc_percent'=> $oi['cost'] * $oi['disc_percent']/100,
@@ -383,6 +421,9 @@ class Reportapi extends CI_Controller {
 		$data['cost_total'] = $cost_total;
 		$data['discount_total'] = $discount_total;
 		$data['tax_total'] = $tax_total;
+		$data['datay'] = implode('-',array_keys($site_graph));
+		$data['datax'] = implode('-',$site_graph);
+		$data['site_graph'] = $site_graph;
 		$filename = "VONTIS-DAILY";
 		$pdfFilePath = FCPATH."/docs/".$filename.".pdf";
 		ini_set('memory_limit','32M');
@@ -396,19 +437,23 @@ class Reportapi extends CI_Controller {
 		//$pdf->Output($filename.".pdf", 'D');
 		$pdf->Output($pdfFilePath, 'F');
 		//$pdf->Output();
-		$this->purchase_model->send_email_daily_report("rizky@wvi.co.id",$filename);
+		$this->purchase_model->send_email_daily_report(implode(", ",$mail_list),$filename);
 	}
-	public function piegraph($data = NULL){
-		
+	public function piegraph($y = NULL, $x = NULL){
+		if(!empty($y) && !empty($x)){
+			$datay = explode("-", $y);
+			$datax = explode("-", $x);
+		}else{
+			$datay = array(0);
+			$datax = array("");
+		}
 		$this->load->library('jpgraph');
         
        $bar_graph = $this->jpgraph->piechart();
-       $datax = array(2,10,20,10,20,10,20);
-        $datay = array($data,"sedang","bagus","a","bagus","sedang","bagus");
         
-        $graph = new PieGraph(260,230,"auto"); 
+        $graph = new PieGraph(230,270,"auto"); 
         $graph->SetScale('textint'); 
-        $graph->img->SetMargin(50,30,70,100); 
+        $graph->img->SetMargin(50,50,50,50); 
         $graph->SetShadow(); 
                
         $bplot = new PiePlot($datax); 

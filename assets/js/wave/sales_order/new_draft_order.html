@@ -64,7 +64,7 @@
 						<i class="glyph-icon icon-plus"></i>
 					</button>
 				</div>
-
+				
 				<div class="form-group pull-right">
 					<label for="exampleInputEmail2">PO Customer</label>
 					<input type="text" class="form-control" id="exampleInputEmail2" ng-model="order.order_details.customer_po">
@@ -235,8 +235,8 @@
 												<td>{{ item.item_unit }}</td>
 												<td>{{ item.item_name }}</td>
 												<td><input type="number" class="form-control" placeholder="0" ng-model="item.cost" min="0" /></td>
-												<td><input type="number" class="form-control" placeholder="0" ng-model="item.disc_percent" min="0" max="100" maxlength="3" /></td>
-												<td><input type="number" class="form-control" placeholder="0" ng-model="item.disc_value" min="0"/></td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.disc_percent" min="0" max="100" maxlength="3" ng-disabled="item.disc_value != 0 " /></td>
+												<td><input type="number" class="form-control" placeholder="0" ng-model="item.disc_value" min="0" ng-disabled="item.disc_percent != 0 " /></td>
 												<td>{{(item.quantity*item.cost)-(item.quantity*item.cost*item.disc_percent/100)-(item.disc_value) || 0 | number:2}}</td>
 												<td><input type="text" class="form-control" placeholder="" ng-model="item.remark" /></td>
 												<td>
@@ -266,17 +266,20 @@
 										<tr>
 											<td colspan="3" style="border-bottom: none"></td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Discount</td>
-											<td colspan="3">{{ totalDiscPercent() || 0 | number:2 }}</td>
+											<td colspan="3">{{ totalDiscPercentAndValue() || 0 | number:2 }}</td>
 										</tr>
 										<tr>
 											<td colspan="3" style="border-bottom: none"></td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Tambahan Discount</td>
-											<td colspan="3">{{ totalDiscValue() || 0 | number:2 }}</td>
+										<!--	<td colspan="3">{{ totalDiscValue() || 0 | number:2 }}</td> -->                                        
+                                            <td colspan="3"><input type="number" class="form-control" placeholder="0" ng-model="order.disc_additional" min="0" /></td>
+                                            
+                                            
 										</tr>
 										<tr ng-if="company.pkp">
 											<td colspan="3" style="border-bottom: none"></td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">DPP</td>
-											<td colspan="3">{{ totalTax() || 0 | number:2 }}</td>
+											<td colspan="3">{{ totalDpp() || 0 | number:2 }}</td>
 										</tr>
 										<tr ng-if="company.pkp">
 											<td colspan="3" style="border-bottom: none"></td>
@@ -345,12 +348,12 @@
 										<tr>
 											<td colspan="3" style="border-bottom: none"></td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">Tambahan Discount</td>
-											<td colspan="3">{{ totalDiscValue() || 0 | number:2 }}</td>
+											<td colspan="3">{{ order.disc_additional || 0 | number:2 }}</td>
 										</tr>
 										<tr ng-if="company.pkp">
 											<td colspan="3" style="border-bottom: none"></td>
 											<td colspan="{{ 4 + attributeActiveList.length}}" style="text-align: right;border-bottom:none">DPP</td>
-											<td colspan="3">{{ 0 || 0 | number:2 }}</td>
+											<td colspan="3">{{ totalDpp() || 0 | number:2 }}</td>
 										</tr>
 										<tr ng-if="company.pkp">
 											<td colspan="3" style="border-bottom: none"></td>

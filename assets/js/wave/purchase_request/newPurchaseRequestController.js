@@ -291,11 +291,13 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 			for (var i = 0; i < $scope.itemRequestList.length; i++) {
 				delete $scope.itemRequestList[i].uom_list;
 			}
+			/*
 			for (var j = 0; j < $scope.deliveryRequestList.length; j++) {
 				for (var k = 0; k < $scope.deliveryRequestList[j].item_delivery_request_list.length; k++) {
 					$scope.deliveryRequestList[j].item_delivery_request_list[k].attributes = JSON.stringify($scope.deliveryRequestList[j].item_delivery_request_list[k].attributes);
 				}
 			}
+			*/
 			var data = {
 				supplier_id: $scope.supplier.vendor_id,
 				currency: $scope.currency,

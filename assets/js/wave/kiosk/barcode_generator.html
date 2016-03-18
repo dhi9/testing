@@ -1,0 +1,59 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title" class="padding-top-15 padding-bottom-15" >
+	<div class="row">
+		<div class="col-sm-7">
+			<h1 class="mainTitle">Test</h1>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+
+<!-- start: YOUR CONTENT HERE -->
+
+<div ng-controller="barcodeGeneratorController">  
+
+<div class="container-fluid container-fullw">
+	<div class="row" ng-show="barcodeValue.length > 0 " >
+		<div class="col-md-12">
+			<center>
+				<div barcode-generator="{{barcodeValue}}" style="height:208px;">
+			</center>
+		</div>
+	</div>
+     <div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white" id="pnlCustomerDetail">
+				<div collapse="pnlCustomerDetail" ng-init="pnlCustomerDetail=false" class="panel-wrapper">
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="txtCustomerName" class="col-sm-1 control-label" style="font-size: 17px">Barcode</label>
+										<div class="col-sm-11">
+											<input type="text" class="form-control underline" id="txtCustomerName" placeholder="Wave Indonesia" ng-model="barcodeValue" style="font-size: 16px"/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	 
+
+		
+	 
+	 
+	 
+	 
+		<button class="btn btn-primary" ui-sref="app.tools.qrscanner">Kembali</button>
+	                            
+</div><!-- End of Customer Row -->
+
+</div>
+
+<!-- end: YOUR CONTENT HERE -->

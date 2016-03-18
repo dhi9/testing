@@ -46,6 +46,9 @@ app.controller('UserMasterEditController', function($scope, $filter, $stateParam
 		if ($scope.user.accept_so_cc == '1') {
 			$scope.user.accept_so_cc = true
 		}
+		if ($scope.user.accept_daily_report == '1') {
+			$scope.user.accept_daily_report = true
+		}
 		
 	});
 	
