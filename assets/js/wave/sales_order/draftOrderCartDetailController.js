@@ -1,4 +1,4 @@
-app.controller('DraftOrderCartDetailController', function($scope, $state, $modal, $http, ItemLookupService, ApiCallService, CustomerService, CustomerFactory, SweetAlert, $state, $stateParams, AuthService, AttributeFactory) {
+app.controller('DraftOrderCartDetailController', function($scope, $state, $modal, $http, ItemLookupService, ApiCallService, CustomerService, CustomerFactory, SweetAlert, $state, $stateParams, AuthService, AttributeFactory, CompanyFactory) {
 	var draft_id = $stateParams.draft_id;
 	console.log(draft_id);
 	$scope.itemLookupList = [];
@@ -11,6 +11,16 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 	$scope.attributeActiveList = AttributeFactory.attributeActiveList;
 	AttributeFactory.getAttributeActiveList().then(function(){
 		$scope.attributeActiveList = AttributeFactory.attributeActiveList;
+	});
+    
+    $scope.company = CompanyFactory.company;
+	CompanyFactory.getCompanyDetail().then(function(){
+		$scope.company =  CompanyFactory.company;
+		if ($scope.company.pkp == null || $scope.company.pkp == undefined || $scope.company.pkp == 0) {
+			$scope.company.pkp = false;
+		}else{
+			$scope.company.pkp = true;
+		}
 	});
 
 	$scope.order = {
@@ -270,6 +280,35 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 	  }
 	  return total;
 	}
+    
+    $scope.totalDiscPercentAndValue = function(){
+        var total = 0;
+        for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+            total += ($scope.order.order_details.order_items[i].quantity * $scope.order.order_details.order_items[i].cost * $scope.order.order_details.order_items[i].disc_percent/100)  ||  $scope.order.order_details.order_items[i].disc_value;
+        }
+        return total;
+    }
+    
+    $scope.totalDpp = function(){
+		var total = 0;
+		if($scope.company.pkp){
+			for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+				total = ($scope.totalWithoutDisc() - $scope.totalDiscPercentAndValue() - $scope.order.disc_additional );
+			}
+		}
+		return total;
+	}
+    
+    $scope.totalTax = function(){
+		var total = 0;
+		if($scope.company.pkp){
+			for (var i = 0; i < $scope.order.order_details.order_items.length; i += 1) {
+                total = ($scope.totalDpp() * $scope.company.ppn/100)
+			}
+		}
+		return total;
+	}
+    
 	$scope.totalDisc = function(){
 	  var total = 0;
 	  total += ($scope.totalDiscPercent() + $scope.totalDiscValue());
@@ -277,7 +316,7 @@ app.controller('DraftOrderCartDetailController', function($scope, $state, $modal
 	}
 	$scope.totalGrand = function(){
 	  var total = 0;
-	  total += ($scope.totalWithoutDisc() - $scope.totalDisc());
+	  total += ($scope.totalDpp() + $scope.totalTax());
 	  return total;
 	}
 
