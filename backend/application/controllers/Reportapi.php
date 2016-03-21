@@ -174,9 +174,20 @@ class Reportapi extends CI_Controller {
 			$result = array();
 			
 			foreach($group_stock as $g){
+				$array_attributes = json_decode($g['attributes'], TRUE);
+				$attributes = "";
+				$i = 0;
+				foreach($array_attributes as $attribKey => $attribVal){
+					if($i > 0){
+						$attributes = $attributes.", ";
+					}
+					$attributes = $attributes.$attribKey." : ".$attribVal;
+					$i += 1;
+				}
 				$group_array = array(
 					"item_code" => $g['item_code'],
 					"attributes" => $g['attributes'],
+					"attributes_string" => $attributes,
 					"uom" => $g['uom'],
 					"items" => array(),
 					"quantity_start" => 0,
@@ -195,6 +206,7 @@ class Reportapi extends CI_Controller {
 				$stock_array = array(
 					"item_code" => $gs['item_code'],
 					"attributes" => $gs['attributes'],
+					"attributes_string" => $gs['attributes_string'],
 					"uom" => $gs['uom'],
 					"items" => array(),
 					"quantity_start" => $gs['quantity_start'],
@@ -216,10 +228,14 @@ class Reportapi extends CI_Controller {
 				array_push($result, $stock_array);
 			}
 			$site = $this->site_db->get_site_by_id($data['searchSite'])->row_array();
+			
+			$data['searchDateFrom'] = date('Y-m-d', strtotime($data['searchDateFrom'] . " +1 days")).' 00:00:00';
+			$data['searchDateTo'] = date('Y-m-d', strtotime($data['searchDateTo'] . " +1 days")).' 23:59:59';
+			
 			$feedback = array(
 				"call_status" => "success",
 				"result" => $result,
-				"report" => array("site" => $site, "date_from" => $data['searchDateFrom'], "date_to" => $data['searchDateTo'])
+				"report" => array("site" => $site, "date_from" => date('Y-m-d', strtotime($data['searchDateFrom'])), "date_to" => date('Y-m-d', strtotime($data['searchDateTo'])))
 			);
 		}
 		
@@ -433,7 +449,7 @@ class Reportapi extends CI_Controller {
 		$pdf = $this->pdf->load('','A4',9,'dejavusans');
 		//$pdf->SetFooter('WVI'.'|{PAGENO}|'.date(DATE_RFC822));
 		$pdf->WriteHTML($html); 
-		//ob_clean();
+		ob_clean();
 		//$pdf->Output($filename.".pdf", 'D');
 		$pdf->Output($pdfFilePath, 'F');
 		//$pdf->Output();
@@ -460,7 +476,8 @@ class Reportapi extends CI_Controller {
         $bplot->SetCenter(0.45,0.40);
         $bplot->SetLegends($datay);
         $bplot->value->Show(); 
-        $bplot->value->SetFont(FF_ARIAL,FS_BOLD); 
+        //$bplot->value->SetFont(FF_ARIAL,FS_BOLD); 
+        $bplot->value->SetFont(FF_DV_SANSSERIF,FS_BOLD); 
                 
         $graph->Add($bplot); 
         $graph->Stroke();    
