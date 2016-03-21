@@ -28,7 +28,7 @@
             <thead>
                 <tr>
                     <th colspan="4" align="left">
-                        <?php echo $s['item_code'] ?> -  <?php echo $s['attributes'] ?>
+                        <?php echo $s['item_code'] ?> -  <?php echo $s['attributes_string'] ?>
                     </th>
                 </tr>
             </thead>

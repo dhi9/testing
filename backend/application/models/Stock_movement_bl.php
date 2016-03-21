@@ -40,4 +40,25 @@ class Stock_movement_bl extends CI_Model {
 		}
 		return $this->stock_movement_db->get_stock_movement_list_by_search($data)->result_array();
 	}
+
+	public function get_stock_movement_list_by_item_code($item_code)
+	{
+		$stock_movement_list = $this->stock_movement_db->get_stock_movement_list_by_item_code($item_code)->result_array();
+		
+		$subtract = array("VGR2", "VGR4", "VGR6", "VGI1", "VGI3", "VGI5", "VGI7", "VPS2");
+		
+		$balance = 0;
+		foreach($stock_movement_list as &$row){
+			if( in_array($row['type'], $subtract) ){
+				$balance -= $row['base_uom_quantity'];
+			}
+			else{
+				$balance += $row['base_uom_quantity'];
+			}
+			
+			$row['balance'] = $balance;
+		}
+		
+		return array_reverse($stock_movement_list);
+	}
 }
