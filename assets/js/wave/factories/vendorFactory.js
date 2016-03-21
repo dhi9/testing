@@ -54,6 +54,18 @@ app.factory('VendorFactory', function ($http, apiUrl, SweetAlert) {
 				}
 			});
 	}
+
+	self.getVendorCombinedItemList = function (vendorId) {
+		return $http.get(url + 'get_vendor_combined_item_list/' + vendorId)
+			.success(function (data) {
+				if (data.call_status == 'success') {
+					self.vendorCombinedItemList = data.vendor_combined_item_list;
+				}
+			})
+			.error(function () {
+				//NotificationFactory.showError();
+			});
+	};
 	
 	self.insertVendor =  function (){
 		var insertData = self.newVendor;

@@ -23,7 +23,11 @@ this.httpPostConfig = {
 		this.getAllCustomers = function() {
         return $http.get(this.hostname+'customerapi/get_all_customers');
     };
-		
+
+	this.getAllVendor= function() {
+		return $http.get(this.hostname+'vendorapi/get_all_vendor');
+	};
+
 		this.getOrderUpdateHistory = function(order_id) {
         return $http.get(this.hostname+'updatehistoryapi/get_order_update_history/' + order_id);
     };

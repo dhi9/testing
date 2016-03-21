@@ -21,9 +21,9 @@
 				<div class="form-group">
 					<label for="txtSearchCustomer"><h5>Cari Supplier &nbsp;</h5></label>
 					<div class="input-group">
-						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="supplierName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" autocomplete="off"/>
+						<input type="text" class="form-control" id="txtSearchCustomer" ng-model="vendorName" typeahead="s.vendor_name for s in supplierList | filter:$viewValue | limitTo:20" typeahead-on-select="searchSupplier(supplierName)" autocomplete="off"/>
 						<span class="input-group-btn">
-							<button type="button" class="btn btn-primary" ng-click="searchSupplier(supplierName)" disabled="disabled">
+							<button type="button" class="btn btn-alt btn-hover btn-primary" ng-click="displayVendorListModal()" >
 									<i class="fa fa-search"></i>
 							</button>
 						</span>
@@ -494,6 +494,29 @@
 			
 			<button class="btn btn-primary" ng-click="saveOrderNotes(notes)">Simpan Order Notes</button>
 			<button class="btn btn-danger" ng-click="closeModal()">Batal</button>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="modal_vendor_list">
+		<div class="modal-header">
+			<h3 class="modal-title">Daftar Supplier (Vendor)</h3>
+		</div>
+		<div class="modal-body bg-white">
+			<input type="text" class="form-control" id="txtSearchTable" ng-model="search.$"/>
+			<div class="table-responsive">
+				<table class="table" ng-table="vendorListTableParams">
+					<tr ng:repeat="vendor in $data | filter: search">
+						<td data-title="'Nama Vendor'" sortable="'vendor_name'">{{ vendor.vendor_name }}</td>
+						<td data-title="'Nama PIC'" sortable="'sales_pic'">{{ vendor.sales_pic}}</td>
+						<td data-title="'No Telp'" sortable="'phone_number'">{{ vendor.phone_number }}</td>
+						<td data-title="'Email'" sortable="'customer_email'">{{ vendor.sales_email }}</td>
+						<td>
+							<button class="btn btn-alt btn-hover btn-primary" ng-click="setVendorIdToSearch(vendor.vendor_id)">Pilih</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<button class="btn btn-primary" ng-click="closeModal()">Tutup</button>
 		</div>
 	</script>
 

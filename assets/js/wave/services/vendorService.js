@@ -28,4 +28,13 @@ app.service('VendorService', function($http, apiUrl) {
 	this.updateVendor = function(data){
 		return $http.post(url + 'vendorapi/update_vendor', data);
 	}
+
+//	this.getVendorById = function(vendor_id) {
+//       return $http.get(url + 'get_vendor/' + vendor_id);
+//    };
+//
+//    this.getVendorById = function(vendor_id) {
+//        return $http.get(url + 'get_vendor/' + vendor_id);
+//    };
+
 });

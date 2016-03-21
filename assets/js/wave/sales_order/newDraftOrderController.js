@@ -24,6 +24,9 @@ app.controller('NewDraftOrderController', function($scope, $modal, ItemLookupSer
 			$scope.company.pkp = true;
 		}
 	});
+    
+    console.log ($scope);
+    
 	$scope.delivery = 'D';
 	 $scope.tabs = [{
 		order_type: 'B',

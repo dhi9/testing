@@ -1,4 +1,4 @@
-app.controller('NewServiceRequestController', function($filter, $scope, $http, $state, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService) {
+app.controller('NewServiceRequestController', function($filter, $scope, $http, $modal, WarehouseService, SupplierService, PurchaseService, VendorService, ItemService, SweetAlert, SiteService, VendorFactory) {
   $scope.edit = {};
 	$scope.edit.itemList = true;
 	$scope.edit.sendEmail = false;
@@ -466,6 +466,111 @@ app.controller('NewServiceRequestController', function($filter, $scope, $http, $
 			}
 		});
 	}
+
+	$scope.inputVendor = function(data){
+		//$scope.order.customer_input_type = "E";
+		//$scope.order.customer_id = data.customer_details.customer_id;
+		//$scope.order.vendor_id = $scope.vendorIdToSearch;
+	//	$scope.order.customer_details.customer_id = data.customer_details.customer_id;
+		//$scope.vendorName = data.vendor_details.vendor_name;
+		$scope.supplier.vendor_name = data.vendor.vendor_name;
+		$scope.order.supplier.sales_pic = data.vendor.sales_pic;
+		$scope.order.supplier.address = data.vendor.address;
+		$scope.order.supplier.city = data.vendor.city;
+		$scope.order.supplier.postcode = data.vendor.postcode;
+		$scope.order.supplier.phone_number = data.vendor.phone_number;
+		$scope.order.supplier.fax_number = data.vendor.fax_number;
+		$scope.order.supplier.sales_email = data.vendor.sales_email;
+	}
+
+	$scope.getVendorById = function(vendorId) {
+		VendorService.getVendorById(vendorId).
+		success(function(data, status, headers, config) {
+			if (data.call_status === "success") {
+			//	if ($scope.order.order_details.order_items[0].item_code !== "") {
+				if ($scope.itemRequestList[0].item_code !== "") {
+
+				//	if ($scope.order.order_details.order_items.length > 0 || $scope.order.delivery_request_details.length > 0 ) {
+					if ($scope.itemRequestList.length > 0 || $scope.order.delivery_request_details.length > 0 ) {
+
+						SweetAlert.swal({
+								title: "Peringatan",
+								text: "Mengganti Customer Akan Menghapus Data Yang Telah Dibuat!",
+								type: "warning",
+								showCancelButton: true,
+								confirmButtonText: "Teruskan",
+								cancelButtonText: "Batal",
+								closeOnConfirm: true,
+								closeOnCancel: true,
+								animation: "slide-from-top"
+							},
+							function(isConfirm){
+								if (isConfirm) {
+									$scope.order.order_details.order_items = [];
+									$scope.addItem();
+									$scope.order.delivery_request_details = [];
+									$scope.HLPFIELD_items_is_edit_mode = true;
+									$scope.inputVendor(data);
+								}else{
+								}
+							});
+					}
+				}else{
+					$scope.inputVendor(data);
+				}
+			}
+		}).
+		error(function(data, status, headers, config) {
+			console.log(data);
+			console.log(status);
+			console.log(header);
+			console.log(config);
+		})
+		;
+
+		//VendorFactory.getVendorCombinedItemList($scope.vendorIdToSearch).then(function () {
+		//	$scope.vendorCombinedItemList = VendorFactory.vendorCombinedItemList;
+		//});
+	}
+	
+	
+	$scope.init = function () {
+		$scope.request = {
+			"vendor_id": null;
+			"vendor_details": {
+				"vendor_id": null;
+				"vendor_name": "";
+				"sales_pic": "";
+				"address": "";
+				"phone_number": "";
+				"city": "";
+				"post_code": "";
+				"sales_email": "",
+				"fax_number": "";
+
+		}
+		}
+	}
+	
+
+	$scope.displayVendorListModal = function() {
+		/*var pass_data = {
+		 index: index
+		 };*/
+
+		var modalInstance = $modal.open({
+			templateUrl: 'modal_vendor_list',
+			controller: 'VendorListModalCtrl',
+			size: 'lg',
+			/*resolve: {
+			 passed_data: function () {
+			 return pass_data;
+			 }
+			 },*/
+			scope: $scope
+		});
+	}
+
 });
 
 app.controller('OrderNotesModalCtrl', function ($scope, $modalInstance, $state) {
@@ -477,4 +582,54 @@ app.controller('OrderNotesModalCtrl', function ($scope, $modalInstance, $state) 
 	$scope.closeModal = function () {
 		$modalInstance.dismiss('close');
 	};
+});
+
+app.controller('VendorListModalCtrl', function ($scope, $modalInstance, ngTableParams, $filter, ApiCallService) {
+
+	//var index = passed_data.index;
+	$scope.customerList = [];
+	$scope.vendorList = [];
+
+	ApiCallService.getAllVendor().
+	success(function(data, status, headers, config) {
+
+		if (data.call_status === "success") {
+			$scope.vendorList = data.vendor_details_list;
+			$scope.vendorList = $filter('filter')($scope.vendorList, {status: "A"});
+			$scope.vendorListTableParams = new ngTableParams(
+				{
+					page: 1, // show first page
+					count: 10 // count per page
+				},
+				{
+					total: $scope.vendorList.length, // length of data
+					getData: function ($defer, params) {
+						var orderedData = params.sorting() ? $filter('orderBy')($scope.vendorList, params.orderBy()) : $scope.vendorList;
+						$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+					}
+				}
+			);
+		}
+		else {
+			console.log(data);
+		}
+
+	}).
+	error(function(data, status, headers, config) {
+		console.log(data);
+		console.log(status);
+		console.log(header);
+		console.log(config);
+	});
+
+	$scope.setVendorIdToSearch = function(vendorId) {
+		$scope.vendorIdToSearch = vendorId;
+		$scope.getVendorById($scope.vendorIdToSearch);
+		$modalInstance.dismiss('close');
+	}
+
+	$scope.closeModal = function () {
+		$modalInstance.dismiss('close');
+	};
+
 });

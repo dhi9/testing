@@ -418,6 +418,25 @@ app.controller('NewPurchaseRequestController', function($filter, $scope, $http, 
 			}
 		});
 	}
+
+	$scope.displayVendorListModal = function() {
+		/*var pass_data = {
+		 index: index
+		 };*/
+
+		var modalInstance = $modal.open({
+			templateUrl: 'modal_vendor_list',
+			controller: 'VendorListModalCtrl',
+			size: 'lg',
+			/*resolve: {
+			 passed_data: function () {
+			 return pass_data;
+			 }
+			 },*/
+			scope: $scope
+		});
+	}
+
 });
 
 app.controller('ItemDetailModalCtrl', function ($scope, $modalInstance, passed_data, ngTableParams, $filter) {
@@ -482,4 +501,54 @@ app.controller('OrderNotesModalCtrl', function ($scope, $modalInstance, $state) 
 	$scope.closeModal = function () {
 		$modalInstance.dismiss('close');
 	};
+});
+
+app.controller('VendorListModalCtrl', function ($scope, $modalInstance, ngTableParams, $filter, ApiCallService) {
+
+	//var index = passed_data.index;
+	$scope.customerList = [];
+	$scope.vendorList = [];
+
+	ApiCallService.getAllVendor().
+	success(function(data, status, headers, config) {
+
+		if (data.call_status === "success") {
+			$scope.vendorList = data.vendor_details_list;
+			$scope.vendorList = $filter('filter')($scope.vendorList, {status: "A"});
+			$scope.vendorListTableParams = new ngTableParams(
+				{
+					page: 1, // show first page
+					count: 10 // count per page
+				},
+				{
+					total: $scope.vendorList.length, // length of data
+					getData: function ($defer, params) {
+						var orderedData = params.sorting() ? $filter('orderBy')($scope.vendorList, params.orderBy()) : $scope.vendorList;
+						$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+					}
+				}
+			);
+		}
+		else {
+			console.log(data);
+		}
+
+	}).
+	error(function(data, status, headers, config) {
+		console.log(data);
+		console.log(status);
+		console.log(header);
+		console.log(config);
+	});
+
+	$scope.setVendorIdToSearch = function(vendorId) {
+		$scope.vendorIdToSearch = vendorId;
+		$scope.getVendorById($scope.vendorIdToSearch);
+		$modalInstance.dismiss('close');
+	}
+
+	$scope.closeModal = function () {
+		$modalInstance.dismiss('close');
+	};
+
 });

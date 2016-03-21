@@ -59,6 +59,33 @@ class Vendor_model extends CI_Model {
 	{
 		return $this->db->get('vendors');
 	}
+
+	public function get_all_vendor()
+	{
+		return $this->db
+			->select('*')
+			->get('vendors');
+	}
+
+	public function get_vendor($vendor_id)
+	{
+		return $this->db
+			->select('
+					vendor_id,
+					vendor_reference,
+					vendor_name,
+					sales_pic,
+					address,
+					city,
+					postcode,
+					phone_number,
+					fax_number,
+					sales_email,
+						
+				')
+			->where('vendor_id', $vendor_id)
+		->get('vendor');
+	}
 	
 	public function insert_vendor($array)
 	{

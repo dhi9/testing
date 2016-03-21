@@ -68,6 +68,53 @@ class Vendorapi extends CI_Controller {
 		
 		echo json_encode($feedback);
 	}
+
+	public function get_all_vendor()
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$array = array(
+				"call_status" => "error",
+				"error_code" => "701",
+				"error_message" =>"User not logged on"
+			);
+		}
+		else {
+			$vendor = $this->vendor_model->get_all_vendor()->result_array();
+
+			$array = array(
+				'call_status' => 'success',
+				'vendor_details_list' => $vendor
+			);
+		}
+
+		echo json_encode($array);
+	}
+
+
+
+	public function get_vendor($vendor_id)
+	{
+		if (! $this->user_model->is_user_logged_in()) {
+			$array = array(
+				"call_status" => "error",
+				"error_code" => "701",
+				"error_message" =>"User not logged on"
+			);
+		}
+		else {
+			$vendor = $this->vendor_model->get_vendor($vendor_id)->row_array();
+
+			$array = array(
+				'call_status' => 'success',
+				'vendor_details' => $vendor,
+				'vendor_list' => $this->vendor_model->get_vendor($vendor_id)->result_array(),
+				//'delivery_address_list' => $this->vendor_model->get_delivery_addresses($vendor_id)->result_array()
+			);
+		}
+
+		echo json_encode($array);
+	}
+
 	
 	public function insert_vendor()
 	{
